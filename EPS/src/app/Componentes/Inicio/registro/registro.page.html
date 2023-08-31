@@ -1,0 +1,62 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>Registrarse</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+
+<ion-content [fullscreen]="true" id="content">
+  <div id="partes">
+    <div class="centrar">
+      <form id="datos">
+        <ion-header [translucent]="true">
+          <ion-toolbar>
+            <ion-title><p align="center">Crear Usuario</p></ion-title>
+          </ion-toolbar>
+        </ion-header>
+        <div id="col1">
+          <br>
+          <ion-input class="ion-text-center" label="CUI" label-placement="floating" fill="outline" type="text"></ion-input>
+          <br>
+          <ion-input class="ion-text-center" label="Carnet" label-placement="floating" fill="outline" type="text"></ion-input>
+          <br>
+          <ion-input class="ion-text-center" label="Nombre Completo" label-placement="floating" fill="outline" type="text"></ion-input>
+          <br>
+          <ion-input class="ion-text-center" label="E-mail" label-placement="floating" fill="outline" type="email"></ion-input>
+          <br>
+          <ion-select aria-label="Fruit" placeholder="Tipo de usuario">
+            <ion-select-option value="Estudiante">Estudiante</ion-select-option>
+            <ion-select-option value="Catedratico">Catedratico</ion-select-option>
+            <ion-select-option value="Profesional">Profesional</ion-select-option>
+            <ion-select-option value="Otro">Otro</ion-select-option>
+          </ion-select>
+        </div>
+        <div id="col2">
+          <ion-input class="ion-text-center" label="Direccion" label-placement="floating" fill="outline" type="text"></ion-input>
+          <br>
+          <ion-input class="ion-text-center" label="Contraseña" label-placement="floating" fill="outline" type="password"></ion-input>
+          <br>
+          <ion-input class="ion-text-center" label=" Validar contraseña" label-placement="floating" fill="outline" type="password"></ion-input>
+          <br>
+          <ion-select aria-label="Fruit" placeholder="Departamento">
+            <ion-select-option value="guatemala">Guatemala</ion-select-option>
+            <ion-select-option value="peten">Peten</ion-select-option>
+            <ion-select-option value="izabal">Izabal</ion-select-option>
+          </ion-select>
+          <br>
+          <ion-select aria-label="Fruit" placeholder="Municipio">
+            <ion-select-option value="guatemala">Mixco</ion-select-option>
+            <ion-select-option value="peten">Villa Nueva</ion-select-option>
+            <ion-select-option value="izabal">Izabal</ion-select-option>
+          </ion-select>
+        </div>
+        <ion-button class="boton" type="submit">Registrarse</ion-button>
+      </form>
+    </div>
+
+    <ion-img src="../../../../assets/icon/Logo.JPG"></ion-img>
+    <h1 class="TituloMain"><label>Facultad de Ciencias<br>Juridicas y Sociales</label></h1>
+    
+    
+  </div>
+</ion-content>

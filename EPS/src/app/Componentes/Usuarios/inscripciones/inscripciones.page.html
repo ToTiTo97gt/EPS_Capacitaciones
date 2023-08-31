@@ -1,0 +1,19 @@
+
+<ion-content [fullscreen]="true">
+  <div id="pantalla">
+    <div id="tabla">
+      <ion-grid>
+        <ion-row *ngFor="let i of [0,1,2]">
+          <ion-col>
+            <app-cart></app-cart>
+          </ion-col>
+          <ion-col>
+            <app-cart></app-cart>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </div>
+    
+  </div>
+  
+</ion-content>

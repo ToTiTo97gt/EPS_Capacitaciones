@@ -1,0 +1,40 @@
+#pantalla{
+    width: 100%;
+    height: 100%;
+    background-color: gray;
+}
+
+#reuniones{
+    margin-left: 25%;
+    margin-top: -8.6%;
+}
+
+#tabla{
+    height: 300px;
+    width: 100%;
+    overflow-y: scroll;
+    background-color: #fff;
+}
+
+#head{
+    width: 148.1%;
+}
+
+ion-select{
+    width: 20%;
+    background-color: white;
+    margin-left: 4%;
+    margin-top: 5px;
+}
+
+ion-button{
+    margin-left: 25%;
+}
+
+ion-col {
+    background-color: #135d54;
+    border: solid 1px #fff;
+    color: #fff;
+    text-align: center;
+}
+

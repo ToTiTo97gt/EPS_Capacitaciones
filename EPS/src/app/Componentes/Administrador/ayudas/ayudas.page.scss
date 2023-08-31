@@ -1,0 +1,42 @@
+#pantalla{
+    width: 100%;
+    height: 100%;
+    background-color: gray;
+}
+
+#tabla{
+    height: 300px;
+    width: 100%;
+    overflow-y: scroll;
+    background-color: #fff;
+}
+
+#head{
+    width: 130%;
+}
+
+#filaMain{
+    width: 76%;
+}
+
+.Conferencia{
+    width: 25%;
+    margin-left: 20px;
+}
+
+ion-col {
+    background-color: #135d54;
+    border: solid 1px #fff;
+    color: #fff;
+    text-align: center;
+}
+
+ion-button{
+    margin-left: 20px;
+}
+
+ion-select{
+    width: 20%;
+    background-color: #fff;
+    margin-left: 20px;
+}

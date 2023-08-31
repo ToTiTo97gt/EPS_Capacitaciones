@@ -1,0 +1,48 @@
+#pantalla{
+    width: 100%;
+    height: 100%;
+    background-color: gray;
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    grid-template-rows: repeat(5, 1fr);
+    grid-column-gap: 0px;
+    grid-row-gap: 0px;
+    overflow-y: auto;
+}
+
+.admins{
+    grid-area: 1 / 1 / 4 / 3;  
+}
+
+.table{
+    grid-area: 1 / 3 / 6 / 6;  
+}
+
+.Nombre, .Apellido, .Telefo, .Correo, .Contra{
+    width: 250px;
+    margin-top: 2%;
+    align-items: center;
+    border-radius: 10%;
+    border-width: 20%;
+    background: rgba(255, 255, 255, 0.986) !important;  
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.boton {
+    margin-top: 1%;
+    margin-left: 2%;
+}
+
+.header-row {
+    background-color: #f0f0f0;
+    font-weight: bold;
+}
+  
+.data-row {
+    border-bottom: 1px solid #ccc;
+}

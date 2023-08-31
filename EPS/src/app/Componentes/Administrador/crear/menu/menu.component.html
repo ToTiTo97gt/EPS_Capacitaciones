@@ -1,0 +1,107 @@
+<ion-content [fullscreen]="true">
+  <div id="pantalla">
+    <div id="Jornadas" *ngIf="menu=='Jornadas'">
+      <form>
+          
+        <ion-input class="Jornada" label="Jornada" labelPlacement="floating" fill="outlined" type="text"></ion-input>
+  
+        <br>
+        <div class="container">
+          <div class="box">
+            <label>Fecha de inicio</label>
+            <ion-datetime presentation="day-month-year"></ion-datetime>
+          </div>
+          <div class="box">
+            <label>Fecha de Finalizacion</label>
+            <ion-datetime presentation="day-month-year"></ion-datetime>
+          </div>
+          <br>
+          
+        </div>
+        <br>
+        <div id="boton">
+          <ion-button class="boton" type="submit">Iniciar Jornada</ion-button>
+        </div>
+      </form>
+    
+    </div>
+    <div id="Conferencias" *ngIf="menu=='Conferencias'">
+      <form>
+        <div id="Conf1">
+          <ion-input class="Conferencia" label="Titulo de Conferencia" labelPlacement="floating" fill="outlined" type="text"></ion-input>
+        <br>
+  
+        <ion-textarea class="descripcion" label="Descripcion" placeholder="Descripcion de conferencia"></ion-textarea>
+        
+        <br>
+        <ion-input class="Conferencia" label="Nombre del Presentador" labelPlacement="floating" fill="outlined" type="text"></ion-input>
+        <br>
+        <ion-datetime-button datetime="datetime"></ion-datetime-button>
+        <ion-modal [keepContentsMounted]="true">
+          <ng-template>
+            <ion-datetime id="datetime"></ion-datetime>
+          </ng-template>
+        </ion-modal>
+        </div>
+        <div id="Conf2">
+        
+  
+        <ion-input class="Conferencia" label="Wallpaper de conferencia" labelPlacement="floating" fill="outlined" type="file"></ion-input>
+        <br>
+  
+        <ion-input class="Conferencia" label="Link de Zoom" labelPlacement="floating" fill="outlined" type="text"></ion-input>
+        <br>
+  
+        <ion-input class="Conferencia" label="Link de FaceBook" labelPlacement="floating" fill="outlined" type="text"></ion-input>
+        <br>
+        </div>
+      </form>
+    </div>
+    <div id="Diplomados" *ngIf="menu=='Diplomados'">
+      <form>
+        <div id="Conf1">
+          <ion-input class="Conferencia" label="Titulo de Diplomado" labelPlacement="floating" fill="outlined" type="text"></ion-input>
+          <br>
+  
+          <ion-textarea class="descripcion" label="Descripcion" placeholder="Descripcion de Diplomado"></ion-textarea>
+          
+          <br>
+          <ion-input class="Conferencia" label="Nombre del Presentador" labelPlacement="floating" fill="outlined" type="text"></ion-input>
+          <br>
+          <div id="dateStart">
+            <label>Fecha de Inicio</label>
+            <ion-datetime-button datetime="datetime"></ion-datetime-button>
+            <ion-modal [keepContentsMounted]="true">
+              <ng-template>
+                <ion-datetime id="datetime"></ion-datetime>
+              </ng-template>
+            </ion-modal>
+          </div>
+          <br>
+          <div id="dateFinish">
+            <label>Fecha de Finalizacion</label>
+            <ion-datetime-button datetime="datetime"></ion-datetime-button>
+            <ion-modal [keepContentsMounted]="true">
+              <ng-template>
+                <ion-datetime id="datetime"></ion-datetime>
+              </ng-template>
+            </ion-modal>
+          </div>
+        </div>
+        <div id="Conf2">
+        
+  
+          <ion-input class="Conferencia" label="Wallpaper de conferencia" labelPlacement="floating" fill="outlined" type="file"></ion-input>
+          <br>
+  
+          <ion-input class="Conferencia" label="Link de Zoom" labelPlacement="floating" fill="outlined" type="text"></ion-input>
+          <br>
+  
+          <ion-input class="Conferencia" label="Link de FaceBook" labelPlacement="floating" fill="outlined" type="text"></ion-input>
+          <br>
+        </div>
+      </form>
+    </div>
+  </div>
+  
+</ion-content>

@@ -1,0 +1,150 @@
+html, body{
+  height:100%;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.container{
+  gap: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.box{
+  width: 20rem;
+  height: 23rem;
+}
+
+#pantalla{
+  width: 100%;
+  height: 100%;
+  background-color: gray;
+}
+
+#Conferencias{
+  height: 60%;
+  width: 98%;
+  margin-left: 10px;
+  align-content: left;
+  justify-content: left;
+  background-color: rgba(183, 231, 11, 0.986);
+  flex-direction: column;
+}
+
+#Diplomados{
+  height: 60%;
+  width: 98%;
+  margin-left: 10px;
+  align-content: left;
+  justify-content: left;
+  background-color: rgba(183, 231, 11, 0.986);
+  flex-direction: column;
+}
+
+#dateStart{
+  width: 35%;
+  height: 50px;
+  background-color: #ffffff;
+}
+
+#dateFinish{
+  width: 35%;
+  height: 50px;
+  margin-left: 40%;
+  margin-top: -70px;
+  background-color: #ffffff;
+}
+
+#fecha{
+  margin-left: 0px;
+}
+
+#Inicio{
+  margin-left: -50%;
+}
+
+#Final{
+  margin-left: 50%;
+  margin-top: -50%;
+}
+
+.descripcion{
+  margin-top: 2%;
+  align-items: left;
+  background: rgba(255, 255, 255, 0.986) !important;  
+}
+
+.Conferencia{
+  margin-top: 2%;
+  align-items: left;
+  background: rgba(255, 255, 255, 0.986) !important;  
+}
+
+#Conf1{
+  width: 50%;
+  margin-left: -50%;
+  align-content: end;
+  justify-content: auto;
+  background: rgba(255, 255, 255, 0.986) !important;  
+}
+
+#Conf2{
+  width: 50%;
+  margin-left: 50%;
+  margin-top: -30%;
+  align-content: end;
+  justify-content: auto;
+  background: rgba(255, 255, 255, 0.986) !important;   
+}
+
+.Jornada{
+  width: 350px;
+  margin-top: 2%;
+  background-color: #ffffff;
+  align-items: center;
+  border-radius: 10%;
+  border-width: 25%;
+}
+
+
+form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.boton {
+  margin-top: 1%;
+  margin-left: 2%;
+}
+
+ion-menu-button {
+    color: var(--ion-color-primary);
+  }
+  
+  #container {
+    text-align: center;
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+  
+  #container strong {
+    font-size: 20px;
+    line-height: 26px;
+  }
+  
+  #container p {
+    font-size: 16px;
+    line-height: 22px;
+    color: #8c8c8c;
+    margin: 0;
+  }
+  
+  #container a {
+    text-decoration: none;
+  }
