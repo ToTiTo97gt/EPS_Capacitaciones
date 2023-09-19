@@ -11,7 +11,10 @@
 }
 
 .admins{
-    grid-area: 1 / 1 / 4 / 3;  
+    grid-area: 1 / 1 / 4 / 3;
+    display: flex;
+    flex-direction: column;
+    align-items: center;  
 }
 
 .table{
@@ -22,20 +25,12 @@
     width: 250px;
     margin-top: 2%;
     align-items: center;
-    border-radius: 10%;
-    border-width: 20%;
     background: rgba(255, 255, 255, 0.986) !important;  
 }
 
-form {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-.boton {
-    margin-top: 1%;
-    margin-left: 2%;
+.boton{
+    width: fit-content;
+    height: 80px;
 }
 
 .header-row {

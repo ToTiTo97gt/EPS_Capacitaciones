@@ -1,61 +1,66 @@
 <ion-content [fullscreen]="true">
-  <div id="pantalla">
-    <div id="Jornadas" *ngIf="menu=='Jornadas'">
-      <form>
-          
-        <ion-input class="Jornada" label="Jornada" labelPlacement="floating" fill="outlined" type="text"></ion-input>
-  
-        <br>
-        <div class="container">
-          <div class="box">
-            <label>Fecha de inicio</label>
-            <ion-datetime presentation="day-month-year"></ion-datetime>
-          </div>
-          <div class="box">
-            <label>Fecha de Finalizacion</label>
-            <ion-datetime presentation="day-month-year"></ion-datetime>
-          </div>
-          <br>
-          
+  <div class="pantalla">
+    <div class="Jornadas" *ngIf="menu=='Jornadas'">
+        <div class="boton">
+          <ion-input class="Jornada" [(ngModel)]="jornada.ciclo" label="Jornada" labelPlacement="floating" fill="outline" type="text"></ion-input>
+          <ion-button type="submit" (click)="registrarJornada()">Iniciar Jornada</ion-button>
         </div>
         <br>
-        <div id="boton">
-          <ion-button class="boton" type="submit">Iniciar Jornada</ion-button>
+        <div class="box">
+          <label>Fecha de inicio</label>
+          <ion-datetime presentation="date" [preferWheel]="true" [(ngModel)]="jornada.FechaInicio"></ion-datetime>
         </div>
-      </form>
+        <div class="box">
+          <label>Fecha de Finalizacion</label>
+          <ion-datetime presentation="date" [preferWheel]="true" [(ngModel)]="jornada.FechaFinal"></ion-datetime>
+        </div>
+        <div class="grid">
+          <ion-grid>
+            <ion-row>
+              <ion-col><h3>Jornada</h3></ion-col>
+              <ion-col><h3>Fecha de inicio</h3></ion-col>
+              <ion-col><h3>Fecha final</h3></ion-col>
+              <ion-col><h3>Datos de jornada</h3></ion-col>
+            </ion-row>
+            <ion-row *ngFor="let jornada of jornadas">
+              <ion-col>{{jornada.ciclo}}</ion-col>
+              <ion-col>{{convertir(jornada.fechaInicio)}}</ion-col>
+              <ion-col>{{convertir(jornada.fechaFinal)}}</ion-col>
+              <ion-col><ion-button (click)="mostrarJornada(jornada.idJornada, jornada.ciclo, convertir(jornada.fechaInicio), convertir(jornada.fechaFinal), jornada.estado)"><ion-icon name="create"></ion-icon></ion-button></ion-col>
+            </ion-row>
+          </ion-grid>
+        </div>
     
     </div>
     <div id="Conferencias" *ngIf="menu=='Conferencias'">
-      <form>
-        <div id="Conf1">
-          <ion-input class="Conferencia" label="Titulo de Conferencia" labelPlacement="floating" fill="outlined" type="text"></ion-input>
-        <br>
-  
-        <ion-textarea class="descripcion" label="Descripcion" placeholder="Descripcion de conferencia"></ion-textarea>
-        
-        <br>
-        <ion-input class="Conferencia" label="Nombre del Presentador" labelPlacement="floating" fill="outlined" type="text"></ion-input>
-        <br>
-        <ion-datetime-button datetime="datetime"></ion-datetime-button>
-        <ion-modal [keepContentsMounted]="true">
-          <ng-template>
-            <ion-datetime id="datetime"></ion-datetime>
-          </ng-template>
-        </ion-modal>
-        </div>
-        <div id="Conf2">
-        
-  
-        <ion-input class="Conferencia" label="Wallpaper de conferencia" labelPlacement="floating" fill="outlined" type="file"></ion-input>
-        <br>
-  
-        <ion-input class="Conferencia" label="Link de Zoom" labelPlacement="floating" fill="outlined" type="text"></ion-input>
-        <br>
-  
-        <ion-input class="Conferencia" label="Link de FaceBook" labelPlacement="floating" fill="outlined" type="text"></ion-input>
-        <br>
-        </div>
-      </form>
+      <div id="Conf1">
+        <ion-input class="Conferencia" label="Titulo de Conferencia" labelPlacement="floating" fill="outline" type="text"></ion-input>
+      <br>
+
+      <ion-textarea class="descripcion" label="Descripcion" placeholder="Descripcion de conferencia"></ion-textarea>
+      
+      <br>
+      <ion-input class="Conferencia" label="Nombre del Presentador" labelPlacement="floating" fill="outlined" type="text"></ion-input>
+      <br>
+      <ion-datetime-button datetime="datetime"></ion-datetime-button>
+      <ion-modal [keepContentsMounted]="true">
+        <ng-template>
+          <ion-datetime id="datetime" min="2023-01-01" max="2023-05-25"></ion-datetime>
+        </ng-template>
+      </ion-modal>
+      </div>
+      <div id="Conf2">
+      
+
+      <ion-input class="Conferencia" label="Wallpaper de conferencia" labelPlacement="floating" fill="outline" type="file"></ion-input>
+      <br>
+
+      <ion-input class="Conferencia" label="Link de Zoom" labelPlacement="floating" fill="outline" type="text"></ion-input>
+      <br>
+
+      <ion-input class="Conferencia" label="Link de FaceBook" labelPlacement="floating" fill="outline" type="text"></ion-input>
+      <br>
+      </div>
     </div>
     <div id="Diplomados" *ngIf="menu=='Diplomados'">
       <form>

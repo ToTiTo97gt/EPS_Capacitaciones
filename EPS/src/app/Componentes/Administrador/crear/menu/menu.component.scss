@@ -1,46 +1,62 @@
-html, body{
-  height:100%;
-  margin: 0;
-  display: flex;
-  flex-direction: column;
-}
-
-.container{
-  gap: 10px;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-}
 
 .box{
-  width: 20rem;
-  height: 23rem;
+  margin-top: 2px;
+  width: 22rem;
+  height: 14rem;
+  background-color: green;
 }
 
-#pantalla{
+.grid{
+  width: 40rem;
+  height: 14rem;
+}
+
+.Jornada{
+  width: 20rem;
+  height: 2rem;
+}
+
+.boton{
+  margin-top: 5px;
+  width: 20rem;
+  height: 6rem;
+  background-color: white;
+}
+
+.pantalla{
   width: 100%;
   height: 100%;
   background-color: gray;
 }
 
+.Jornadas{
+  width: 100%;
+  height: 100%;
+  gap: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  overflow-y: auto;
+  justify-content: center;
+}
+
 #Conferencias{
-  height: 60%;
-  width: 98%;
-  margin-left: 10px;
-  align-content: left;
-  justify-content: left;
-  background-color: rgba(183, 231, 11, 0.986);
-  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  gap: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  overflow-y: auto;
+  justify-content: center;
 }
 
 #Diplomados{
-  height: 60%;
-  width: 98%;
-  margin-left: 10px;
-  align-content: left;
-  justify-content: left;
-  background-color: rgba(183, 231, 11, 0.986);
-  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  gap: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  overflow-y: auto;
+  justify-content: center;
 }
 
 #dateStart{
@@ -83,68 +99,27 @@ html, body{
 }
 
 #Conf1{
-  width: 50%;
-  margin-left: -50%;
-  align-content: end;
-  justify-content: auto;
-  background: rgba(255, 255, 255, 0.986) !important;  
+  margin-top: 2px;
+  width: 22rem;
+  height: 14rem;
+  background-color: green; 
 }
 
 #Conf2{
-  width: 50%;
-  margin-left: 50%;
-  margin-top: -30%;
-  align-content: end;
-  justify-content: auto;
-  background: rgba(255, 255, 255, 0.986) !important;   
+  margin-top: 2px;
+  width: 22rem;
+  height: 14rem;
+  background-color: green;
 }
 
-.Jornada{
-  width: 350px;
-  margin-top: 2%;
-  background-color: #ffffff;
-  align-items: center;
-  border-radius: 10%;
-  border-width: 25%;
+ion-datetime{
+  border: 3px solid black;
+  width: 50px;
 }
 
-
-form {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+ion-col {
+  background-color: #135d54;
+  border: solid 1px #fff;
+  color: #fff;
+  text-align: center;
 }
-
-.boton {
-  margin-top: 1%;
-  margin-left: 2%;
-}
-
-ion-menu-button {
-    color: var(--ion-color-primary);
-  }
-  
-  #container {
-    text-align: center;
-    position: absolute;
-    left: 0;
-    right: 0;
-    top: 50%;
-    transform: translateY(-50%);
-  }
-  
-  #container strong {
-    font-size: 20px;
-    line-height: 26px;
-  }
-  
-  #container p {
-    font-size: 16px;
-    line-height: 22px;
-    color: #8c8c8c;
-    margin: 0;
-  }
-  
-  #container a {
-    text-decoration: none;
-  }

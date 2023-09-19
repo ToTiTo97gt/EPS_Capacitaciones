@@ -3,11 +3,21 @@ const router = express.Router();
 const usuario= require("../Controllers/tareas.controllers");
 
 router.get("/Prueba",usuario.Prueba);
+router.post("/RegistrarAdmin", usuario.RegistrarAdmin);
 router.post("/GetEmpleados", usuario.Empleados);
 router.post("/GetAdminUser",usuario.AdminUser);
 router.post("/GetAdminPermisos", usuario.AdminPermisos);
 router.post("/GetAdminLista", usuario.AdminLista);
-router.post("/permisos", usuario.Permisos)
+router.post("/permisos", usuario.Permisos);
+router.post("/permisosAdmin", usuario.PermisosAdmin);
+router.post("/revocar", usuario.RevocarPermiso)
+router.post("/AsignarPermiso", usuario.AsignarPermiso)
+router.post("/EliminarAdmin", usuario.EliminarAdmin)
+//Rutas para la pestaña crear
+router.post('/JornadaNueva', usuario.JornadaNueva)
+router.post('/JornadaActual', usuario.GetJornadaActual)
+router.post('/Actualizar0', usuario.Actualizar0)
+router.post('/Actualizar1', usuario.Actualizar1)
 /* router.post("/login",usuario.login);
 router.post("/registro",usuario.registro);
 router.post("/getUser",usuario.getUsuario);

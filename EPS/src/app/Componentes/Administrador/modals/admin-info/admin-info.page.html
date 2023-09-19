@@ -1,0 +1,36 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>{{nombre +" "+ apellido}}</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="Regresar()">Cerrar</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+  <div class="asignarPerm">
+    <div class="Asignar">
+      <ion-select #miSelect aria-label="Fruit" placeholder="Permisos">
+        <ion-select-option *ngFor="let dato of datos" [value]="dato.idPermiso">{{dato.permiso}}</ion-select-option>
+      </ion-select>
+    </div>
+    <div class="Asignar">
+      <ion-button (click)="AsignarPermiso(miSelect.value)">Asignar permiso</ion-button>
+    </div>
+    <div class="tabla">
+      <ion-grid>
+        <ion-row class="header-row">
+          <ion-col>Permiso</ion-col>
+          <ion-col>Revocar Permiso</ion-col>
+        </ion-row>
+        <ion-row class="data-row" *ngFor="let permiso of permisos">
+          <ion-col>{{permiso.permiso}}</ion-col>
+          <ion-col><ion-button (click)="RevocarPermiso(idAdmin, permiso.idPermiso)">Revocar Permiso</ion-button></ion-col>
+        </ion-row>
+      </ion-grid>
+    </div>
+  </div>
+  <br>
+  <ion-button class="Eliminar" (click)="EliminarAdmin(idAdmin)">Eliminar Administrador</ion-button>
+
+  
+</ion-content>

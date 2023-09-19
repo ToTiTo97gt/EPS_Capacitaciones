@@ -6,14 +6,18 @@ import { AListaComponent } from './ALista.component';
 import { ExploreContainerComponentModule } from '../explore-container/explore-container.module';
 
 import { AListaPageRoutingModule } from './ALista-routing.module';
+import { AdminInfoPage } from '../modals/admin-info/admin-info.page';
+import { AdminInfoPageModule } from '../modals/admin-info/admin-info.module';
 
 @NgModule({
+  
   imports: [
     IonicModule,
     CommonModule,
     FormsModule,
     ExploreContainerComponentModule,
-    AListaPageRoutingModule
+    AListaPageRoutingModule,
+    AdminInfoPageModule
   ],
   declarations: [AListaComponent]
 })

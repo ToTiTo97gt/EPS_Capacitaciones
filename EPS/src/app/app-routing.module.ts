@@ -17,6 +17,14 @@ const routes: Routes = [
   {
     path: 'tabsu',
     loadChildren: () => import('./Componentes/Usuarios/tabsu/tabsu.module').then( m => m.TabsuPageModule)
+  },
+  {
+    path: 'admin-info',
+    loadChildren: () => import('./Componentes/Administrador/modals/admin-info/admin-info.module').then( m => m.AdminInfoPageModule)
+  },
+  {
+    path: 'crear-info',
+    loadChildren: () => import('./Componentes/Administrador/modals/crear-info/crear-info.module').then( m => m.CrearInfoPageModule)
   }
 ];
 @NgModule({

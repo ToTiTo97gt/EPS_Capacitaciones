@@ -1,20 +1,19 @@
 <ion-content>
   <div id="pantalla">
     <div class="admins">
-      <form>
         
-        <ion-input class="Nombre" label="Nombre" labelPlacement="floating" fill="outline" type="text"></ion-input>
+        <ion-input class="Nombre" label="Nombre" labelPlacement="floating" fill="outline" [(ngModel)]="nuevoUser.nombre" type="text"></ion-input>
 
-        <ion-input class="Apellido" label="Apellido" labelPlacement="floating" fill="outline" type="text"></ion-input>
+        <ion-input class="Apellido" label="Apellido" labelPlacement="floating" fill="outline" [(ngModel)]="nuevoUser.apellido" type="text"></ion-input>
   
-        <ion-input class="Telefo" label="Numero telefonico" labelPlacement="floating" fill="outline" type="text"></ion-input>
+        <ion-input class="Telefo" label="Numero telefonico" labelPlacement="floating" fill="outline" [(ngModel)]="nuevoUser.telefono" type="text"></ion-input>
     
-        <ion-input class="Correo" label="E-mail" labelPlacement="floating" fill="outline" type="email"></ion-input>
+        <ion-input class="Correo" label="E-mail" labelPlacement="floating" fill="outline" [(ngModel)]="nuevoUser.email" type="email"></ion-input>
     
-        <ion-input class="Contra" label="Contraseña" labelPlacement="floating" fill="outline" type="password"></ion-input>
+        <ion-input class="Contra" label="Contraseña" labelPlacement="floating" fill="outline" [(ngModel)]="nuevoUser.passw" type="password"></ion-input>
       
-        <ion-button class="boton" type="submit">Registrar Administrador</ion-button>
-      </form>
+        <ion-button class="boton" (click)="Registrar(nuevoUser)" type="submit">Registrar Administrador</ion-button>
+
     </div>
     <div class="table">
       <ion-grid>
@@ -22,13 +21,13 @@
           <ion-col>Nombre</ion-col>
           <ion-col>Telefono</ion-col>
           <ion-col>Correo</ion-col>
-          <ion-col>Eliminar</ion-col>
+          <ion-col>Datos</ion-col>
         </ion-row>
         <ion-row class="data-row" *ngFor="let item of datos">
           <ion-col>{{item.nombre + " " + item.apellido}}</ion-col>
           <ion-col>{{item.telefono}}</ion-col>
           <ion-col>{{item.email}}</ion-col>
-          <ion-col><ion-button>Eliminar</ion-button></ion-col>
+          <ion-col><ion-button (click)="MostrarDatos(item.idAdmin, item.nombre, item.apellido)">Mostrar Informacion</ion-button></ion-col>
         </ion-row>
       </ion-grid>
     </div>
