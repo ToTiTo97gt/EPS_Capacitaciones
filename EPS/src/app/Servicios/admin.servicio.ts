@@ -73,8 +73,68 @@ export class AdminService{
         return this.httpClient.post(ruta, data).toPromise()
     }
 
-    GetJornadaActual(){
-        const ruta = this.url+"Inicio/JornadaActual"
+    GetJornadas(){
+        const ruta = this.url+"Inicio/Jornadas"
+        const data = {}
+        return this.httpClient.post(ruta, data).toPromise()
+    }
+
+    JornadasPorAnio(anio: any){
+        const ruta = this.url+"Inicio/JornadasAnio"
+        const data = {anio}
+        return this.httpClient.post(ruta, data).toPromise()
+    }
+
+    GetJornadaEspecifica(agenda: any){
+        const ruta = this.url+"Inicio/JornadaEspecifica"
+        const data = {agenda}
+        return this.httpClient.post(ruta, data).toPromise()
+    }
+
+    modificarJornada(jornada: any){
+        const ruta = this.url+"Inicio/modificarJornada"
+        const data = {jornada}
+        return this.httpClient.post(ruta, data).toPromise() 
+    }
+
+    eliminarJornada(idJornada: any){
+        const ruta = this.url+"Inicio/eliminarJornada"
+        const data = {idJornada}
+        return this.httpClient.post(ruta, data).toPromise() 
+    }
+
+    CrearCapacitacion(capacitacion: any){
+        const ruta = this.url+"Inicio/CrearCapacitacion"
+        const data = {capacitacion}
+        return this.httpClient.post(ruta, data).toPromise()
+    }
+
+    CapacitacionesPorJornada(idJornada: any){
+        const ruta = this.url+"Inicio/CapacitacionesXJornada"
+        const data = {idJornada}
+        return this.httpClient.post(ruta, data).toPromise()
+    }
+
+    CapacitacionReciente(capacitacion: any){
+        const ruta = this.url+"Inicio/CapacitacionReciente"
+        const data = {capacitacion}
+        return this.httpClient.post(ruta, data).toPromise()
+    }
+
+    Agendar(agenda: any){
+        const ruta = this.url+"Inicio/Agendar"
+        const data = {agenda}
+        return this.httpClient.post(ruta, data).toPromise()
+    }
+
+    getAgenda(idCapacitacion: any){
+        const ruta = this.url+"Inicio/getAgenda"
+        const data = {idCapacitacion}
+        return this.httpClient.post(ruta, data).toPromise()
+    }
+
+    Capacitaciones(){
+        const ruta = this.url+"Inicio/Capacitaciones"
         const data = {}
         return this.httpClient.post(ruta, data).toPromise()
     }

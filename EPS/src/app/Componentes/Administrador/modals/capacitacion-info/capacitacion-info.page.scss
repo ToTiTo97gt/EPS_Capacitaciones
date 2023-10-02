@@ -1,0 +1,45 @@
+  #Conferencias{
+    width: 100%;
+    height: 100%;
+    gap: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    overflow-y: auto;
+    justify-content: center;
+  }
+
+  .descripcion{
+    margin-top: 2%;
+    align-items: left;
+    margin-left: -50px;
+    width: 25rem;
+    height: 5rem;
+    background: rgba(255, 255, 255, 0.986) !important;  
+  }
+  
+  .Conferencia{
+    margin-top: 2%;
+    align-items: left;
+    background: rgba(255, 255, 255, 0.986) !important;  
+  }
+
+  #Conf1{
+    margin-top: 2px;
+    width: 18rem;
+    height: 13rem;
+    background: #fff;
+  }
+  
+  #Conf2{
+    margin-top: 2px;
+    width: 18rem;
+    height: 14rem;
+    background: #fff;
+  }
+  
+  #Conf3{
+    margin-top: 2px;
+    width: 18rem;
+    height: 14rem;
+    background: #fff;
+  }

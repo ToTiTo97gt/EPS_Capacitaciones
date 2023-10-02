@@ -3,17 +3,23 @@
     <ion-menu contentId="main-content" type="overlay">
       <ion-header>
         <ion-toolbar color="tertiary">
+          
+          <ion-buttons slot="start">
+            <ion-menu-button auto-hide="false"></ion-menu-button>
+          </ion-buttons>
           <ion-title>Formularios</ion-title>
         </ion-toolbar>
       </ion-header>
       <ion-content>
         <ion-list id="inbox-list">
-          <ion-menu-toggle auto-hide="false" *ngFor="let p of appPages; let i = index">
+          <ion-menu-toggle auto-hide="false" *ngFor="let p of appPages; let i = index" (click)="cargar()">
             <ion-item routerDirection="root" [routerLink]="[p.url]" lines="none" detail="false" routerLinkActive="selected">
               <ion-label>{{ p.title }}</ion-label>
             </ion-item>
           </ion-menu-toggle>
         </ion-list>
+        
+        <!-- <ion-button expand="full" (click)="toggleMenu()">Mostrar/Ocultar Barra Lateral</ion-button> -->
       </ion-content>
     </ion-menu>
     <ion-router-outlet id="main-content"></ion-router-outlet>

@@ -1,0 +1,27 @@
+.content{
+    gap: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.box1{
+    margin-top: 8px;
+    width: 22rem;
+    height: 3rem;
+}
+
+.box{
+    width: 22rem;
+    height: 22rem;
+}
+
+.subbox{
+    display: flex; /* Usa un modelo de caja flexible */
+    justify-content: center; /* Centra horizontalmente */
+    align-items: center;
+}
+
+.label-center{
+    text-align: center;
+}

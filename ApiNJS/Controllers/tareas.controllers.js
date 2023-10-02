@@ -160,8 +160,138 @@ exports.JornadaNueva = async (req, res) => {
     }
 }
 
-exports.GetJornadaActual = async (req, res) => {
-    bd.query(`Select * from jornada where estado = 1` , function(err, result){
+exports.GetJornadas = async (req, res) => {
+    bd.query(`Select * from jornada ORDER BY estado DESC` , function(err, result){
+        if(err) throw err;
+        return res.send(result)
+    })
+}
+
+exports.GetJornadaEspecifica = async (req, res) => {
+    try {
+        var fecha = req.body.agenda.fecha
+        bd.query(`Select idJornada from jornada where fechaInicio<='${fecha}' AND fechaFinal>='${fecha}'` , function(err, result){
+            if(err) throw err;
+            return res.send(result)
+        })
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({error: 'Error al solicitar la jornada'})
+    }
+}
+
+exports.JornadasAnio = async (req, res) => {
+    try {
+        var anio = req.body.anio
+        bd.query(`select * from jornada where year(fechaInicio) = '${anio}'` , function(err, result){
+            if(err) {
+                throw err;
+            } else if(Object.keys(result).length === 0) {
+                return res.send({msg:'No hay jornadas en este año'})
+            } else {
+                return res.send(result)
+            }
+        })
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({error: 'Error al solicitar la jornada'})
+    }
+}
+
+exports.modificarJornada = async (req, res) => {
+    try {
+        var idJornada = req.body.jornada.idJornada
+        var ciclo = req.body.jornada.ciclo
+        var fechaInicio = req.body.jornada.fechaInicio
+        var fechaFinal = req.body.jornada.fechaFinal
+        bd.query(`update jornada set ciclo = '${ciclo}', fechaInicio = '${fechaInicio}', fechaFinal = '${fechaFinal}' where idJornada = ${idJornada}`, function(err, result){
+            if(err) throw err
+            res.status(201).json({mensaje:'Modificacion Exitosa'})
+        })
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({error: 'error al modificar la informacion de la jornada'})
+    }
+}
+
+exports.eliminarJornada = async (req, res) => {
+    var idJornada = req.body.idJornada
+    bd.query(`delete from jornada idJornada = ${idJornada}` , function(err, result){
+        if(err) throw err;
+        return res.send(result)
+    })
+}
+
+exports.CrearCapacitacion = async (req, res) => {
+    try {
+        var nomCapacitacion = req.body.capacitacion.nomCapacitacion
+        var descripcion = req.body.capacitacion.descripcion
+        var presentador = req.body.capacitacion.presentador
+        var poster = req.body.capacitacion.poster
+        var zoomLink = req.body.capacitacion.zoomLink
+        var fbLink = req.body.capacitacion.fbLink
+        var idJornada = req.body.capacitacion.idJornada
+        var idCategoria = req.body.capacitacion.idCategoria
+        bd.query(`insert into capacitacion(nomCapacitacion, descripcion, presentador, poster, zoomLink, fbLink, idJornada, idCategoria)
+          values('${nomCapacitacion}', '${descripcion}', '${presentador}', '${poster}', '${zoomLink}', '${fbLink}', ${idJornada}, ${idCategoria})`, function(err, result){
+            if(err) throw err
+            res.status(201).json({mensaje:'Capacitacion Creada con exito'})
+        })
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({error: 'error al registrar la capacitacion nueva'})
+    }
+}
+
+exports.Agendar = async (req, res) => {
+    try {
+        var fecha = req.body.agenda.fecha
+        var hora = req.body.agenda.hora
+        var idCapacitacion = req.body.agenda.idCapacitacion
+        bd.query(`insert into agenda(fecha, hora, idCapacitacion) values ('${fecha}', '${hora}', ${idCapacitacion})`, function(err, result){
+            if(err) throw err
+            res.status(201).json({mensaje:'Fecha y hora asignadas'})
+        })
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({error: 'error al Agendar'})
+    }
+}
+
+exports.CapacitacionReciente = async (req, res) => {
+    try {
+        var nomCapacitacion = req.body.capacitacion.nomCapacitacion
+        var descripcion = req.body.capacitacion.descripcion
+        var presentador = req.body.capacitacion.presentador
+        bd.query(`select idCapacitacion from capacitacion where nomCapacitacion = '${nomCapacitacion}' and descripcion = '${descripcion}' and presentador = '${presentador}' Order by idCapacitacion DESC LIMIT 1`, function(err, result){
+            if(err) throw err;
+            return res.send(result)
+        })
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({error: 'error al solicitar la capacitacion'})
+    }
+}
+
+exports.Capacitaciones = async (req, res) => {
+    bd.query(`Select a.* from capacitacion a, jornada b where a.idJornada = b.idJornada and CURDATE() >= b.fechaInicio
+	  and CURDATE() <= b.fechaFinal;` , function(err, result){
+        if(err) throw err;
+        return res.send(result)
+    })
+}
+
+exports.CapacitacionesPorJornada = async (req, res) => {
+    var idJornada = req.body.idJornada
+    bd.query(`Select * from capacitacion where idJornada = ${idJornada};` , function(err, result){
+        if(err) throw err;
+        return res.send(result)
+    })
+}
+
+exports.getAgenda = async (req, res) => {
+    var idCapacitacion = req.body.idCapacitacion
+    bd.query(`Select * from agenda where idCapacitacion = '${idCapacitacion}'` , function(err, result){
         if(err) throw err;
         return res.send(result)
     })
