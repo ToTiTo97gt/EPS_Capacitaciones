@@ -21,7 +21,7 @@
   height: 2rem;
 }
 
-.boton{
+.boton1{
   margin-top: 5px;
   width: 20rem;
   height: 55px;
@@ -122,9 +122,9 @@
 
 #Diplo{
   margin-top: 2px;
-  width: 35rem;
-  height: 18rem;
-  background: #fff;
+  width: 40rem;
+  height: 28rem;
+  background: gray;
   gap: 10px;
   display: flex;
   flex-wrap: wrap;
@@ -156,10 +156,8 @@
 
 ion-datetime{
   width: 325px; /* Ancho personalizado */
-  height: 224px; /* Altura personalizada */
   font-size: 14px; /* Tamaño de fuente personalizado */
   padding: 5px; /* Espaciado interno personalizado */
-  overflow-y: scroll;
 }
 
 ion-datetime-button{
@@ -167,13 +165,18 @@ ion-datetime-button{
 }
 
 .filt{
-  --background: gray;
-  --background-rgb: 246, 255, 0;
-  --wheel-highlight-background: rgb(255, 255, 255);
+  --background: red;
+  --background-rgb: 34, 29, 69;
+  --wheel-highlight-background: rgb(229, 255, 0);
   --wheel-fade-background-rgb: 246, 255, 0;
   overflow: hidden;
-  margin-top: -75px;
-  width: 120px;
+  margin-top: -50px;
+  height: 150px;
+  width: 95px;
+}
+
+.filt::part(wheel:item){
+  color: white
 }
 
 .hora{
@@ -182,6 +185,11 @@ ion-datetime-button{
   --wheel-fade-background-rgb: 246, 255, 0;
   overflow: hidden;
   width: 100px;
+  height: 200px;
+}
+
+.fecha{
+  height: 350px;
 }
 
 .boton{
@@ -189,17 +197,15 @@ ion-datetime-button{
   height: 25px;
 }
 
-ion-datetime::part(wheel-item) {
-  color: rgb(17, 0, 255);
-}
-
-ion-datetime::part(wheel-item active) {
-  color: yellow;
-}
-
 ion-modal{
   max-width: 80%;
   width: auto;
+}
+
+ion-list{
+  background-color: yellow;
+  height: 200px;
+  overflow-y: auto;
 }
 
 ion-col {
@@ -207,4 +213,12 @@ ion-col {
   border: solid 1px #fff;
   color: #fff;
   text-align: center;
+}
+
+.my-custom-modal-css .modal-wrapper {
+  height: 20%;
+  top: 80%;
+  background-color: black;
+  position: absolute; 
+  display: block;  
 }

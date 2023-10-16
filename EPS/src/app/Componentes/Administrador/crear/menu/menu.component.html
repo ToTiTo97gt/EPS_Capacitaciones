@@ -1,7 +1,7 @@
 <ion-content [fullscreen]="true">
   <div class="pantalla">
     <div class="Jornadas" *ngIf="menu=='Jornadas'">
-        <div class="boton">
+        <div class="boton1">
           <ion-input class="Jornada" [(ngModel)]="jornada.ciclo" label="Jornada" labelPlacement="floating" fill="outline" type="text"></ion-input>
           <ion-button type="submit" (click)="registrarJornada()">Iniciar Jornada</ion-button>
         </div>
@@ -36,12 +36,16 @@
       <div id="Conf1">
         <ion-input class="Conferencia" label="Titulo de Conferencia" [(ngModel)]="capacitacion.nomCapacitacion" labelPlacement="floating" fill="outline" type="text"></ion-input>
         
-        <ion-textarea class="descripcion" label="Descripcion" [(ngModel)]="capacitacion.descripcion" placeholder="Descripcion de conferencia"></ion-textarea>
+        <ion-textarea class="descripcion" [(ngModel)]="capacitacion.descripcion" placeholder="Descripcion de conferencia"></ion-textarea>
       
         <ion-input class="Conferencia" label="Nombre del Presentador" [(ngModel)]="capacitacion.presentador" labelPlacement="floating" fill="outline" type="text"></ion-input>
       </div>
       <div id="Conf2">
-      <ion-input class="Conferencia" label="Wallpaper de conferencia" [(ngModel)]="capacitacion.poster" labelPlacement="floating" fill="outline" type="file"></ion-input>
+      <label for="file">Select File
+        <img [src]="imageUrl" alter="Image Review" style="width: 275px; height: 275px;">
+      </label><br>
+      <input class="Conferencia" type="file" id="file" accept="image/jpeg,image/png" hidden #fileInput
+        [(ngModel)]="capacitacion.poster" (change)="onSelectNewFile()">
       <ion-input class="Conferencia" label="Link de Zoom" [(ngModel)]="capacitacion.zoomLink" labelPlacement="floating" fill="outline" type="text"></ion-input>
       <ion-input class="Conferencia" label="Link de FaceBook" [(ngModel)]="capacitacion.fbLink" labelPlacement="floating" fill="outline" type="text"></ion-input>
       
@@ -87,22 +91,28 @@
       <div id="Conf1">
         <ion-input class="Conferencia" label="Titulo de Diplomado" [(ngModel)]="capacitacion.nomCapacitacion" labelPlacement="floating" fill="outline" type="text"></ion-input>
         
-        <ion-textarea class="descripcion" label="Descripcion" [(ngModel)]="capacitacion.descripcion" placeholder="Descripcion de conferencia"></ion-textarea>
-      
-        <ion-input class="Conferencia" label="Nombre del Presentador" [(ngModel)]="capacitacion.presentador" labelPlacement="floating" fill="outline" type="text"></ion-input>
+        <ion-textarea class="descripcion" [(ngModel)]="capacitacion.descripcion" placeholder="Descripcion de conferencia"></ion-textarea>
+        
+        <ion-input class="Conferencia" label="Link de Zoom" [(ngModel)]="capacitacion.zoomLink" labelPlacement="floating" fill="outline" type="text"></ion-input>
+        
+        <ion-input class="Conferencia" label="Link de FaceBook" [(ngModel)]="capacitacion.fbLink" labelPlacement="floating" fill="outline" type="text"></ion-input>
       </div>
       <div id="Conf2">
-      <ion-input class="Conferencia" label="Wallpaper de diplomado" [(ngModel)]="capacitacion.poster" labelPlacement="floating" fill="outline" type="file"></ion-input>
-      <ion-input class="Conferencia" label="Link de Zoom" [(ngModel)]="capacitacion.zoomLink" labelPlacement="floating" fill="outline" type="text"></ion-input>
-      <ion-input class="Conferencia" label="Link de FaceBook" [(ngModel)]="capacitacion.fbLink" labelPlacement="floating" fill="outline" type="text"></ion-input>
-      
-      <ion-button (click)="CrearCapacitacion()">Crear Diplomado</ion-button>
+      <label for="file">Select File
+        <img [src]="imageUrl" alter="Image Review" style="width: 275px; height: 275px;">
+      </label><br>
+      <input class="Conferencia" type="file" id="file" accept="image/jpeg,image/png" hidden #fileInput
+        [(ngModel)]="capacitacion.poster" (change)="onSelectNewFile()">
 
       </div>
       <div id="Diplo">
         <ion-datetime class="fecha" presentation="date" [min]="2023" [(ngModel)]="horaYFecha.fecha"></ion-datetime>
         <ion-datetime class="hora" presentation="time" [(ngModel)]="horaYFecha.hora"></ion-datetime>
+        <ion-list>
+          <ion-item *ngFor="let datos of Fechas; let i = index">{{datos.fecha}}<br>{{datos.hora}} <ion-button (click)="eliminar(datos.fecha, datos.hora)"><ion-icon name="trash"></ion-icon></ion-button></ion-item>
+        </ion-list>
         <ion-button class="boton" (click)="AgregarFecha(horaYFecha.fecha, horaYFecha.hora)">Agregar fecha y hora</ion-button>
+        <ion-button (click)="CrearDiplomado()">Crear Diplomado</ion-button>
       </div>
       <div class="filtro">
         <div class="filtro1">

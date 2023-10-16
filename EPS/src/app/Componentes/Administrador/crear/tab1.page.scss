@@ -1,16 +1,30 @@
 
+  ion-toolbar{
+    background-color: red;
+    color: #fff;
+  }
+
+  ion-content{
+    background-color: #ff0000;
+  }
+  
   ion-menu::part(backdrop) {
-    background-color: rgba(255, 0, 255, 0.5);
+    background-color: rgb(255, 0, 0);
+  }
+
+  ion-list{
+    background-color:#221d45;
+    color: #ff0000;
   }
   
   ion-menu::part(container) {
     border-radius: 0 20px 20px 0;
   
-    box-shadow: 4px 0px 16px rgba(255, 0, 255, 0.18);
+    box-shadow: 4px 0px 16px rgb(255, 1, 1);
   }
 
   ion-menu ion-content {
-    --background: var(--ion-item-background, var(--ion-background-color, #fff));
+    --background: #221d45;
   }
   
   ion-menu.md ion-content {
@@ -22,10 +36,12 @@
   
   ion-menu.md ion-list {
     padding: 20px 0;
+    
   }
   
   ion-menu.md ion-note {
     margin-bottom: 30px;
+    
   }
   
   ion-menu.md ion-list-header,
@@ -34,7 +50,7 @@
   }
   
   ion-menu.md ion-list#inbox-list {
-    border-bottom: 1px solid var(--ion-color-step-150, #d7d8da);
+    border-bottom: 1px solid #221d45;
   }
   
   ion-menu.md ion-list#inbox-list ion-list-header {
@@ -49,27 +65,34 @@
   
     margin-bottom: 18px;
   
-    color: #757575;
+    color: #FF0000;
   
     min-height: 26px;
+  }
+
+  ion-item{
+    --background: #221d45;
+    color:#fff;
   }
   
   ion-menu.md ion-item {
     --padding-start: 10px;
     --padding-end: 10px;
-    border-radius: 4px;
   }
   
   ion-menu.md ion-item.selected {
-    --background: rgba(var(--ion-color-primary-rgb), 0.14);
+    --background: rgb(255, 0, 0); //Color del objeto seleccionado de lista
+    color: #fff;
   }
   
   ion-menu.md ion-item.selected ion-icon {
-    color: var(--ion-color-primary);
+    
+    --background: #ff0000;
+    color: #ff0000;
   }
   
   ion-menu.md ion-item ion-icon {
-    color: #616e7e;
+    color: #eeff00;
   }
   
   ion-menu.md ion-item ion-label {
@@ -96,12 +119,15 @@
   }
   
   ion-menu.ios ion-item.selected ion-icon {
-    color: var(--ion-color-primary);
+    
+    --background: #ff0000;
+    color: #ff0000;
   }
   
   ion-menu.ios ion-item ion-icon {
     font-size: 24px;
-    color: #73849a;
+    
+    color: #ff0000;
   }
   
   ion-menu.ios ion-list#labels-list ion-list-header {
@@ -129,6 +155,8 @@
     width: 0%;
   }
   
-  ion-item.selected {
-    --color: var(--ion-color-primary);
+  ion-item.selected { //Color al pasar el mouse por en sima
+    
+    --background: #fff;
+    --color: #fff;
   }

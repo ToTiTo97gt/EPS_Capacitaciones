@@ -1,3 +1,11 @@
+  .my-custom-modal-css .modal-wrapper {
+    height: 20%;
+    top: 80%;
+    background-color: black;
+    position: absolute; 
+    display: block;  
+  }
+  
   #Conferencias{
     width: 100%;
     height: 100%;
@@ -6,13 +14,14 @@
     flex-wrap: wrap;
     overflow-y: auto;
     justify-content: center;
+    background: rgb(34, 29, 69);
   }
 
   .descripcion{
     margin-top: 2%;
     align-items: left;
-    margin-left: -50px;
-    width: 25rem;
+    margin-left: 2px;
+    width: 17.7rem;
     height: 5rem;
     background: rgba(255, 255, 255, 0.986) !important;  
   }
@@ -27,14 +36,14 @@
     margin-top: 2px;
     width: 18rem;
     height: 13rem;
-    background: #fff;
+    background-color: #fff;
   }
   
   #Conf2{
     margin-top: 2px;
     width: 18rem;
-    height: 14rem;
-    background: #fff;
+    height: 28rem;
+    background-color: #fff;
   }
   
   #Conf3{
@@ -42,4 +51,49 @@
     width: 18rem;
     height: 14rem;
     background: #fff;
+  }
+
+  .boton{
+    width: 220px;
+    height: 25px;
+  }
+
+  #Diplo{
+    margin-left: -200px;
+    background-color: green;
+    width: 40rem;
+    height: 18rem;
+    gap: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    overflow-y: auto;
+    justify-content: center;
+  }
+
+  .hora{
+    --background-rgb: 246, 255, 0;
+    --wheel-highlight-background: rgb(255, 255, 255);
+    --wheel-fade-background-rgb: 246, 255, 0;
+    overflow: hidden;
+    width: 100px;
+    height: 200px;
+  }
+  
+  .fecha{
+    overflow: hidden;
+    height: 300px;
+  }
+
+  ion-list{
+    background-color: yellow;
+    height: 170px;
+    overflow-y: auto;
+  }
+
+  ion-toolbar{
+    --background: #ff0000;
+  }
+
+  ion-button{
+    --background: #ff0000;
   }

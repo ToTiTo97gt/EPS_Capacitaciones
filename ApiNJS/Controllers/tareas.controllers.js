@@ -1,5 +1,8 @@
 const bd = require('../BD/conection')
 const jwt = require('jsonwebtoken')
+const aws_keys = require('../Keys/creds')
+var AWS = require('aws-sdk')
+const s3 = new AWS.S3(aws_keys.s3)
 const nodemailer = require('nodemailer')
 
 exports.Prueba = async (req, res) => {
@@ -168,7 +171,7 @@ exports.GetJornadas = async (req, res) => {
 }
 
 exports.GetJornadaEspecifica = async (req, res) => {
-    try {
+    try { 
         var fecha = req.body.agenda.fecha
         bd.query(`Select idJornada from jornada where fechaInicio<='${fecha}' AND fechaFinal>='${fecha}'` , function(err, result){
             if(err) throw err;
@@ -232,14 +235,58 @@ exports.CrearCapacitacion = async (req, res) => {
         var fbLink = req.body.capacitacion.fbLink
         var idJornada = req.body.capacitacion.idJornada
         var idCategoria = req.body.capacitacion.idCategoria
-        bd.query(`insert into capacitacion(nomCapacitacion, descripcion, presentador, poster, zoomLink, fbLink, idJornada, idCategoria)
-          values('${nomCapacitacion}', '${descripcion}', '${presentador}', '${poster}', '${zoomLink}', '${fbLink}', ${idJornada}, ${idCategoria})`, function(err, result){
-            if(err) throw err
-            res.status(201).json({mensaje:'Capacitacion Creada con exito'})
-        })
+        const {var1, var2, var3, var4, var5, var6, var7, var8} = req.body.capacitacion
+        console.log(var1 + " " +var3)
+        var idArchivo = req.body.base64
+        let archiv = "https://bucket-jornadas.s3.amazonaws.com/"+SubirArchivo(poster, idArchivo)
+        if(archiv != "error"){
+            bd.query(`insert into capacitacion(nomCapacitacion, descripcion, presentador, poster, zoomLink, fbLink, idJornada, idCategoria, estado)
+              values('${nomCapacitacion}', '${descripcion}', '${presentador}', '${archiv}', '${zoomLink}', '${fbLink}', ${idJornada}, ${idCategoria}, 1)`, function(err, result){
+                if(err) throw err
+                if(idCategoria == 1){
+                    res.status(201).json({mensaje:'Capacitacion Creada con exito'})
+                } else {
+                    res.status(201).json({mensaje:'Diplomado Creado con exito'})
+                }
+            })
+        }
+        
     } catch (error) {
         console.log(error)
         res.status(500).json({error: 'error al registrar la capacitacion nueva'})
+    }
+}
+
+exports.modificarCapacitacion = async (req, res) => {
+    try {
+        //oldPoster trae la ultima parte de la ruta del antiguo poster
+        //poster trae el nuevo archivo
+        const {idCapacitacion, nomCapacitacion, descripcion, presentador, poster, zoomLink, fbLink, idJornada} = req.body.capacitacion
+        var base64 = req.body.base64
+        var oldPoster = req.body.oldPoster
+        if(oldPoster == poster){
+            bd.query(`update capacitacion set nomCapacitacion = '${nomCapacitacion}', descripcion = '${descripcion}', presentador = '${presentador}', poster = '${poster}', zoomLink = '${zoomLink}', fbLink = '${fbLink}', idJornada=${idJornada} where idCapacitacion = ${idCapacitacion}`, function(err, result){
+                if(err) throw err
+                res.status(201).json({mensaje:'Modificacion Exitosa'})
+            })
+        } else {
+            const params1 = {
+                Bucket: "bucket-jornadas",
+                Key: oldPoster
+            }
+            const putResult1 = s3.deleteObject(params1).promise();
+            console.log(putResult1);
+            let archiv = "https://bucket-jornadas.s3.amazonaws.com/"+SubirArchivo(poster, base64)
+            if(archiv != "Error"){
+                bd.query(`update capacitacion set nomCapacitacion = '${nomCapacitacion}', descripcion = '${descripcion}', presentador = '${presentador}', poster = '${archiv}', zoomLink = '${zoomLink}', fbLink = '${fbLink}' where idCapacitacion = ${idCapacitacion}`, function(err, result){
+                    if(err) throw err
+                    res.status(201).json({mensaje:'Modificacion Exitosa'})
+                })
+            }
+        }
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({error: 'error al modificar la informacion de la capacitacion'})
     }
 }
 
@@ -250,11 +297,25 @@ exports.Agendar = async (req, res) => {
         var idCapacitacion = req.body.agenda.idCapacitacion
         bd.query(`insert into agenda(fecha, hora, idCapacitacion) values ('${fecha}', '${hora}', ${idCapacitacion})`, function(err, result){
             if(err) throw err
-            res.status(201).json({mensaje:'Fecha y hora asignadas'})
+            res.status(201).json({mensaje:'Fecha y hora registradas'})
         })
     } catch (error) {
         console.log(error)
-        res.status(500).json({error: 'error al Agendar'})
+        res.status(500).json({error: 'error al registrar la Agenda'})
+    }
+}
+
+exports.modificarAgenda = async (req, res) => {
+    try {
+        const {fecha, hora} = req.body.agenda
+        var idCapacitacion = req.body.idCapacitacion
+        bd.query(`update agenda set fecha = '${fecha}', hora = '${hora}' where idCapacitacion = ${idCapacitacion}`, function(err, result){
+            if(err) throw err
+            res.status(201).json({mensaje:'Modificacion de agenda Exitosa'})
+        })
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({error: 'error al modificar la agenda'})
     }
 }
 
@@ -274,8 +335,9 @@ exports.CapacitacionReciente = async (req, res) => {
 }
 
 exports.Capacitaciones = async (req, res) => {
+    var idCategoria = req.body.idCategoria
     bd.query(`Select a.* from capacitacion a, jornada b where a.idJornada = b.idJornada and CURDATE() >= b.fechaInicio
-	  and CURDATE() <= b.fechaFinal;` , function(err, result){
+	  and CURDATE() <= b.fechaFinal and a.idCategoria = ${idCategoria} and a.estado = 1;` , function(err, result){
         if(err) throw err;
         return res.send(result)
     })
@@ -283,7 +345,8 @@ exports.Capacitaciones = async (req, res) => {
 
 exports.CapacitacionesPorJornada = async (req, res) => {
     var idJornada = req.body.idJornada
-    bd.query(`Select * from capacitacion where idJornada = ${idJornada};` , function(err, result){
+    var idCategoria = req.body.idCategoria
+    bd.query(`Select * from capacitacion where idJornada = ${idJornada} and idCategoria = ${idCategoria} and estado = 1;` , function(err, result){
         if(err) throw err;
         return res.send(result)
     })
@@ -321,6 +384,26 @@ exports.Actualizar1 = async (req, res) => {
         if(err) throw err
         console.log("Actualizar 1")  
     })
+}
+
+function SubirArchivo(Archivo, idArchivo){
+    try {
+        var nombrei = "Posts/" + Archivo;
+        //se convierte la base64 a bytes
+        let buff = new Buffer.from(idArchivo, 'base64');
+        const params2 = {
+            Bucket: "bucket-jornadas",
+            Key: nombrei,
+            Body: buff,
+            ContentType: "image/jpeg",
+            ACL: 'public-read'
+        };
+        putResult = s3.putObject(params2).promise();
+        
+        return nombrei;
+    } catch (error) {
+        return "error";
+    }
 }
 
 function sendMail1(user, callback) {

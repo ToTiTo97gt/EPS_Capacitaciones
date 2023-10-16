@@ -103,15 +103,21 @@ export class AdminService{
         return this.httpClient.post(ruta, data).toPromise() 
     }
 
-    CrearCapacitacion(capacitacion: any){
+    CrearCapacitacion(capacitacion: any, base64:string){
         const ruta = this.url+"Inicio/CrearCapacitacion"
-        const data = {capacitacion}
+        const data = {capacitacion, base64}
         return this.httpClient.post(ruta, data).toPromise()
     }
 
-    CapacitacionesPorJornada(idJornada: any){
+    modificarCapacitacion(capacitacion: any, base64:string, oldPoster: any){
+        const ruta = this.url+"Inicio/modificarCapacitacion"
+        const data = {capacitacion, base64, oldPoster}
+        return this.httpClient.post(ruta, data).toPromise()
+    }
+
+    CapacitacionesPorJornada(idJornada: any, idCategoria: any){
         const ruta = this.url+"Inicio/CapacitacionesXJornada"
-        const data = {idJornada}
+        const data = {idJornada, idCategoria}
         return this.httpClient.post(ruta, data).toPromise()
     }
 
@@ -127,15 +133,21 @@ export class AdminService{
         return this.httpClient.post(ruta, data).toPromise()
     }
 
+    modificarAgenda(agenda:any, idCapacitacion:any){
+        const ruta = this.url+"Inicio/modificarAgenda"
+        const data = {agenda, idCapacitacion}
+        return this.httpClient.post(ruta, data).toPromise()
+    }
+
     getAgenda(idCapacitacion: any){
         const ruta = this.url+"Inicio/getAgenda"
         const data = {idCapacitacion}
         return this.httpClient.post(ruta, data).toPromise()
     }
 
-    Capacitaciones(){
+    Capacitaciones(idCategoria: any){
         const ruta = this.url+"Inicio/Capacitaciones"
-        const data = {}
+        const data = {idCategoria}
         return this.httpClient.post(ruta, data).toPromise()
     }
 
