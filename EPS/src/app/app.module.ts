@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
 import { AdminService } from './Servicios/admin.servicio';
+import { UserService } from './Servicios/user.servicio';
 
 import { BrowserModule } from '@angular/platform-browser';
 import { RouteReuseStrategy } from '@angular/router';
@@ -22,7 +23,7 @@ import { CommonModule } from '@angular/common';
   ],
   imports: [BrowserModule, IonicModule.forRoot(), AppRoutingModule, MatDatepickerModule, BrowserAnimationsModule
   ,MatInputModule, MatNativeDateModule, MatFormFieldModule, IonicModule, CommonModule, HttpClientModule],
-  providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy }, AdminService],
+  providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy }, AdminService, UserService],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

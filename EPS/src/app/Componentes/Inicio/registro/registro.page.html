@@ -1,62 +1,81 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/"></ion-back-button>
+      <!-- <ion-button style="--background: #221d45;" [routerLink]="['/']">
+        <ion-icon slot="icon-only" name="exit"></ion-icon>
+      </ion-button> -->
+    </ion-buttons>
+    
     <ion-title>Registrarse</ion-title>
   </ion-toolbar>
 </ion-header>
 
 
 <ion-content [fullscreen]="true" id="content">
-  <div id="partes">
-    <div class="centrar">
-      <form id="datos">
-        <ion-header [translucent]="true">
-          <ion-toolbar>
-            <ion-title><p align="center">Crear Usuario</p></ion-title>
-          </ion-toolbar>
-        </ion-header>
-        <div id="col1">
-          <br>
-          <ion-input class="ion-text-center" label="CUI" label-placement="floating" fill="outline" type="text"></ion-input>
-          <br>
-          <ion-input class="ion-text-center" label="Carnet" label-placement="floating" fill="outline" type="text"></ion-input>
-          <br>
-          <ion-input class="ion-text-center" label="Nombre Completo" label-placement="floating" fill="outline" type="text"></ion-input>
-          <br>
-          <ion-input class="ion-text-center" label="E-mail" label-placement="floating" fill="outline" type="email"></ion-input>
-          <br>
-          <ion-select aria-label="Fruit" placeholder="Tipo de usuario">
-            <ion-select-option value="Estudiante">Estudiante</ion-select-option>
-            <ion-select-option value="Catedratico">Catedratico</ion-select-option>
-            <ion-select-option value="Profesional">Profesional</ion-select-option>
-            <ion-select-option value="Otro">Otro</ion-select-option>
-          </ion-select>
-        </div>
-        <div id="col2">
-          <ion-input class="ion-text-center" label="Direccion" label-placement="floating" fill="outline" type="text"></ion-input>
-          <br>
-          <ion-input class="ion-text-center" label="Contraseña" label-placement="floating" fill="outline" type="password"></ion-input>
-          <br>
-          <ion-input class="ion-text-center" label=" Validar contraseña" label-placement="floating" fill="outline" type="password"></ion-input>
-          <br>
-          <ion-select aria-label="Fruit" placeholder="Departamento">
-            <ion-select-option value="guatemala">Guatemala</ion-select-option>
-            <ion-select-option value="peten">Peten</ion-select-option>
-            <ion-select-option value="izabal">Izabal</ion-select-option>
-          </ion-select>
-          <br>
-          <ion-select aria-label="Fruit" placeholder="Municipio">
-            <ion-select-option value="guatemala">Mixco</ion-select-option>
-            <ion-select-option value="peten">Villa Nueva</ion-select-option>
-            <ion-select-option value="izabal">Izabal</ion-select-option>
-          </ion-select>
-        </div>
-        <ion-button class="boton" type="submit">Registrarse</ion-button>
-      </form>
+  <div class="main">
+    <div id="partes">
+      <ion-header [translucent]="true">
+        <ion-toolbar class="tool">
+          <ion-title><p align="center" class="titulo">Crear Usuario</p></ion-title>
+        </ion-toolbar>
+      </ion-header>
+      <div id="col1">
+        <ion-input class="ion-text-center" [(ngModel)]="nuevoUser.cui" label="CUI" label-placement="floating" fill="outline" type="text"></ion-input>
+        <br>
+        <ion-input class="ion-text-center" [(ngModel)]="nuevoUser.carne" label="Carnet" label-placement="floating" fill="outline" type="text"></ion-input>
+        <br>
+        <ion-input class="ion-text-center" [(ngModel)]="nuevoUser.nombre" label="Nombre" label-placement="floating" fill="outline" type="text"></ion-input>
+        <br>
+        <ion-input class="ion-text-center" [(ngModel)]="nuevoUser.apellido" label="Apellido" label-placement="floating" fill="outline" type="text"></ion-input>
+        <br>
+        <ion-input class="ion-text-center" [(ngModel)]="nuevoUser.correo" label="E-mail" label-placement="floating" fill="outline" type="email"></ion-input>
+        <br>
+        <ion-select aria-label="Fruit" [(ngModel)]="nuevoUser.idTipo" placeholder="Tipo de usuario">
+          <ion-select-option *ngFor="let usuario of usuarios" [value]="usuario.idTipo" >{{usuario.tipo}}</ion-select-option>
+        </ion-select>
+      </div>
+      <div id="col2">
+        <ion-item>
+          <ion-label position="stacked">Contraseña</ion-label>
+          <ion-input type="{{mostrar1 ? 'text' : 'password'}}" [(ngModel)]="nuevoUser.passwo"></ion-input>
+          <ion-button slot="end" fill="clear" (click)="togglePassVisibility()">
+            <ion-icon [name]="mostrar1 ? 'eye-off' : 'eye'"></ion-icon>
+          </ion-button>
+        </ion-item>
+        <br>
+        <ion-item>
+          <ion-label position="stacked">Confirmar contraseña</ion-label>
+          <ion-input type="{{mostrar1 ? 'text' : 'password'}}" [(ngModel)]="nuevoUser.confirmarPasswo"></ion-input>
+          <ion-button slot="end" fill="clear" (click)="togglePassVisibility()">
+            <ion-icon [name]="mostrar1 ? 'eye-off' : 'eye'"></ion-icon>
+          </ion-button>
+        </ion-item>
+        <br>
+        <ion-input class="ion-text-center" [(ngModel)]="nuevoUser.direccion" label="Direccion" label-placement="floating" fill="outline" type="text"></ion-input>
+        <br>
+        <ion-select aria-label="Fruit" placeholder="Departamento" (ionChange)="DepartamentoChange($event)">
+          <ion-select-option *ngFor="let departamento of departamentos" [value]="departamento.idDepartamento" >{{departamento.departamento}}</ion-select-option>
+        </ion-select>
+        <br>
+        <ion-select aria-label="Fruit" [(ngModel)]="nuevoUser.idMunicipio" placeholder="Municipio">
+          <ion-select-option *ngFor="let municipio of municipios" [value]="municipio.idMunicipio" >{{municipio.municipio}}</ion-select-option>
+        </ion-select>
+        <br>
+        <ion-select aria-label="Fruit" [(ngModel)]="nuevoUser.genero" placeholder="Genero">
+          <ion-select-option value="1">Hombre</ion-select-option>
+          <ion-select-option value="2">Mujer</ion-select-option>
+        </ion-select>
+      </div>
+      <ion-button class="boton" (click)="Registrarse()">Registrarse</ion-button>
+      
     </div>
-
-    <ion-img src="../../../../assets/icon/Logo.JPG"></ion-img>
-    <h1 class="TituloMain"><label>Facultad de Ciencias<br>Juridicas y Sociales</label></h1>
-    
-    
+    <div class="partes2">
+      <div class="imagen">
+        <ion-img src="https://bucket-jornadas.s3.amazonaws.com/Posts/Logo.JPG"></ion-img>
+      </div>
+      <h1 class="TituloMain"><label>Facultad de Ciencias<br>Juridicas y Sociales</label></h1>
+    </div>
   </div>
+  
 </ion-content>

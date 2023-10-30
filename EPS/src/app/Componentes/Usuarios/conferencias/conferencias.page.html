@@ -1,18 +1,68 @@
 <ion-content [fullscreen]="true">
   <div id="pantalla">
-    <div id="tabla">
-      <ion-grid>
-        <ion-row *ngFor="let i of [0,1,2]">
-          <ion-col>
-            <app-card></app-card>
-          </ion-col>
-          <ion-col>
-            <app-card></app-card>
-          </ion-col>
-        </ion-row>
-      </ion-grid>
+    <div class="titulo">
+      <h1>Capacitaciones</h1>
     </div>
+    <ng-container *ngFor="let conferencia of conferencias">
+      <div class="card" *ngIf="conferencia.idCategoria == 1">
+        <ion-header>
+          <ion-toolbar>
+            <ion-title>{{conferencia.nomCapacitacion}}</ion-title>
+          </ion-toolbar>
+        </ion-header>
+        <div class="parte1">
+          <ion-img src="{{conferencia.poster}}"></ion-img>
+        </div>
+        <div class="parte2">
+          <br>
+          <div class="text">
+            <p style="font-size: 15px;">{{conferencia.descripcion}}</p>
+          </div>
+          <p style="font-size: 23px;">Presentador: {{conferencia.presentador}}</p>
+          <p style="font-size: 20px;">Fecha: {{convertir(conferencia.fecha)}}</p>
+          <p style="font-size: 17px;">Hora: {{conferencia.hora}}</p>
+          <br>
+          <br>
+          <p>Si desea inscribirse a esta capacitacion, oprima el boton</p>
+          <ion-button>Inscribirme</ion-button>
+        </div>
+        
+      </div>
+    </ng-container>
+    <div class="titulo" *ngIf="idTipo == 1 || idTipo == 2 || idTipo == 3 || idTipo == 6">
+      <h1>Diplomados</h1>
+    </div>
+    <div class="diplomados" *ngIf="idTipo == 1 || idTipo == 2 || idTipo == 3 || idTipo == 6">
+      <ng-container *ngFor="let conferencia of conferencias">
+        <div class="card2" *ngIf="conferencia.idCategoria == 2">
+          <ion-header>
+            <ion-toolbar>
+              <ion-title>{{conferencia.nomCapacitacion}}</ion-title>
+            </ion-toolbar>
+          </ion-header>
+          <div class="parte11">
+            <ion-img src="{{conferencia.poster}}"></ion-img>
+          </div>
+          <div class="parte2">
+            <br>
+            <div class="text">
+              <p style="font-size: 15px;">{{conferencia.descripcion}}</p>
+            </div>
+            <ion-button>
+              <ion-icon name="calendar"></ion-icon>
+            </ion-button>
+            <br>
+            <br>
+            <p>Si desea inscribirse a esta capacitacion, oprima el boton</p>
+            <ion-button>Inscribirme</ion-button>
+          </div>
+        </div>
+      </ng-container>
+    </div>
+    <div class="foot">
     
+    </div>
   </div>
+  
   
 </ion-content>

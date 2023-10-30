@@ -1,6 +1,7 @@
 import { Component, OnInit, NgModule } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { AdminService } from '../../../Servicios/admin.servicio';
+import { UserService } from 'src/app/Servicios/user.servicio';
 import jwt_decode from 'jwt-decode';
 import { ActivatedRoute, Router } from '@angular/router'
 
@@ -12,10 +13,11 @@ import { ActivatedRoute, Router } from '@angular/router'
 
 export class IngresoPage implements OnInit {
 
-  constructor(private AdminService: AdminService, private http:HttpClient,
+  constructor(private UserService: UserService, private AdminService: AdminService, private http:HttpClient,
     public router: Router, public ActRou: ActivatedRoute) { }
   token: string = ""
   decoded: any
+  public mostrar1: boolean = false
   ngOnInit() {
   }
 
@@ -31,11 +33,24 @@ export class IngresoPage implements OnInit {
         this.decoded = jwt_decode(obj.token)
         this.router.navigate(['/tabs',this.decoded.datos[0]]);
       } catch (error) {
-        alert("Error en el ingreso")
+        alert("Error en el ingreso\nVerifique sus datos de administrador")
         console.log("Error al decodificar el Token JWT ", error)
       }
     } else {
-      alert('el dato NO es un email: '+this.dato1)
+      let datos = await this.UserService.GetUsuario(this.dato1, this.dato2)
+      let json = JSON.stringify(datos)
+      let obj = JSON.parse(json)
+      try {
+        this.decoded = jwt_decode(obj.token)
+        let json : any = {
+          token: obj.token
+        }
+        this.router.navigate(['/tabsu', json,'conferencias'])
+      } catch (error) {
+        alert("Error en el ingreso\nVerifique los datos que ingreso")
+        location.reload()
+        console.log("Error al decodificar el Token JWT ", error)
+      }
     }
    /*  if(this.dato1 == 'admin' && this.dato2 == 'admin'){
       this.router.navigate(['/tabs']);
@@ -49,8 +64,8 @@ export class IngresoPage implements OnInit {
     return emailRegex.test(email);
   }
 
-  decodeJWT(){
-    
+  togglePassVisibility(){
+    this.mostrar1 = !this.mostrar1
   }
 
 }

@@ -128,7 +128,7 @@ export class MenuComponent  implements OnInit {
     this.capacitacion.nomCapacitacion = ""
     this.capacitacion.descripcion = ""
     this.capacitacion.presentador = ""
-    this.capacitacion.post = ""
+    this.capacitacion.poster = ""
     this.capacitacion.fbLink = ""
     this.capacitacion.zoomLink = ""
     this.capacitacion.idJornada = ""
@@ -191,57 +191,61 @@ export class MenuComponent  implements OnInit {
       const primerElemento = respuesta1[0];
       if (primerElemento.hasOwnProperty('idJornada')) {
         this.capacitacion.idJornada = primerElemento.idJornada;
-
-        let reader = new FileReader();
-        reader.readAsDataURL(this.fileSelected as Blob);
-    
-        reader.onloadend= async ()=>{
-          this.base64=reader.result as string;
-          let arrayAux=this.base64.split(",",2)
-          this.base64 = arrayAux[1]
-          let respuesta2 = await this.adminService.CrearCapacitacion(this.capacitacion, this.base64)
-        try {
-          const resp = respuesta2 as {mensaje?: string}
-          if(resp.mensaje !== undefined){
-            const mensaje = resp.mensaje
-            let respuesta3 = await this.adminService.CapacitacionReciente(this.capacitacion)
-            if(Array.isArray(respuesta3) && respuesta3.length > 0){
-              const Elemento = respuesta3[0];
-              if(Elemento.hasOwnProperty('idCapacitacion')){
-                this.agenda.idCapacitacion = Elemento.idCapacitacion
-                let respuesta4 = await this.adminService.Agendar(this.agenda)
-                try {
-                  const resp4 = respuesta4 as {mensaje?: string}
-                  if(resp.mensaje !== undefined){
-                    const mensaje2 = resp4.mensaje
-                    alert(mensaje +"||" + mensaje2)
-                  } else {
-                    console.log('Error al registrar la fecha y hora \n'+ resp4)
-                  }
-                } catch (error) {
-                  console.log(error)
-                  alert('error al registrar la hora y fecha')
-                }
-              } 
-            }
-            this.vaciar()
-          } else {
-            console.log(respuesta2)
-            alert('error al crear la capacitacion')
-          }
-        } catch (error) {
-          console.log(error)
-          alert('error al registrar la nueva jornada')
+        if(this.capacitacion.poster != "") {
+          let reader = new FileReader();
+          reader.readAsDataURL(this.fileSelected as Blob);
+          reader.onloadend= async ()=>{
+            this.base64=reader.result as string;
+            let arrayAux=this.base64.split(",",2)
+            this.base64 = arrayAux[1]
+            this.capac()
+          } 
+        } else {
+          this.capac
         }
-          //console.log(this.base64+'/--*-*-*');
-        } 
-        //console.log('Valor de idJornada:', this.capacitacion.idJornada);
       } else {
         console.log('El primer elemento no tiene la propiedad "idJornada".');
       }
     } else {
       alert('La fecha ingresada no conicide con ninguna jornada')
       console.log('El arreglo está vacío o no es un arreglo válido.');
+    }
+  }
+
+  async capac(){
+    let respuesta2 = await this.adminService.CrearCapacitacion(this.capacitacion, this.base64)
+    try {
+      const resp = respuesta2 as {mensaje?: string}
+      if(resp.mensaje !== undefined){
+        const mensaje = resp.mensaje
+        let respuesta3 = await this.adminService.CapacitacionReciente(this.capacitacion)
+        if(Array.isArray(respuesta3) && respuesta3.length > 0){
+          const Elemento = respuesta3[0];
+          if(Elemento.hasOwnProperty('idCapacitacion')){
+            this.agenda.idCapacitacion = Elemento.idCapacitacion
+            let respuesta4 = await this.adminService.Agendar(this.agenda)
+            try {
+              const resp4 = respuesta4 as {mensaje?: string}
+              if(resp.mensaje !== undefined){
+                const mensaje2 = resp4.mensaje
+                alert(mensaje +"||" + mensaje2)
+              } else {
+                console.log('Error al registrar la fecha y hora \n'+ resp4)
+              }
+            } catch (error) {
+              console.log(error)
+              alert('error al registrar la hora y fecha')
+            }
+          } 
+        }
+        this.vaciar()
+      } else {
+        console.log(respuesta2)
+        alert('error al crear la capacitacion')
+      }
+    } catch (error) {
+      console.log(error)
+      alert('error al registrar la nueva jornada')
     }
   }
 
@@ -316,56 +320,70 @@ export class MenuComponent  implements OnInit {
       const primerElemento = respuesta1[0];
       if (primerElemento.hasOwnProperty('idJornada')) {
         this.capacitacion.idJornada = primerElemento.idJornada;
-
-        let respuesta2 = await this.adminService.CrearCapacitacion(this.capacitacion, this.base64)
-        try {
-          const resp = respuesta2 as {mensaje?: string}
-          if(resp.mensaje !== undefined){
-            const mensaje = resp.mensaje
-            let respuesta3 = await this.adminService.CapacitacionReciente(this.capacitacion)
-            if(Array.isArray(respuesta3) && respuesta3.length > 0){
-              const Elemento = respuesta3[0];
-              if(Elemento.hasOwnProperty('idCapacitacion')){
-                this.agenda.idCapacitacion = Elemento.idCapacitacion
-                let respuesta4, resp4, mensaje2
-                for(let i = 0; i < this.Fechas.length; i++){
-                  this.agenda.fecha = this.Fechas[i].fecha
-                  this.agenda.hora = this.Fechas[i].hora
-                  respuesta4 = await this.adminService.Agendar(this.agenda)
-                  try {
-                    resp4 = respuesta4 as {mensaje?: string}
-                    if(resp.mensaje !== undefined){
-                      mensaje2 = resp4.mensaje
-                    } else {
-                      console.log('Error al registrar la fecha y hora \n'+ resp4)
-                      break
-                    }
-                  } catch (error) {
-                    console.log(error)
-                    alert('error al registrar la hora y fecha')
-                    break
-                  }
-                }
-                alert(mensaje +"||" + mensaje2)
-                
-              } 
-            }
-            this.vaciar()
-          } else {
-            console.log(respuesta2)
-            alert('error al crear el diplomado')
+        if(this.capacitacion.poster != ""){
+          let reader = new FileReader();
+          reader.readAsDataURL(this.fileSelected as Blob);
+          reader.onloadend= async ()=>{
+            this.base64=reader.result as string;
+            let arrayAux=this.base64.split(",",2)
+            this.base64 = arrayAux[1]
+            this.diplo()
           }
-        } catch (error) {
-          console.log(error)
-          alert('error al registrar la nueva jornada')
+        } else {
+          this.diplo()
         }
-        //console.log('Valor de idJornada:', this.capacitacion.idJornada);
+        
       } else {
         console.log('El primer elemento no tiene la propiedad "idJornada".');
       }
     } else {
       alert('La fecha ingresada no conicide con ninguna jornada')
       console.log('El arreglo está vacío o no es un arreglo válido.');
+    }
+  }
+
+  async diplo(){
+    let respuesta2 = await this.adminService.CrearCapacitacion(this.capacitacion, this.base64)
+    try {
+      const resp = respuesta2 as {mensaje?: string}
+      if(resp.mensaje !== undefined){
+        const mensaje = resp.mensaje
+        let respuesta3 = await this.adminService.CapacitacionReciente(this.capacitacion)
+        if(Array.isArray(respuesta3) && respuesta3.length > 0){
+          const Elemento = respuesta3[0];
+          if(Elemento.hasOwnProperty('idCapacitacion')){
+            this.agenda.idCapacitacion = Elemento.idCapacitacion
+            let respuesta4, resp4, mensaje2
+            for(let i = 0; i < this.Fechas.length; i++){
+              this.agenda.fecha = this.Fechas[i].fecha
+              this.agenda.hora = this.Fechas[i].hora
+              respuesta4 = await this.adminService.Agendar(this.agenda)
+              try {
+                resp4 = respuesta4 as {mensaje?: string}
+                if(resp.mensaje !== undefined){
+                  mensaje2 = resp4.mensaje
+                } else {
+                  console.log('Error al registrar la fecha y hora \n'+ resp4)
+                  break
+                }
+              } catch (error) {
+                console.log(error)
+                alert('error al registrar la hora y fecha')
+                break
+              }
+            }
+            alert(mensaje +"||" + mensaje2)
+            
+          } 
+        }
+        this.vaciar()
+      } else {
+        console.log(respuesta2)
+        alert('error al crear el diplomado')
+      }
+    } catch (error) {
+      console.log(error)
+      alert('error al registrar la nueva jornada')
     }
   }
 

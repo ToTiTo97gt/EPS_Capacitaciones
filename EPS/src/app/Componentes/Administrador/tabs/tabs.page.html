@@ -1,5 +1,11 @@
 <ion-header>
   <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button style="--background: #221d45;" [routerLink]="['/']">
+        <ion-icon slot="icon-only" name="exit"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+
     <ion-title>Administracion {{this.nombre}}</ion-title>
   </ion-toolbar>
 </ion-header>

@@ -1,4 +1,5 @@
 const tareas = require('./Routes/rutas.routes')
+const user = require('./Routes/rutasUser.routes')
 var express = require('express');
 const ejs=require('ejs');
 const morgan=require('morgan');
@@ -20,7 +21,9 @@ app.get('/', function(req,res){
 });
     
 //app.use("/",usuario);
-app.use('/Inicio',tareas)
+app.use('/Admin',tareas)
+
+app.use('/User', user)
 
 http.listen(port, function() {
     console.log('listening on :3000');

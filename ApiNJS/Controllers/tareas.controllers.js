@@ -235,13 +235,9 @@ exports.CrearCapacitacion = async (req, res) => {
         var fbLink = req.body.capacitacion.fbLink
         var idJornada = req.body.capacitacion.idJornada
         var idCategoria = req.body.capacitacion.idCategoria
-        const {var1, var2, var3, var4, var5, var6, var7, var8} = req.body.capacitacion
-        console.log(var1 + " " +var3)
-        var idArchivo = req.body.base64
-        let archiv = "https://bucket-jornadas.s3.amazonaws.com/"+SubirArchivo(poster, idArchivo)
-        if(archiv != "error"){
+        if(poster == "" || poster === undefined){
             bd.query(`insert into capacitacion(nomCapacitacion, descripcion, presentador, poster, zoomLink, fbLink, idJornada, idCategoria, estado)
-              values('${nomCapacitacion}', '${descripcion}', '${presentador}', '${archiv}', '${zoomLink}', '${fbLink}', ${idJornada}, ${idCategoria}, 1)`, function(err, result){
+              values('${nomCapacitacion}', '${descripcion}', '${presentador}', '${poster}', '${zoomLink}', '${fbLink}', ${idJornada}, ${idCategoria}, 1)`, function(err, result){
                 if(err) throw err
                 if(idCategoria == 1){
                     res.status(201).json({mensaje:'Capacitacion Creada con exito'})
@@ -249,7 +245,22 @@ exports.CrearCapacitacion = async (req, res) => {
                     res.status(201).json({mensaje:'Diplomado Creado con exito'})
                 }
             })
+        } else {
+            var idArchivo = req.body.base64
+            let archiv = "https://bucket-jornadas.s3.amazonaws.com/"+SubirArchivo(poster, idArchivo)
+            if(archiv != "error"){
+                bd.query(`insert into capacitacion(nomCapacitacion, descripcion, presentador, poster, zoomLink, fbLink, idJornada, idCategoria, estado)
+                  values('${nomCapacitacion}', '${descripcion}', '${presentador}', '${archiv}', '${zoomLink}', '${fbLink}', ${idJornada}, ${idCategoria}, 1)`, function(err, result){
+                    if(err) throw err
+                    if(idCategoria == 1){
+                        res.status(201).json({mensaje:'Capacitacion Creada con exito'})
+                    } else {
+                        res.status(201).json({mensaje:'Diplomado Creado con exito'})
+                    }
+                })
+            }
         }
+        
         
     } catch (error) {
         console.log(error)
@@ -270,12 +281,16 @@ exports.modificarCapacitacion = async (req, res) => {
                 res.status(201).json({mensaje:'Modificacion Exitosa'})
             })
         } else {
-            const params1 = {
-                Bucket: "bucket-jornadas",
-                Key: oldPoster
+            
+            if(oldPoster !== undefined){
+                console.log("--entre aqui--")
+                const params1 = {
+                    Bucket: "bucket-jornadas",
+                    Key: oldPoster
+                }
+                const putResult1 = s3.deleteObject(params1).promise();
+                console.log(putResult1);
             }
-            const putResult1 = s3.deleteObject(params1).promise();
-            console.log(putResult1);
             let archiv = "https://bucket-jornadas.s3.amazonaws.com/"+SubirArchivo(poster, base64)
             if(archiv != "Error"){
                 bd.query(`update capacitacion set nomCapacitacion = '${nomCapacitacion}', descripcion = '${descripcion}', presentador = '${presentador}', poster = '${archiv}', zoomLink = '${zoomLink}', fbLink = '${fbLink}' where idCapacitacion = ${idCapacitacion}`, function(err, result){
@@ -307,12 +322,23 @@ exports.Agendar = async (req, res) => {
 
 exports.modificarAgenda = async (req, res) => {
     try {
-        const {fecha, hora} = req.body.agenda
-        var idCapacitacion = req.body.idCapacitacion
-        bd.query(`update agenda set fecha = '${fecha}', hora = '${hora}' where idCapacitacion = ${idCapacitacion}`, function(err, result){
-            if(err) throw err
-            res.status(201).json({mensaje:'Modificacion de agenda Exitosa'})
-        })
+        var jornada = req.body.jornada
+        if(jornada == 0){
+            const {fecha, hora} = req.body.agenda
+            var idCapacitacion = req.body.idCapacitacion
+            bd.query(`update agenda set fecha = '${fecha}', hora = '${hora}' where idCapacitacion = ${idCapacitacion}`, function(err, result){
+                if(err) throw err
+                res.status(201).json({mensaje:'Modificacion de agenda Exitosa'})
+            })
+        } else {
+            var idCapacitacion = req.body.idCapacitacion
+            bd.query(`delete from agenda agenda where idCapacitacion = ${idCapacitacion}`)
+            for (var i = 0; i < req.body.agenda.length; i++){
+                var {fecha, hora} = req.body.agenda[i]
+                bd.query(`insert into agenda(fecha, hora, idCapacitacion) values ('${fecha}', '${hora}', ${idCapacitacion})`)
+            }
+            res.status(201).json({mensaje:'Modificacion de agenda de jornada exitosa'})
+        }
     } catch (error) {
         console.log(error)
         res.status(500).json({error: 'error al modificar la agenda'})

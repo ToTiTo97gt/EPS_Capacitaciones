@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-
 import { TabsuPage } from './tabsu.page';
 
 const routes: Routes = [
@@ -8,10 +7,6 @@ const routes: Routes = [
     path: '', //aqui antes estaba tabs escrito, pero lo cambie para que funcionara la navegacion
     component: TabsuPage,
     children: [
-      {
-        path: 'perfil',
-        loadChildren: () => import('../perfil/perfil.module').then(m => m.PerfilPageModule)
-      },
       {
         path: 'conferencias',
         loadChildren: () => import('../conferencias/conferencias.module').then(m => m.ConferenciasPageModule)
@@ -27,17 +22,17 @@ const routes: Routes = [
       {
         path: 'ayuda',
         loadChildren: () => import('../ayuda/ayuda.module').then(m => m.AyudaPageModule)
-      },
+      }/* ,
       {
         path: '',
-        redirectTo: '/tabsu/perfil',
+        redirectTo: '/tabsu/conferencias',
         pathMatch: 'full'
-      }
+      } */
     ]
   },
   {
     path: '',
-    redirectTo: '/tabsu/perfil',
+    redirectTo: '/tabsu/conferencias',
     pathMatch: 'full'
   }
 ];

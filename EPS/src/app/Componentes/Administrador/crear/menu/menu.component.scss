@@ -31,7 +31,7 @@
 .pantalla{
   width: 100%;
   height: 100%;
-  background-color: gray;
+  background-color: white;
 }
 
 .Jornadas{
@@ -124,7 +124,6 @@
   margin-top: 2px;
   width: 40rem;
   height: 28rem;
-  background: gray;
   gap: 10px;
   display: flex;
   flex-wrap: wrap;
@@ -158,6 +157,8 @@ ion-datetime{
   width: 325px; /* Ancho personalizado */
   font-size: 14px; /* Tamaño de fuente personalizado */
   padding: 5px; /* Espaciado interno personalizado */
+  border-color: #221d45;
+  border-radius: 3px;
 }
 
 ion-datetime-button{
@@ -165,7 +166,6 @@ ion-datetime-button{
 }
 
 .filt{
-  --background: red;
   --background-rgb: 34, 29, 69;
   --wheel-highlight-background: rgb(229, 255, 0);
   --wheel-fade-background-rgb: 246, 255, 0;

@@ -14,7 +14,7 @@
       
       <ion-textarea class="descripcion" [(ngModel)]="descripcion" placeholder="Descripcion de conferencia"></ion-textarea>
     
-      <ion-input *ngIf="idCategoria == 1" class="Conferencia" label="Nombre del Presentador" [(ngModel)]="presentador" labelPlacement="floating" fill="outline" type="text"></ion-input>
+      <ion-input *ngIf="idCategoria == 1" class="Presentador" label="Nombre del Presentador" [(ngModel)]="presentador" labelPlacement="floating" fill="outline" type="text"></ion-input>
     </div>
     <div id="Conf2">
       <label for="file1">Seleccionar poster
@@ -31,14 +31,18 @@
         <ion-datetime *ngIf="idCategoria == 1" [min]="2023" [(ngModel)]="fechaYhora"></ion-datetime>
       </div>
       <div id="Diplo" *ngIf="idCategoria == 2">
-        <ion-datetime class="fecha" presentation="date" [min]="2023" ></ion-datetime>
-        <ion-datetime class="hora" presentation="time" ></ion-datetime>
-        <ion-list >
-          <ion-item *ngFor="let dato of agenda">{{convertir(dato.fecha)}}<br>{{dato.hora}}</ion-item>
-        </ion-list>
-        <ion-button class="boton" >Agregar fecha y hora</ion-button>
+        <ion-datetime class="fecha" presentation="date" [min]="2023" [(ngModel)]="horaYFecha.fecha"></ion-datetime>
+        <div class="subDiplo">
+          <ion-datetime class="hora" presentation="time" [(ngModel)]="horaYFecha.hora"></ion-datetime>
+          <ion-list>
+            <ion-item *ngFor="let datos of Fechas; let i = index">{{convertir(datos.fecha)}}<br>{{datos.hora}}<ion-button (click)="eliminar(datos.fecha, datos.hora)"><ion-icon name="trash"></ion-icon></ion-button></ion-item>
+          </ion-list>
+        </div>
+        <ion-button class="boton" (click)="AgregarFecha(horaYFecha.fecha, horaYFecha.hora)">Agregar fecha y hora</ion-button>
+        
       </div>
-      <ion-button (click)="modificarCapacitacion()">Modificar</ion-button>
+      <ion-button *ngIf="idCategoria == 1" class="Modif" (click)="modificarCapacitacion()">Modificar</ion-button>
+      <ion-button *ngIf="idCategoria == 2" class="Modif" (click)="modificarDiplomado()">Modificar</ion-button>
     </div>
 
   </div>

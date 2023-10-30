@@ -29,6 +29,10 @@ const routes: Routes = [
   {
     path: 'capacitacion-info',
     loadChildren: () => import('./Componentes/Administrador/modals/capacitacion-info/capacitacion-info.module').then( m => m.CapacitacionInfoPageModule)
+  },
+  {
+    path: 'datos-usuario',
+    loadChildren: () => import('./Componentes/Usuarios/modals/datos-usuario/datos-usuario.module').then( m => m.DatosUsuarioPageModule)
   }
 ];
 @NgModule({

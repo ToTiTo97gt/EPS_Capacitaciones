@@ -1,17 +1,22 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>Usuario</ion-title>
+    <ion-buttons slot="start">
+      <ion-button style="--background: #221d45;" [routerLink]="['/']">
+        <ion-icon slot="icon-only" name="exit"></ion-icon>
+      </ion-button>
+      <ion-button (click)="mostrarUsuario()" style="--background: #221d45;">
+        <ion-icon slot="icon-only" name="person"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>{{this.decoded.datos[0].nombre}} {{this.decoded.datos[0].apellido}}</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
-  <ion-tabs>
+  <ion-tabs (ionTabsDidChange)="onTabChange()">
 
+    <!-- <ion-tab-bar slot="top" (click)="recarga()"> -->
     <ion-tab-bar slot="top">
-      
-      <ion-tab-button tab="perfil">
-        <ion-label>Perfil</ion-label>
-      </ion-tab-button>
   
       <ion-tab-button tab="conferencias">
         <ion-label>Conferencias</ion-label>

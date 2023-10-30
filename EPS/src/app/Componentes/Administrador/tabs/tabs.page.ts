@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { MenuController } from '@ionic/angular';
 import { ActivatedRoute, Router } from '@angular/router'
 import { HttpClient } from '@angular/common/http';
@@ -9,7 +9,7 @@ import { AdminService } from '../../../Servicios/admin.servicio';
   templateUrl: 'tabs.page.html',
   styleUrls: ['tabs.page.scss']
 })
-export class TabsPage {
+export class TabsPage implements OnInit {
 
   constructor(private menuController: MenuController, public route: Router, public parametros:ActivatedRoute,
     private adminService:AdminService) {}
@@ -21,6 +21,7 @@ export class TabsPage {
     this.nombre = this.parametros.snapshot.paramMap.get('nombre')
     this.id = this.parametros.snapshot.paramMap.get('idAdmin')
     this.adminService.idG = this.id
+    console.log(this.parametros.snapshot.paramMap)
     this.permisos();
   }
 
