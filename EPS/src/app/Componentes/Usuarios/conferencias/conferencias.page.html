@@ -24,9 +24,8 @@
           <br>
           <br>
           <p>Si desea inscribirse a esta capacitacion, oprima el boton</p>
-          <ion-button>Inscribirme</ion-button>
+          <ion-button (click)="Inscribir(conferencia.idCapacitacion)">Inscribirme</ion-button>
         </div>
-        
       </div>
     </ng-container>
     <div class="titulo" *ngIf="idTipo == 1 || idTipo == 2 || idTipo == 3 || idTipo == 6">
@@ -48,13 +47,13 @@
             <div class="text">
               <p style="font-size: 15px;">{{conferencia.descripcion}}</p>
             </div>
-            <ion-button>
-              <ion-icon name="calendar"></ion-icon>
+            <ion-button (click)="MostrarCalendarioDiplomado(conferencia.idCapacitacion, conferencia.nomCapacitacion)">
+              <ion-icon name="calendar">Calendario</ion-icon>
             </ion-button>
             <br>
             <br>
             <p>Si desea inscribirse a esta capacitacion, oprima el boton</p>
-            <ion-button>Inscribirme</ion-button>
+            <ion-button (click)="Inscribir(conferencia.idCapacitacion)">Inscribirme</ion-button>
           </div>
         </div>
       </ng-container>
@@ -63,6 +62,4 @@
     
     </div>
   </div>
-  
-  
 </ion-content>

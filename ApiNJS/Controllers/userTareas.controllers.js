@@ -74,21 +74,112 @@ exports.GetUser = async (req, res) => {//modificar esta peticion para que acepta
 
 exports.GetCapacitaciones = async (req, res) => {
     var idTipo = req.body.idTipo;
+    var idUser = req.body.idUser;
+    var Inscrito = req.body.Inscrito
     if(idTipo == 4 || idTipo == 5 || idTipo == 7){
-        bd.query(`select a.*, c.fecha, c.hora from capacitacion a, jornada b, agenda c where a.idJornada = b.idJornada and CURDATE() >= b.fechaInicio
-        and CURDATE() <= b.fechaFinal and a.idCapacitacion = c.idCapacitacion and a.idCategoria = 1;`, function(err, result){
+        bd.query(`select a.*, c.fecha, c.hora from capacitacion a, jornada b, agenda c, asistencia d, usuario e where a.idJornada = b.idJornada and CURDATE() >= b.fechaInicio
+          and CURDATE() <= b.fechaFinal and a.idCapacitacion = c.idCapacitacion and a.idCategoria = 1 and e.idUsuario = d.idUsuario and e.idUsuario = ${idUser} and a.idCapacitacion = d.idCapacitacion and d.inscrito = ${Inscrito};`, function(err, result){
             if(err) throw err;
             return res.send(result)
         })
     } else {
-        bd.query(`Select a.*, c.fecha, c. hora from capacitacion a, jornada b, agenda c where a.idJornada = b.idJornada and CURDATE() >= b.fechaInicio
-          and CURDATE() <= b.fechaFinal and a.idCapacitacion = c.idCapacitacion and a.idCategoria = 1
-          UNION
-          Select a.*, null as fecha, null as hora from capacitacion a, jornada b where a.idJornada = b.idJornada and CURDATE() >= b.fechaInicio
-          and CURDATE() <= b.fechaFinal and a.idCategoria = 2;`, function(err, result){
+        bd.query(`select a.*, c.fecha, c.hora from capacitacion a, jornada b, agenda c, asistencia d, usuario e where a.idJornada = b.idJornada and CURDATE() >= b.fechaInicio
+          and CURDATE() <= b.fechaFinal and a.idCapacitacion = c.idCapacitacion and a.idCategoria = 1 and e.idUsuario = d.idUsuario and e.idUsuario = ${idUser} and a.idCapacitacion = d.idCapacitacion and d.inscrito = ${Inscrito}
+	      UNION
+          Select a.*, null as fecha, null as hora from capacitacion a, jornada b, asistencia d, usuario e where a.idJornada = b.idJornada and CURDATE() >= b.fechaInicio
+	      and CURDATE() <= b.fechaFinal and a.idCategoria = 2 and e.idUsuario = d.idUsuario and e.idUsuario = ${idUser} and a.idCapacitacion = d.idCapacitacion and d.inscrito = ${Inscrito};`, function(err, result){
             if(err) throw err;
             return res.send(result)
         })
     }
-    
+}
+
+exports.AsignacionAuto = async (req, res) => {
+    var idUser = req.body.idUser;
+    var idTipo = req.body.idTipo;
+    try {
+
+        const capacitaciones = await capacitacionesUser(idTipo)
+
+        for(const capacitacion of capacitaciones){
+            try {
+                await insertarAsistencia(idUser, capacitacion.idCapacitacion)
+            } catch (error) {
+                if (error.code === 'ER_DUP_ENTRY') {
+                    console.error(`${capacitacion.idCapacitacion} Ya Existe para el usuario ${idUser}`);
+                } else {
+                    // Otro tipo de error
+                    console.error('Error inesperado:', error);
+                    return res.status(500).json({ error: 'Error interno del servidor' });
+                }
+            }
+        }
+
+        return res.status(200).json({mensaje: 'Existo al asignar los datos'})
+    } catch (error) {
+        console.error('Error inesperado:', error);
+        return res.status(500).json({ error: 'Error interno del servidor' });
+    }
+}
+
+function capacitacionesUser(idTipo) {
+    return new Promise((resolve, reject) => {
+        if(idTipo == 4 || idTipo == 5 || idTipo == 7){
+            bd.query(`SELECT a.idCapacitacion FROM capacitacion a, jornada b where a.idJornada = b.idJornada and CURDATE() >= b.fechaInicio
+              and CURDATE() <= b.fechaFinal and a.idCategoria = 1`, (err, result) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve(result);
+                }
+            });
+        } else {
+            bd.query(`SELECT a.idCapacitacion FROM capacitacion a, jornada b where a.idJornada = b.idJornada and CURDATE() >= b.fechaInicio
+              and CURDATE() <= b.fechaFinal`, (err, result) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve(result);
+                }
+            });
+        }
+    })
+}
+
+function insertarAsistencia(idUser, idCapacitacion){
+    return new Promise((resolve, reject) => {
+        bd.query(`Insert into asistencia(idUsuario, inscrito, presente, idCapacitacion) values (${idUser}, 0, 0, ${idCapacitacion})`, (err, result) => {
+            if (err) {
+              reject(err);
+            } else {
+              resolve(result);
+            }
+        });
+    });
+}
+
+exports.Inscripcion = async(req, res) => {//recordar la inscripcion
+    var idUser = req.body.idUser
+    var idCapacitacion = req.body.idCapacitacion
+    var inscripcion = req.body.inscripcion
+    try {
+        bd.query(`update asistencia SET inscrito = ${inscripcion} WHERE idUsuario = ${idUser} and idCapacitacion = ${idCapacitacion}`, (err, result) => {
+            if(err) throw err;
+            return res.send({mensaje: 'Exito al modificar la asistencia'})
+        })
+    } catch (error) {
+        console.log('Error al momento de registrar la inscripcion')
+    }
+}
+
+exports.CalendarioDiplomado = async(req, res) => {
+    var idCapacitacion = req.body.idCapacitacion
+    try {
+        bd.query(`select * from agenda where idCapacitacion = ${idCapacitacion}`, (err, result) => {
+            if(err) throw err;
+            return res.send(result)
+        })
+    } catch (error) {
+        console.log("error al solicitar el calendario del diplomado")
+    }
 }

@@ -39,7 +39,8 @@ export class AListaComponent implements OnInit {
       componentProps: {
         idAdmin: idadmin,
         nombre: nombre,
-        apellido: apellido
+        apellido: apellido,
+        dato: 1
       }
     });
     await modal.present();

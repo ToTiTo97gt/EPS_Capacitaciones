@@ -42,9 +42,27 @@ export class UserService{
         return this.httpClient.post(ruta, data).toPromise()
     }
 
-    GetCapacitaciones(idTipo: any){
+    GetCapacitaciones(idTipo: any, idUser: any, Inscrito: any){
         const ruta = this.url+"User/GetCapacitaciones"
-        const data = {idTipo}
+        const data = {idTipo, idUser, Inscrito}
+        return this.httpClient.post(ruta, data).toPromise()
+    }
+
+    AsignacionAuto(idUser:any, idTipo:any){
+        const ruta = this.url+"User/AsignacionAuto"
+        const data = {idUser, idTipo}
+        return this.httpClient.post(ruta, data).toPromise()
+    }
+
+    CalendarioDiplomado(idCapacitacion: any){
+        const ruta = this.url+"User/CalendarioDiplomado"
+        const data = {idCapacitacion}
+        return this.httpClient.post(ruta, data).toPromise()
+    }
+
+    Inscripcion(idUser: any, idCapacitacion: any, inscripcion: any){
+        const ruta = this.url+"User/Inscripcion"
+        const data = {idUser, idCapacitacion, inscripcion}
         return this.httpClient.post(ruta, data).toPromise()
     }
 

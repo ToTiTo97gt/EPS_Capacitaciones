@@ -41,7 +41,7 @@ exports.AdminUser = async (req, res) => {
     var email = req.body.email;
     var passw = req.body.passw;
     var payload, clave="token1"
-    bd.query(`select idAdmin, nombre, apellido from administrador where email='${email}' and passw='${passw}';`, function(err, result){
+    bd.query(`select * from administrador where email='${email}' and passw='${passw}';`, function(err, result){
         if(err) throw err;
         payload = {
             "datos": result
@@ -76,7 +76,7 @@ exports.AdminLista = async (req, res) => {
 }
 
 exports.Permisos = async (req, res) => {
-    bd.query(`select * from permiso where permiso <> 'Principal'`, function(err, result){
+    bd.query(`select * from permiso where permiso <> 'Principal' and permiso <> 'Informacion'`, function(err, result){
         if(err) throw err;
         return res.send(result)
     })

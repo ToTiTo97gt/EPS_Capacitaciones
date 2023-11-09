@@ -1,38 +1,43 @@
 <ion-content [fullscreen]="true">
   <div class="pantalla">
     <div class="Jornadas" *ngIf="menu=='Jornadas'">
-        <div class="boton1">
-          <ion-input class="Jornada" [(ngModel)]="jornada.ciclo" label="Jornada" labelPlacement="floating" fill="outline" type="text"></ion-input>
-          <ion-button type="submit" (click)="registrarJornada()">Iniciar Jornada</ion-button>
-        </div>
-        <br>
-        <div class="box">
-          <label>Fecha de inicio</label>
-          <ion-datetime presentation="date" [preferWheel]="true" [(ngModel)]="jornada.FechaInicio"></ion-datetime>
-        </div>
-        <div class="box">
-          <label>Fecha de Finalizacion</label>
-          <ion-datetime presentation="date" [preferWheel]="true" [(ngModel)]="jornada.FechaFinal"></ion-datetime>
-        </div>
+      <div class="boton1">
+        <ion-input class="Jornada" [(ngModel)]="jornada.ciclo" label="Jornada" labelPlacement="floating" fill="outline" type="text"></ion-input>
+        <ion-button type="submit" (click)="registrarJornada()">Iniciar Jornada</ion-button>
+      </div>
+      <br>
+      <div class="box">
+        <label>Fecha de inicio</label>
+        <ion-datetime presentation="date" [preferWheel]="true" [(ngModel)]="jornada.FechaInicio"></ion-datetime>
+      </div>
+      <div class="box">
+        <label>Fecha de Finalizacion</label>
+        <ion-datetime presentation="date" [preferWheel]="true" [(ngModel)]="jornada.FechaFinal"></ion-datetime>
+      </div>
+      <div class="Info" style="width: 100%; text-align: center;">  
+        <h1>Informacion</h1>
+      </div>
+      <ion-datetime class="filt" presentation="year" [preferWheel]="true" (ionChange)="dateChanged($event)"></ion-datetime>
         
-        <ion-datetime class="filt" presentation="year" [preferWheel]="true" (ionChange)="dateChanged($event)"></ion-datetime>
-          
-        <div class="grid">
-          <ion-grid>
-            <ion-row>
-              <ion-col><h3>Jornada</h3></ion-col>
-              <ion-col><h3>Fecha de inicio</h3></ion-col>
-              <ion-col><h3>Fecha final</h3></ion-col>
-              <ion-col><h3>Datos de jornada</h3></ion-col>
-            </ion-row>
+      <div class="grid">
+        <ion-grid>
+          <ion-row class="GridHead">
+            <ion-col class="head"><h3>Jornada</h3></ion-col>
+            <ion-col class="head"><h3>Fecha de inicio</h3></ion-col>
+            <ion-col class="head"><h3>Fecha final</h3></ion-col>
+            <ion-col class="head"><h3>Datos de jornada</h3></ion-col>
+          </ion-row>
+          <div class="tab">
             <ion-row *ngFor="let jornada of jornadas">
               <ion-col>{{jornada.ciclo}}</ion-col>
               <ion-col>{{convertir(jornada.fechaInicio)}}</ion-col>
               <ion-col>{{convertir(jornada.fechaFinal)}}</ion-col>
               <ion-col><ion-button (click)="mostrarJornada(jornada.idJornada, jornada.ciclo, convertir(jornada.fechaInicio), convertir(jornada.fechaFinal), jornada.estado)"><ion-icon name="create"></ion-icon></ion-button></ion-col>
             </ion-row>
-          </ion-grid>
-        </div>
+          </div>
+          
+        </ion-grid>
+      </div>
     
     </div>
     <div id="Conferencias" *ngIf="menu=='Conferencias'">
@@ -51,9 +56,12 @@
         [(ngModel)]="capacitacion.poster" (change)="onSelectNewFile()">
       <ion-input class="Conferencia" label="Link de Zoom" [(ngModel)]="capacitacion.zoomLink" labelPlacement="floating" fill="outline" type="text"></ion-input>
       <ion-input class="Conferencia" label="Link de FaceBook" [(ngModel)]="capacitacion.fbLink" labelPlacement="floating" fill="outline" type="text"></ion-input>
-      
       <ion-button (click)="CrearCapacitacion()">Crear Capacitacion</ion-button>
-
+      <br>
+      <br>
+      <div class="Info" style="width: 100%; text-align: center;">  
+        <h1>Informacion</h1>
+      </div>
       </div>
       <div id="Conf3">
         <ion-datetime [min]="2023" [(ngModel)]="fechaYhora"></ion-datetime>
@@ -71,21 +79,23 @@
           <ion-button >Aplicar Filtro</ion-button>
         </div>
       </div>
-
+      
       <div class="grid2">
         <ion-grid>
-          <ion-row>
-            <ion-col><h3>Capacitacion</h3></ion-col>
-            <ion-col size="5"><h3>Descripcion</h3></ion-col>
-            <ion-col><h3>Presentador</h3></ion-col>
-            <ion-col><h3>Datos de capacitacion</h3></ion-col>
+          <ion-row class="GridHead">
+            <ion-col class="head"><h3>Capacitacion</h3></ion-col>
+            <ion-col size="5" class="head"><h3>Descripcion</h3></ion-col>
+            <ion-col class="head"><h3>Presentador</h3></ion-col>
+            <ion-col class="head"><h3>Datos de capacitacion</h3></ion-col>
           </ion-row>
-          <ion-row *ngFor="let capacitacion of capacitaciones">
-            <ion-col>{{capacitacion.nomCapacitacion}}</ion-col>
-            <ion-col size="5">{{capacitacion.descripcion}}</ion-col>
-            <ion-col>{{capacitacion.presentador}}</ion-col>
-            <ion-col><ion-button (click)="mostrarCapacitacion(capacitacion)"><ion-icon name="create"></ion-icon></ion-button></ion-col>
-          </ion-row>
+          <div class="tab2">
+            <ion-row *ngFor="let capacitacion of capacitaciones">
+              <ion-col>{{capacitacion.nomCapacitacion}}</ion-col>
+              <ion-col size="5">{{capacitacion.descripcion}}</ion-col>
+              <ion-col>{{capacitacion.presentador}}</ion-col>
+              <ion-col><ion-button (click)="mostrarCapacitacion(capacitacion)"><ion-icon name="create"></ion-icon></ion-button></ion-col>
+            </ion-row>
+          </div>
         </ion-grid>
       </div>
 
@@ -117,6 +127,9 @@
         <ion-button class="boton" (click)="AgregarFecha(horaYFecha.fecha, horaYFecha.hora)">Agregar fecha y hora</ion-button>
         <ion-button (click)="CrearDiplomado()">Crear Diplomado</ion-button>
       </div>
+      <div class="Info" style="width: 100%; text-align: center;">  
+        <h1>Informacion</h1>
+      </div>
       <div class="filtro">
         <div class="filtro1">
           <ion-datetime class="filt" presentation="year" [preferWheel]="true" (ionChange)="dateChanged($event)"></ion-datetime>
@@ -130,22 +143,28 @@
           <ion-button >Aplicar Filtro</ion-button>
         </div>
       </div>
-
+      
       <div class="grid2">
         <ion-grid>
-          <ion-row>
-            <ion-col><h3>Diplomado</h3></ion-col>
-            <ion-col size="5"><h3>Descripcion</h3></ion-col>
-            <ion-col><h3>Datos del diplomado</h3></ion-col>
+          <ion-row class="GridHead">
+            <ion-col class="head"><h3>Diplomado</h3></ion-col>
+            <ion-col size="5" class="head"><h3>Descripcion</h3></ion-col>
+            <ion-col class="head"><h3>Datos del diplomado</h3></ion-col>
           </ion-row>
-          <ion-row *ngFor="let capacitacion of capacitaciones">
-            <ion-col>{{capacitacion.nomCapacitacion}}</ion-col>
-            <ion-col size="5">{{capacitacion.descripcion}}</ion-col>
-            <ion-col><ion-button (click)="mostrarCapacitacion(capacitacion)"><ion-icon name="create"></ion-icon></ion-button></ion-col>
-          </ion-row>
+          <div class="tab3">
+            <ion-row *ngFor="let capacitacion of capacitaciones">
+              <ion-col>{{capacitacion.nomCapacitacion}}</ion-col>
+              <ion-col size="5">{{capacitacion.descripcion}}</ion-col>
+              <ion-col><ion-button (click)="mostrarCapacitacion(capacitacion)"><ion-icon name="create"></ion-icon></ion-button></ion-col>
+            </ion-row>
+          </div>
         </ion-grid>
       </div>
     </div>
+    <div id="Usuarios" *ngIf="menu=='Usuarios'">
+    
+    </div>
   </div>
+  
   
 </ion-content>

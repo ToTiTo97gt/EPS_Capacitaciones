@@ -30,8 +30,10 @@ export class IngresoPage implements OnInit {
       let json = JSON.stringify(datos)
       let obj = JSON.parse(json)
       try {
-        this.decoded = jwt_decode(obj.token)
-        this.router.navigate(['/tabs',this.decoded.datos[0]]);
+        let json : any = {
+          token: obj.token
+        }
+        this.router.navigate(['/tabs', json]);
       } catch (error) {
         alert("Error en el ingreso\nVerifique sus datos de administrador")
         console.log("Error al decodificar el Token JWT ", error)
@@ -41,7 +43,6 @@ export class IngresoPage implements OnInit {
       let json = JSON.stringify(datos)
       let obj = JSON.parse(json)
       try {
-        this.decoded = jwt_decode(obj.token)
         let json : any = {
           token: obj.token
         }

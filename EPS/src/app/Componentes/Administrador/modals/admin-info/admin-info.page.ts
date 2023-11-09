@@ -13,14 +13,36 @@ export class AdminInfoPage implements OnInit {
   @Input() nombre: any;
   @Input() apellido: any;
   @Input() idAdmin: any;
+  @Input() datosP: any
+  @Input() dato: any
   @ViewChild('miSelect') miSelect: any
   constructor(private modalCtrl:ModalController, private adminService:AdminService) { }
 
   public datos: any
   public permisos: any
+  public mostrar1: boolean = false
+  public mostrar2: boolean = false
+
+  public AdminPerfil = {
+    nombre: "",
+    apellido: "",
+    correo: "",
+    telefono: "",
+    OldPass: "",
+    NewPass: "",
+    ConfirmPass: ""
+  }
 
   ngOnInit() {
-    this.getPermisos()
+    if(this.dato == 1){
+      this.getPermisos()
+    } else {
+      this.AdminPerfil.nombre = this.datosP.nombre
+      this.AdminPerfil.apellido = this.datosP.apellido
+      this.AdminPerfil.correo = this.datosP.email
+      this.AdminPerfil.OldPass = this.datosP.passw
+      this.AdminPerfil.telefono = this.datosP.telefono
+    }
   }
 
   Regresar(){
@@ -80,6 +102,14 @@ export class AdminInfoPage implements OnInit {
     } catch (error) {
       alert('error al ejecutar la peticion de RevocarPermiso. ' + error)
     }
+  }
+
+  togglePassVisibility(){
+    this.mostrar1 = !this.mostrar1
+  }
+
+  togglePassVisibility1(){
+    this.mostrar2 = !this.mostrar2
   }
 
 }

@@ -27,6 +27,7 @@ export class TabsuPage implements OnInit {
       this.decoded = jwt_decode(datos)
       this.userService.idG = this.decoded.datos[0].idUsuario
       this.userService.idTipo = this.decoded.datos[0].idTipo
+      this.userService.AsignacionAuto(this.userService.idG, this.userService.idTipo)
     } else {
       alert('error en el token, esta vacio')
     }

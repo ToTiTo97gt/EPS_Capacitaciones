@@ -1,0 +1,24 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>{{this.Diplomado}}</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="Regresar()">Cerrar</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <div class="elementos">
+    <ion-datetime presentation="date" [multiple]="true" [value]="fechasDiplomado"></ion-datetime>
+    <div class="lista">
+      <ion-list>
+        <ion-item style="--background: red; color: white;">Horario de cada fecha</ion-item>
+        <ion-item *ngFor="let datos of fechas">{{convertir(datos.fecha)}} -> {{datos.hora}}</ion-item>
+      </ion-list>
+    </div>
+  </div>
+  
+
+
+
+</ion-content>

@@ -7,7 +7,7 @@
   </ion-toolbar>
 </ion-header>
 <ion-content>
-  <div class="asignarPerm">
+  <div class="asignarPerm" *ngIf="dato == 1">
     <div class="Asignar">
       <ion-select #miSelect aria-label="Fruit" placeholder="Permisos">
         <ion-select-option *ngFor="let dato of datos" [value]="dato.idPermiso">{{dato.permiso}}</ion-select-option>
@@ -28,9 +28,45 @@
         </ion-row>
       </ion-grid>
     </div>
+    <br>
+    <ion-button class="Eliminar" (click)="EliminarAdmin(idAdmin)">Eliminar Administrador</ion-button>
   </div>
-  <br>
-  <ion-button class="Eliminar" (click)="EliminarAdmin(idAdmin)">Eliminar Administrador</ion-button>
+  <div class="perfil" *ngIf="dato == 0">
+    <div id="col11">
+      <ion-input class="input" [(ngModel)]="AdminPerfil.nombre" label="Nombre" label-placement="floating" fill="outline" type="text"></ion-input>
+      <br>
+      <ion-input class="input" [(ngModel)]="AdminPerfil.apellido" label="Apellido" label-placement="floating" fill="outline" type="text"></ion-input>
+      <br>
+      <ion-input class="input" [(ngModel)]="AdminPerfil.telefono" label="Telefono" label-placement="floating" fill="outline" type="text"></ion-input>
+      <br>
+      <ion-input class="input" [(ngModel)]="AdminPerfil.correo" label="E-mail" label-placement="floating" fill="outline" type="text"></ion-input>
+      </div>
+    <div id="col2">
+      <ion-item>
+        <ion-label position="stacked">Contraseña Actual</ion-label>
+        <ion-input type="{{mostrar1 ? 'text' : 'password'}}" [(ngModel)]="AdminPerfil.OldPass"></ion-input>
+        <ion-button slot="end" fill="clear" (click)="togglePassVisibility()">
+          <ion-icon [name]="mostrar1 ? 'eye-off' : 'eye'"></ion-icon>
+        </ion-button>
+      </ion-item>
+      <ion-item>
+        <ion-label position="stacked">Contraseña Nueva</ion-label>
+        <ion-input type="{{mostrar1 ? 'text' : 'password'}}" [(ngModel)]="AdminPerfil.NewPass"></ion-input>
+        <ion-button slot="end" fill="clear" (click)="togglePassVisibility1()">
+          <ion-icon [name]="mostrar1 ? 'eye-off' : 'eye'"></ion-icon>
+        </ion-button>
+      </ion-item>
+      <ion-item>
+        <ion-label position="stacked">Confirmar contraseña</ion-label>
+        <ion-input type="{{mostrar1 ? 'text' : 'password'}}" [(ngModel)]="AdminPerfil.ConfirmPass"></ion-input>
+        <ion-button slot="end" fill="clear" (click)="togglePassVisibility1()">
+          <ion-icon [name]="mostrar1 ? 'eye-off' : 'eye'"></ion-icon>
+        </ion-button>
+      </ion-item>
+      <ion-button class="boton">Cambiar Contraseña(P)</ion-button>
+    </div>
+  </div>
+  
 
   
 </ion-content>

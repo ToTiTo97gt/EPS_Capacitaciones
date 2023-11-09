@@ -33,6 +33,14 @@ const routes: Routes = [
   {
     path: 'datos-usuario',
     loadChildren: () => import('./Componentes/Usuarios/modals/datos-usuario/datos-usuario.module').then( m => m.DatosUsuarioPageModule)
+  },
+  {
+    path: 'calendario',
+    loadChildren: () => import('./Componentes/Usuarios/modals/calendario/calendario.module').then( m => m.CalendarioPageModule)
+  },
+  {
+    path: 'inscripcion-info',
+    loadChildren: () => import('./Componentes/Administrador/modals/inscripcion-info/inscripcion-info.module').then( m => m.InscripcionInfoPageModule)
   }
 ];
 @NgModule({

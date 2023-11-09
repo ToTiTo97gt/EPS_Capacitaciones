@@ -1,0 +1,21 @@
+ion-content{
+    --background: #221d45;
+}
+
+.elementos{
+    gap: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.lista{
+    width: 14rem;
+    height: 15rem;
+    overflow-y: scroll;
+}
+
+ion-toolbar{
+    color: #fff;
+    --background: #ff0000;
+}
