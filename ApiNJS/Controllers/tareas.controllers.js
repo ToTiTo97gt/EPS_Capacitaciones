@@ -412,6 +412,45 @@ exports.Actualizar1 = async (req, res) => {
     })
 }
 
+exports.getInscripciones = async (req, res) => {
+    try {
+        var idCapacitacion = req.body.idCapacitacion
+        if(req.body.datosExtra === undefined){
+            bd.query(`select a.carne, a.cui, a.nombre, a.apellido, a.correo from usuario a, tipousuario b, municipio c, departamento d, asistencia e, capacitacion f
+              where f.idCapacitacion = ${idCapacitacion} and f.idCapacitacion = e.idCapacitacion and e.inscrito = 1 and e.idUsuario = a.idUsuario and b.idTipo = a.idTipo and a.idmunicipio = c.idMunicipio and c.idDepartamento = d.idDepartamento`, function(err, result){
+                if(err) throw err;
+                return res.send(result)
+            })
+        } else {
+            var parametrosExtra = ""
+            if(req.body.datosExtra.idTipo != 0){
+                parametrosExtra += " and b.idTipo = " + req.body.datosExtra.idTipo
+            }
+            if(req.body.datosExtra.genero != 0){
+                parametrosExtra += " and a.genero = " + req.body.datosExtra.genero
+            }
+            if(req.body.datosExtra.idDepartamento != 0){
+                parametrosExtra += " and d.idDepartamento = " + req.body.datosExtra.idDepartamento
+            }
+            if(req.body.datosExtra.idmunicipio != 0){
+                parametrosExtra += " and c.idmunicipio = " + req.body.datosExtra.idmunicipio
+            }
+            if(req.body.datosExtra.presente != 2){
+                parametrosExtra += " and e.presente = " + req.body.datosExtra.presente
+            }
+            console.log(parametrosExtra + " -*--*-*-*-*-*-")
+            bd.query(`select a.carne, a.cui, a.nombre, a.apellido, a.correo from usuario a, tipousuario b, municipio c, departamento d, asistencia e, capacitacion f
+              where f.idCapacitacion = ${idCapacitacion} and f.idCapacitacion = e.idCapacitacion and e.inscrito = 1 and e.idUsuario = a.idUsuario and b.idTipo = a.idTipo and a.idmunicipio = c.idMunicipio and c.idDepartamento = d.idDepartamento${parametrosExtra}`, function(err, result){
+                if(err) throw err;
+                return res.send(result)
+            })
+        }
+    } catch (error) {
+        console.log(error)
+        console.log('Problema en la ejecucion del query para inscripciones')
+    }
+}
+
 function SubirArchivo(Archivo, idArchivo){
     try {
         var nombrei = "Posts/" + Archivo;

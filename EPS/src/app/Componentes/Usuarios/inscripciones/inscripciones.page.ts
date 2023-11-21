@@ -24,7 +24,7 @@ export class InscripcionesPage implements OnInit {
   }
 
   async GetConferencias(){
-    this.conferencias = await this.userService.GetCapacitaciones(this.userService.idTipo, this.userService.idG, 1)
+    this.conferencias = await this.userService.GetCapacitaciones(this.userService.idG, 1)
   }
 
   convertir(fecha: string){
@@ -32,13 +32,15 @@ export class InscripcionesPage implements OnInit {
     return this.formatoFecha(objc,'dd/mm/yyyy') 
   }
 
-  async MostrarCalendarioDiplomado(idDiplomado: any, Diplomado: any){
+  async MostrarCalendarioDiplomado(Diplomado: any){
     const modal = await this.modalCtrl.create({
       component: CalendarioPage,
       cssClass: 'custom-modal',
       componentProps: {
-        idDiplomado: idDiplomado,
-        Diplomado: Diplomado
+        Diplomado: Diplomado,
+        Boton: 'ANULAR INSCRIPCION',
+        Valor: 0,
+        Mensaje: 'Inscripcion Anulada'
       }
     });
     await modal.present();

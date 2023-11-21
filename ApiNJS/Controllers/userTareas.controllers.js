@@ -73,16 +73,8 @@ exports.GetUser = async (req, res) => {//modificar esta peticion para que acepta
 }
 
 exports.GetCapacitaciones = async (req, res) => {
-    var idTipo = req.body.idTipo;
     var idUser = req.body.idUser;
     var Inscrito = req.body.Inscrito
-    if(idTipo == 4 || idTipo == 5 || idTipo == 7){
-        bd.query(`select a.*, c.fecha, c.hora from capacitacion a, jornada b, agenda c, asistencia d, usuario e where a.idJornada = b.idJornada and CURDATE() >= b.fechaInicio
-          and CURDATE() <= b.fechaFinal and a.idCapacitacion = c.idCapacitacion and a.idCategoria = 1 and e.idUsuario = d.idUsuario and e.idUsuario = ${idUser} and a.idCapacitacion = d.idCapacitacion and d.inscrito = ${Inscrito};`, function(err, result){
-            if(err) throw err;
-            return res.send(result)
-        })
-    } else {
         bd.query(`select a.*, c.fecha, c.hora from capacitacion a, jornada b, agenda c, asistencia d, usuario e where a.idJornada = b.idJornada and CURDATE() >= b.fechaInicio
           and CURDATE() <= b.fechaFinal and a.idCapacitacion = c.idCapacitacion and a.idCategoria = 1 and e.idUsuario = d.idUsuario and e.idUsuario = ${idUser} and a.idCapacitacion = d.idCapacitacion and d.inscrito = ${Inscrito}
 	      UNION
@@ -91,15 +83,12 @@ exports.GetCapacitaciones = async (req, res) => {
             if(err) throw err;
             return res.send(result)
         })
-    }
 }
 
 exports.AsignacionAuto = async (req, res) => {
     var idUser = req.body.idUser;
-    var idTipo = req.body.idTipo;
     try {
-
-        const capacitaciones = await capacitacionesUser(idTipo)
+        const capacitaciones = await capacitacionesUser()
 
         for(const capacitacion of capacitaciones){
             try {
@@ -122,27 +111,16 @@ exports.AsignacionAuto = async (req, res) => {
     }
 }
 
-function capacitacionesUser(idTipo) {
+function capacitacionesUser() {
     return new Promise((resolve, reject) => {
-        if(idTipo == 4 || idTipo == 5 || idTipo == 7){
-            bd.query(`SELECT a.idCapacitacion FROM capacitacion a, jornada b where a.idJornada = b.idJornada and CURDATE() >= b.fechaInicio
-              and CURDATE() <= b.fechaFinal and a.idCategoria = 1`, (err, result) => {
-                if (err) {
-                    reject(err);
-                } else {
-                    resolve(result);
-                }
-            });
-        } else {
-            bd.query(`SELECT a.idCapacitacion FROM capacitacion a, jornada b where a.idJornada = b.idJornada and CURDATE() >= b.fechaInicio
-              and CURDATE() <= b.fechaFinal`, (err, result) => {
-                if (err) {
-                    reject(err);
-                } else {
-                    resolve(result);
-                }
-            });
-        }
+        bd.query(`SELECT a.idCapacitacion FROM capacitacion a, jornada b where a.idJornada = b.idJornada and CURDATE() >= b.fechaInicio
+          and CURDATE() <= b.fechaFinal`, (err, result) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(result);
+            }
+        });
     })
 }
 

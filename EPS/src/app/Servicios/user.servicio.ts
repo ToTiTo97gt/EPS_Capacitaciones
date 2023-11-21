@@ -42,15 +42,15 @@ export class UserService{
         return this.httpClient.post(ruta, data).toPromise()
     }
 
-    GetCapacitaciones(idTipo: any, idUser: any, Inscrito: any){
+    GetCapacitaciones(idUser: any, Inscrito: any){
         const ruta = this.url+"User/GetCapacitaciones"
-        const data = {idTipo, idUser, Inscrito}
+        const data = {idUser, Inscrito}
         return this.httpClient.post(ruta, data).toPromise()
     }
 
-    AsignacionAuto(idUser:any, idTipo:any){
+    AsignacionAuto(idUser:any){
         const ruta = this.url+"User/AsignacionAuto"
-        const data = {idUser, idTipo}
+        const data = {idUser}
         return this.httpClient.post(ruta, data).toPromise()
     }
 

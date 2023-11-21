@@ -12,23 +12,25 @@
     
         <ion-input class="Contra" label="Contraseña" labelPlacement="floating" fill="outline" [(ngModel)]="nuevoUser.passw" type="password"></ion-input>
       
-        <ion-button class="boton" (click)="Registrar(nuevoUser)" type="submit">Registrar Administrador</ion-button>
+        <ion-button (click)="Registrar(nuevoUser)" type="submit">Registrar Administrador</ion-button>
 
     </div>
     <div class="table">
       <ion-grid>
         <ion-row class="header-row">
-          <ion-col>Nombre</ion-col>
-          <ion-col>Telefono</ion-col>
-          <ion-col>Correo</ion-col>
-          <ion-col>Datos</ion-col>
+          <ion-col class="head">Nombre</ion-col>
+          <ion-col class="head">Telefono</ion-col>
+          <ion-col class="head">Correo</ion-col>
+          <ion-col class="head">Datos</ion-col>
         </ion-row>
-        <ion-row class="data-row" *ngFor="let item of datos">
-          <ion-col>{{item.nombre + " " + item.apellido}}</ion-col>
-          <ion-col>{{item.telefono}}</ion-col>
-          <ion-col>{{item.email}}</ion-col>
-          <ion-col><ion-button (click)="MostrarDatos(item.idAdmin, item.nombre, item.apellido)">Mostrar Informacion</ion-button></ion-col>
-        </ion-row>
+        <div class="tab">
+          <ion-row class="data-row" *ngFor="let item of datos">
+            <ion-col>{{item.nombre + " " + item.apellido}}</ion-col>
+            <ion-col>{{item.telefono}}</ion-col>
+            <ion-col>{{item.email}}</ion-col>
+            <ion-col><ion-button (click)="MostrarDatos(item.idAdmin, item.nombre, item.apellido)">Mostrar Informacion</ion-button></ion-col>
+          </ion-row>
+        </div>
       </ion-grid>
     </div>
   </div>

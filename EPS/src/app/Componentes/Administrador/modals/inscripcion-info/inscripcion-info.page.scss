@@ -1,0 +1,82 @@
+    
+    .contenido{
+        gap: 10px;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .tipo{
+        width: 20rem;
+        border: 2px solid red;
+        background-color: white;
+    }
+
+    .genero{
+        width: 8rem;
+        border: 2px solid red;
+        background-color: white;
+    }
+
+    .departamento{
+        width: 10rem;
+        border: 2px solid red;
+        background-color: white;
+    }
+
+    .municipio{
+        width: 10rem;
+        border: 2px solid red;
+        background-color: white;
+    }
+
+    .asistencia{
+        width: 7rem;
+        border: 2px solid red;
+        background-color: white;
+    }
+
+    .GridHead{
+        background-color: #FF0000;
+        border: solid 1px #fff;
+        color: #fff;
+        text-align: center;
+    }
+
+    .head{
+        background-color: #FF0000;
+        border: solid 1px #fff;
+        color: #fff;
+        text-align: center;
+    }
+
+    .tab{
+        width: 100%;
+        height: 14rem;
+        border: solid 1px #fff;
+        color: #fff;
+        text-align: center;
+        overflow-y: auto;
+    }
+
+    .grid{
+        width: 100%;
+        height: 14rem;
+    }
+
+    ion-col {
+        background-color: #221d45;
+        border: solid 1px #fff;
+        color: #fff;
+        text-align: center;
+      }
+    
+    ion-content{
+        --background: #221d45;
+        overflow-x: auto;
+    }
+    
+    ion-toolbar{
+        --background: #ff0000;
+        color: white
+    }

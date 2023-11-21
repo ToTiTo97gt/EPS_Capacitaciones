@@ -26,7 +26,7 @@
           <ion-row *ngFor="let capacitacion of capacitaciones">
             <ion-col class="body">{{capacitacion.nomCapacitacion}}</ion-col>
             <ion-col class="body" size="5">{{capacitacion.descripcion}}</ion-col>
-            <ion-col class="body"><ion-button><ion-icon name="create"></ion-icon></ion-button></ion-col>
+            <ion-col class="body"><ion-button (click)="mostrarInscripciones(capacitacion)"><ion-icon name="create"></ion-icon></ion-button></ion-col>
           </ion-row>
         </div>
         

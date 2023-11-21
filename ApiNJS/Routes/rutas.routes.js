@@ -30,5 +30,6 @@ router.post('/CapacitacionesXJornada', admin.CapacitacionesPorJornada)
 router.post('/CapacitacionReciente', admin.CapacitacionReciente)
 router.post('/Actualizar0', admin.Actualizar0)
 router.post('/Actualizar1', admin.Actualizar1)
+router.post('/GetInscripciones', admin.getInscripciones)
 
 module.exports = router

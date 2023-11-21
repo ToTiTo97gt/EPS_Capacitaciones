@@ -10,23 +10,34 @@ import { UserService } from 'src/app/Servicios/user.servicio';
 })
 export class CalendarioPage implements OnInit {
 
-  @Input() idDiplomado: any
   @Input() Diplomado: any
+  @Input() Boton: any
+  @Input() Valor: any
+  @Input() Mensaje: any
   public fechasDiplomado: string[] = []
 
-  constructor(private modalCtrl:ModalController, private adminService:AdminService, private UserService:UserService) { }
+  constructor(private modalCtrl:ModalController, private adminService:AdminService, private userService:UserService) { }
 
   ngOnInit() {
-    this.getCalendario()
+    console.log(this.Diplomado + "----")
+    if(this.Diplomado.idCategoria == 2){
+      this.getCalendario()
+    }
   }
 
   public fechas: any
   async getCalendario(){
-    this.fechas = await this.UserService.CalendarioDiplomado(this.idDiplomado)
+    this.fechas = await this.userService.CalendarioDiplomado(this.Diplomado.idCapacitacion)
     for(let fecha of this.fechas){
       const fechadate = new Date(fecha.fecha)
       this.fechasDiplomado.push(fechadate.toISOString().split('T')[0])
     }
+  }
+
+  async Inscribir(idCapacitacion: any){
+    let res = await this.userService.Inscripcion(this.userService.idG, idCapacitacion, this.Valor)
+    alert(this.Mensaje)
+    location.reload()
   }
 
   convertir(fecha: string){

@@ -5,7 +5,6 @@
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    background-color: #221d45;
 }
 
 
@@ -32,13 +31,12 @@
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    background-color: #221d45;
 }
 
 .head{
-    background-color: red;
-    color: white;
-    border: solid 1px #fff;
+    background-color: white;
+    color: red;
+    border: solid 1px red;
     text-align: center;
 }
 
@@ -60,10 +58,12 @@ ion-select{
     background-color: white;
     margin-left: 4%;
     margin-top: 5px;
+    border: solid 1px #221d45;
 }
 
 ion-button{
     margin-left: 25%;
+    --background: red;
 }
 
 

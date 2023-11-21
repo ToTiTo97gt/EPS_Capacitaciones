@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { IonMenuToggle } from '@ionic/angular';
 import { MenuController } from '@ionic/angular';
 
 @Component({
@@ -21,7 +22,7 @@ export class Tab1Page implements OnInit{
   }
 
   toggleMenu(){
-    this.menuController.enable(false)
+    this.menuController.toggle()
   }
 
   cargar(){

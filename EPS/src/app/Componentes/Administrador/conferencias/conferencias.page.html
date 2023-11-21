@@ -2,8 +2,10 @@
   <div id="pantalla">
     <br>
     <ion-input class="Conferencia" label="Cargar Diplomas de conferencias" labelPlacement="floating" fill="outline" type="file"></ion-input>
+    <input class="Conferencia" type="file" id="file" accept=".csv"
+        (change)="onFileChange($event)">
     <br>
-    <ion-button> Cargar Datos </ion-button>
+    <ion-button (click)="cargarArchivo()"> Cargar Datos </ion-button>
     <ion-grid>
       <div id="head">
         <ion-row id="filaMain">

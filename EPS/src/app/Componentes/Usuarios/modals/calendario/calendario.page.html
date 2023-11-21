@@ -1,6 +1,6 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
-    <ion-title>{{this.Diplomado}}</ion-title>
+    <ion-title>{{this.Diplomado.nomCapacitacion}}</ion-title>
     <ion-buttons slot="end">
       <ion-button (click)="Regresar()">Cerrar</ion-button>
     </ion-buttons>
@@ -8,17 +8,67 @@
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <div class="elementos">
-    <ion-datetime presentation="date" [multiple]="true" [value]="fechasDiplomado"></ion-datetime>
-    <div class="lista">
-      <ion-list>
-        <ion-item style="--background: red; color: white;">Horario de cada fecha</ion-item>
-        <ion-item *ngFor="let datos of fechas">{{convertir(datos.fecha)}} -> {{datos.hora}}</ion-item>
-      </ion-list>
+  <div class="main">
+    <div class="card" *ngIf="Diplomado.idCategoria == 1">
+      <div class="parte1">
+        <ion-img src="{{this.Diplomado.poster}}"></ion-img>
+      </div>
+      <div class="gridd">
+        <ion-grid>
+          <ion-row class="GridHead">
+            <ion-col class="head"><h3>Fecha</h3></ion-col>
+            <ion-col class="head"><h3>Hora</h3></ion-col>
+            <ion-col class="head"><h3>Presentador</h3></ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col>{{convertir(this.Diplomado.fecha)}}</ion-col>
+            <ion-col>{{this.Diplomado.hora}}</ion-col>
+            <ion-col>{{this.Diplomado.presentador}}</ion-col>
+          </ion-row>
+        </ion-grid>
+      </div>
+      <div class="titulo">
+        <ion-button (click)="Inscribir(Diplomado.idCapacitacion)">{{this.Boton}}</ion-button>
+      </div>
+      <div class="foot">
+
+      </div>
+    </div>
+    
+
+    <div class="card2" *ngIf="Diplomado.idCategoria == 2">
+      <div class="parte2">
+        <ion-img src="{{this.Diplomado.poster}}"></ion-img>
+      </div>
+    </div>
+
+    <div class="elementos" *ngIf="Diplomado.idCategoria == 2">
+      <ion-datetime presentation="date" [multiple]="true" [value]="fechasDiplomado"></ion-datetime>
+      <div class="titulo">
+        <h1>Horarios</h1>
+      </div>
+      <div class="grid">
+        <ion-grid>
+          <ion-row class="GridHead">
+            <ion-col class="head"><h3>Fecha</h3></ion-col>
+            <ion-col class="head"><h3>Hora</h3></ion-col>
+          </ion-row>
+          <div class="tab">
+            <ion-row *ngFor="let datos of fechas">
+              <ion-col>{{convertir(datos.fecha)}}</ion-col>
+              <ion-col>{{datos.hora}}</ion-col>
+            </ion-row>
+          </div>
+        </ion-grid>
+      </div>
+      <div class="titulo">
+        <ion-button (click)="Inscribir(Diplomado.idCapacitacion)">{{this.Boton}}</ion-button>
+      </div>
+      
+    </div>
+    <div class="foot" *ngIf="Diplomado.idCategoria == 2">
+
     </div>
   </div>
-  
-
-
 
 </ion-content>

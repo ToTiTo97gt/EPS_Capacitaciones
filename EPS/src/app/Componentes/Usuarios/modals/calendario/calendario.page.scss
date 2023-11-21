@@ -2,6 +2,22 @@ ion-content{
     --background: #221d45;
 }
 
+.main{
+    width: 100%;
+    height: 100%;
+    gap: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    --background: #221d45;
+}
+
+.foot{
+    width: 100%;
+    height: 3rem;
+    background-color: #221d45;
+}
+
 .elementos{
     gap: 10px;
     display: flex;
@@ -14,6 +30,287 @@ ion-content{
     height: 15rem;
     overflow-y: scroll;
 }
+
+@media (min-width: 300px) {
+    .card{
+        margin-top: 5px;
+        width: 100%;
+        height: 25rem;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .card2{
+        margin-top: 5px;
+        width: 100%;
+        height: 25rem;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+}
+
+@media (min-width: 374px) {
+    .card{
+        margin-top: 5px;
+        width: 100%;
+        height: 26rem;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .card2{
+        margin-top: 5px;
+        width: 100%;
+        height: 26rem;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+}
+
+@media (min-width: 400px) {
+    .card{
+        margin-top: 5px;
+        width: 80%;
+        height: 27rem;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+    .card2{
+        margin-top: 5px;
+        width: 80%;
+        height: 29rem;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+}
+
+@media (min-width: 450px) {
+    .card{
+        margin-top: 5px;
+        width: 85%;
+        height: 27rem;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+    .card2{
+        margin-top: 5px;
+        width: 85%;
+        height: 31rem;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+}
+
+@media (min-width: 550px) {
+    .card{
+        margin-top: 5px;
+        width: 68%;
+        height: 28rem;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+    .card2{
+        margin-top: 5px;
+        width: 68%;
+        height: 33rem;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+}
+
+@media (min-width: 600px) {
+    .card{
+        margin-top: 5px;
+        width: 71%;
+        height: 35rem;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+}
+
+@media (min-width: 650px) {
+    .card{
+        margin-top: 5px;
+        width: 74%;
+        height: 30rem;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+    .card2{
+        margin-top: 5px;
+        width: 71%;
+        height: 37rem;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+}
+
+@media (min-width: 700px) {
+    .card{
+        margin-top: 5px;
+        width: 77%;
+        height: 31rem;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+    .card2{
+        margin-top: 5px;
+        width: 77%;
+        height: 39rem;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+}
+
+@media (min-width: 750px) {
+    .card{
+        margin-top: 5px;
+        width: 80%;
+        height: 32rem;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+    .card2{
+        margin-top: 5px;
+        width: 80%;
+        height: 41rem;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+}
+
+@media (min-width: 767px) {
+    .card{
+        margin-top: 5px;
+        width: 100%;
+        height: 32rem;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+    .card2{
+        margin-top: 5px;
+        width: 100%;
+        height: 43rem;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+}
+
+@media (min-width: 768px) {
+    .card{
+        margin-top: 5px;
+        width: 100%;
+        height: 33rem;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .card2{
+        margin-top: 5px;
+        width: 100%;
+        height: 45rem;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+}
+
+.parte1{
+    width: 100%;
+    height: 90%; //29rem;
+    //border: 1px solid #000; /* Para visualización */
+    overflow: hidden;
+}
+
+.parte1 ion-img {
+    max-width: 100%; /* Ajusta el ancho de la imagen al 100% del div */
+    height: 100%; /* Ajusta la altura de la imagen al 100% del div */
+    object-fit: contain; /* Hace que la imagen se ajuste completamente al contenedor manteniendo la proporción */
+    object-position: center;
+}
+
+.parte2{
+    width: 100%;
+    height: 100%; //29rem;
+    //border: 1px solid #000; /* Para visualización */
+    overflow: hidden;
+}
+
+.parte2 ion-img {
+    max-width: 100%; /* Ajusta el ancho de la imagen al 100% del div */
+    height: 100%; /* Ajusta la altura de la imagen al 100% del div */
+    object-fit: contain; /* Hace que la imagen se ajuste completamente al contenedor manteniendo la proporción */
+    object-position: center;
+}
+
+.gridd{
+    width: 30rem;
+  }
+
+.grid{
+    width: 20rem;
+    height: 14rem;
+  }
+
+  .GridHead{
+    --background: #FF0000;
+    border: solid 1px #fff;
+    color: red;
+    text-align: center;
+  }
+  
+  .head{
+    background-color: #FF0000;
+    border: solid 1px #fff;
+    color: #fff;
+    text-align: center;
+  }
+
+  .tab{
+    width: calc(100% + 16px);
+    height: 10rem;
+    overflow-y: scroll;
+  }
+  
+  .titulo{
+    width: 100%;
+    gap: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    color: red;
+  }
+
+  h1{
+    font-size: 3rem;
+  }
+
+  ion-col {
+    background-color: #221d45;
+    border: solid 1px #fff;
+    color: #fff;
+    text-align: center;
+  }
 
 ion-toolbar{
     color: #fff;

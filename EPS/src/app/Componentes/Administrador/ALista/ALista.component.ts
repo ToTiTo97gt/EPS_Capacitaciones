@@ -56,7 +56,7 @@ export class AListaComponent implements OnInit {
         alert('error al registrar usuario')
       }
     }
-    
+    location.reload()
 
   }
 

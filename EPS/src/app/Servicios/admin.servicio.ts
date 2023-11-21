@@ -9,6 +9,9 @@ export class AdminService{
 
     public idG: any;
     url:string="http://localhost:3000/"
+
+    jsonData: any[] = []
+
     constructor(private httpClient: HttpClient) {}
 
     Registrar(nuevoUser: any){
@@ -151,6 +154,12 @@ export class AdminService{
         return this.httpClient.post(ruta, data).toPromise()
     }
 
+    Inscripciones(idCapacitacion: any, datosExtra?: any){
+        const ruta = this.url+"Admin/GetInscripciones"
+        const data = {idCapacitacion, datosExtra}
+        return this.httpClient.post(ruta, data).toPromise()
+    }
+
     Actualizar0(){
         const ruta = this.url+"Admin/Actualizar0"
         const data = {}
@@ -161,5 +170,18 @@ export class AdminService{
         const ruta = this.url+"Admin/Actualizar1"
         const data = {}
         return this.httpClient.post(ruta, data).toPromise()
+    }
+
+    enviarCsv(datos: any){
+        const ruta = this.url+"CSV"
+        const data = datos
+        this.httpClient.post(ruta, data).subscribe(
+            (response) => {
+              console.log('Archivo enviado con éxito', response);
+            },
+            (error) => {
+              console.error('Error al enviar el archivo', error);
+            }
+          );
     }
 }
