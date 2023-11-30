@@ -35,8 +35,6 @@ export class MenuComponent  implements OnInit {
   ngOnInit() {
     this.base64 = "Base64..."
     this.menu = this.activatedRoute.snapshot.paramMap.get('id') as string
-    this.Actualizar0()
-    this.Actualizar1()
     this.GetJornadas()
     this.GetCapacitaciones()
   }
@@ -63,14 +61,6 @@ export class MenuComponent  implements OnInit {
       alert('error al seleccionar el archivo')
     }
     
-  }
-
-  async Actualizar0(){
-    let resp0 = await this.adminService.Actualizar0()
-  }
-
-  async Actualizar1(){
-    let resp1 = await this.adminService.Actualizar1()
   }
 
   async mostrarJornada(idJornada: any, ciclo: any, DateInicio: any, DateFinal: any, estado:any){

@@ -69,6 +69,7 @@ export class RegistroPage implements OnInit {
         if(resp != 'error'){
           alert('Usuario registrado con exito')
           this.borrarRegistro()
+          this.router.navigate(['/']);
         } else {
           alert('error al registrar usuario')
         }

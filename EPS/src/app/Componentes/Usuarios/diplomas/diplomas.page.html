@@ -1,90 +1,24 @@
 
 <ion-content [fullscreen]="true">
   <div id="pantalla">
-    <br>
     <h1>
       Reuniones en las que he participado
     </h1>
-    <ion-grid>
-      <div id="head">
-        <ion-row id="filaMain">
-          <ion-col ><b>Capacitacion</b></ion-col>
-          <ion-col ><b>Descripcion</b></ion-col>
-          <ion-col ><b>Descarga</b></ion-col>
-        </ion-row>
-      </div>
-      <div id="tabla">
+    <div class="grid">
+      <ion-grid>
         <ion-row>
-          <ion-col>Capacitacion 1</ion-col>
-          <ion-col>Este es un ejemplo de la descripcion de una capacitacion, tambien sera de un diplomado</ion-col>
-          <ion-col> <ion-button>Descargar diploma</ion-button> </ion-col>
+          <ion-col class="head" size="3"><b>Capacitacion</b></ion-col>
+          <ion-col class="head" size="6"><b>Descripcion</b></ion-col>
+          <ion-col class="head"><b>Generar Diploma</b></ion-col>
         </ion-row>
-        <ion-row>
-          <ion-col>Capacitacion 1</ion-col>
-          <ion-col>Este es un ejemplo de la descripcion de una capacitacion, tambien sera de un diplomado</ion-col>
-          <ion-col> <ion-button>Descargar diploma</ion-button> </ion-col>
-        </ion-row>
-        <ion-row>
-          <ion-col>Capacitacion 1</ion-col>
-          <ion-col>Este es un ejemplo de la descripcion de una capacitacion, tambien sera de un diplomado</ion-col>
-          <ion-col> <ion-button>Descargar diploma</ion-button> </ion-col>
-        </ion-row>
-        <ion-row>
-          <ion-col>Capacitacion 1</ion-col>
-          <ion-col>Este es un ejemplo de la descripcion de una capacitacion, tambien sera de un diplomado</ion-col>
-          <ion-col> <ion-button>Descargar diploma</ion-button> </ion-col>
-        </ion-row>
-        <ion-row>
-          <ion-col>Capacitacion 1</ion-col>
-          <ion-col>Este es un ejemplo de la descripcion de una capacitacion, tambien sera de un diplomado</ion-col>
-          <ion-col> <ion-button>Descargar diploma</ion-button> </ion-col>
-        </ion-row>
-        <ion-row>
-          <ion-col>Capacitacion 1</ion-col>
-          <ion-col>Este es un ejemplo de la descripcion de una capacitacion, tambien sera de un diplomado</ion-col>
-          <ion-col> <ion-button>Descargar diploma</ion-button> </ion-col>
-        </ion-row>
-        <ion-row>
-          <ion-col>Capacitacion 1</ion-col>
-          <ion-col>Este es un ejemplo de la descripcion de una capacitacion, tambien sera de un diplomado</ion-col>
-          <ion-col> <ion-button>Descargar diploma</ion-button> </ion-col>
-        </ion-row>
-        <ion-row>
-          <ion-col>Capacitacion 1</ion-col>
-          <ion-col>Este es un ejemplo de la descripcion de una capacitacion, tambien sera de un diplomado</ion-col>
-          <ion-col> <ion-button>Descargar diploma</ion-button> </ion-col>
-        </ion-row>
-        <ion-row>
-          <ion-col>Capacitacion 1</ion-col>
-          <ion-col>Este es un ejemplo de la descripcion de una capacitacion, tambien sera de un diplomado</ion-col>
-          <ion-col> <ion-button>Descargar diploma</ion-button> </ion-col>
-        </ion-row>
-        <ion-row>
-          <ion-col>Capacitacion 1</ion-col>
-          <ion-col>Este es un ejemplo de la descripcion de una capacitacion, tambien sera de un diplomado</ion-col>
-          <ion-col> <ion-button>Descargar diploma</ion-button> </ion-col>
-        </ion-row>
-        <ion-row>
-          <ion-col>Capacitacion 1</ion-col>
-          <ion-col>Este es un ejemplo de la descripcion de una capacitacion, tambien sera de un diplomado</ion-col>
-          <ion-col> <ion-button>Descargar diploma</ion-button> </ion-col>
-        </ion-row>
-        <ion-row>
-          <ion-col>Capacitacion 1</ion-col>
-          <ion-col>Este es un ejemplo de la descripcion de una capacitacion, tambien sera de un diplomado</ion-col>
-          <ion-col> <ion-button>Descargar diploma</ion-button> </ion-col>
-        </ion-row>
-        <ion-row>
-          <ion-col>Capacitacion 1</ion-col>
-          <ion-col>Este es un ejemplo de la descripcion de una capacitacion, tambien sera de un diplomado</ion-col>
-          <ion-col> <ion-button>Descargar diploma</ion-button> </ion-col>
-        </ion-row>
-        <ion-row>
-          <ion-col>Capacitacion 1</ion-col>
-          <ion-col>Este es un ejemplo de la descripcion de una capacitacion, tambien sera de un diplomado</ion-col>
-          <ion-col> <ion-button>Descargar diploma</ion-button> </ion-col>
-        </ion-row>
-      </div>
-    </ion-grid>
+        <div id="tabla">
+          <ion-row *ngFor="let data of datas">
+            <ion-col class="body" size="3">{{data.nomCapacitacion}}</ion-col>
+            <ion-col class="body" size="6">{{data.descripcion}}</ion-col>
+            <ion-col class="body"><ion-button (click)="generarPDF(data.nomCapacitacion)"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="1.5" stroke-linecap="square" stroke-linejoin="bevel"><path d="M13 2H6a2 2 0 0 0-2 2v16c0 1.1.9 2 2 2h12a2 2 0 0 0 2-2V9l-7-7z"/><path d="M13 3v6h6"/></svg></ion-button></ion-col>
+          </ion-row>
+        </div>
+      </ion-grid>
+    </div>
   </div>
 </ion-content>

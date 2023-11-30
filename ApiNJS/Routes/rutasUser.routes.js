@@ -12,6 +12,8 @@ router.post("/GetCapacitaciones", usuario.GetCapacitaciones)
 router.post("/AsignacionAuto", usuario.AsignacionAuto)
 router.post("/Inscripcion", usuario.Inscripcion)
 router.post("/CalendarioDiplomado", usuario.CalendarioDiplomado)
+router.post("/Diplomas", usuario.Diplomas)
+router.post('/GenerarPDF', usuario.GenerarPDF)
 
 
 module.exports = router

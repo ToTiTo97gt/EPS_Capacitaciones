@@ -373,9 +373,18 @@ exports.CapacitacionesPorJornada = async (req, res) => {
     var idJornada = req.body.idJornada
     var idCategoria = req.body.idCategoria
     bd.query(`Select * from capacitacion where idJornada = ${idJornada} and idCategoria = ${idCategoria} and estado = 1;` , function(err, result){
-        if(err) throw err;
-        return res.send(result)
+        if(err){
+            if(err.code === 'ER_BAD_FIELD_ERROR'){
+                console.error('Columna no encontrada en la tabla.');
+            } else {
+                // Otro tipo de error, manejar según sea necesario
+                console.error('Error en la consulta:', err);
+            }
+        } else {
+            return res.send(result)
+        }
     })
+    
 }
 
 exports.getAgenda = async (req, res) => {
@@ -386,15 +395,41 @@ exports.getAgenda = async (req, res) => {
     })
 }
 
+exports.Asistencias = async (req, res) => {
+    var idCapacitacion = req.body.idCapacitacion
+    console.log(idCapacitacion)
+    try {
+        for(let data of req.body.datos){
+            bd.query(`update asistencia set presente = 1 where idUsuario = (select idUsuario from usuario where carne = '${data['Carne']}' and cui='${data['CUI']}' and correo='${data['Correo Electrónico']}') and inscrito = 1 and idCapacitacion = ${idCapacitacion}`, function(err, result){
+                if(err){
+                    if(err.code === 'ER_BAD_FIELD_ERROR'){
+                        console.error('Columna no encontrada en la tabla.');
+                    } else {
+                        // Otro tipo de error, manejar según sea necesario
+                        console.error('Error en la consulta:', err);
+                    }
+                } else {
+                    console.log('Asistencia Registrada')
+                    //return res.send({message: 'Asistencia registrada con exito'})
+                }
+            })
+        }
+        return res.send({message: 'Asistencias Registradas'})
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({error: 'error al registrar las asistencias'})
+    }
+}
+
 // fuciones extras
 
 exports.Actualizar0 = async (req, res) => {
     bd.query(`UPDATE jornada
     SET estado = CASE
-        WHEN CURDATE() > fechaFinal AND CURDATE() < fechaInicio THEN 0
+        WHEN CURDATE() > fechaFinal OR CURDATE() < fechaInicio THEN 0
         ELSE estado -- Mantener el valor actual si no se cumple la condición
     END
-    WHERE CURDATE() > fechaFinal AND CURDATE() < fechaInicio`, function(err, result){
+    WHERE CURDATE() > fechaFinal OR CURDATE() < fechaInicio`, function(err, result){
         if(err) throw err
         console.log("Actualizar 0")
     })

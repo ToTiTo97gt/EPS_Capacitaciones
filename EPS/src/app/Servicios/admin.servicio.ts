@@ -1,5 +1,6 @@
 import { Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
+import { retry } from "rxjs";
 
 @Injectable({
     providedIn: 'root'
@@ -160,6 +161,12 @@ export class AdminService{
         return this.httpClient.post(ruta, data).toPromise()
     }
 
+    MarcarAsistencias(idCapacitacion:any, datos:any){
+        const ruta = this.url+"Admin/Asistencias"
+        const data = {idCapacitacion, datos}
+        return this.httpClient.post(ruta, data).toPromise()
+    }
+
     Actualizar0(){
         const ruta = this.url+"Admin/Actualizar0"
         const data = {}
@@ -174,14 +181,6 @@ export class AdminService{
 
     enviarCsv(datos: any){
         const ruta = this.url+"CSV"
-        const data = datos
-        this.httpClient.post(ruta, data).subscribe(
-            (response) => {
-              console.log('Archivo enviado con éxito', response);
-            },
-            (error) => {
-              console.error('Error al enviar el archivo', error);
-            }
-          );
+        return this.httpClient.post(ruta, datos).toPromise()
     }
 }

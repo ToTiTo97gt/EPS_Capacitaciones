@@ -9,6 +9,7 @@ export class UserService{
 
     public idG: any
     public idTipo: any
+    public datosUser: any
     url:string="http://localhost:3000/"
     constructor(private httpClient: HttpClient) {}
 
@@ -63,6 +64,18 @@ export class UserService{
     Inscripcion(idUser: any, idCapacitacion: any, inscripcion: any){
         const ruta = this.url+"User/Inscripcion"
         const data = {idUser, idCapacitacion, inscripcion}
+        return this.httpClient.post(ruta, data).toPromise()
+    }
+
+    Diplomas(idUser: any){
+        const ruta = this.url+"User/Diplomas"
+        const data = {idUser}
+        return this.httpClient.post(ruta, data).toPromise()
+    }
+
+    GenerarPDF(nombre: any, apellido: any, capacitacion:any){
+        const ruta = this.url+"User/GenerarPDF"
+        const data = {nombre, apellido, capacitacion}
         return this.httpClient.post(ruta, data).toPromise()
     }
 

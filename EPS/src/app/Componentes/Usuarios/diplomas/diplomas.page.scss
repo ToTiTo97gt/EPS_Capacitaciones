@@ -1,30 +1,47 @@
 #pantalla{
     width: 100%;
     height: 100%;
-    background-color: gray;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.grid{
+    height: 262px;
+    width: 70%;
+    gap: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    background: red;
 }
 
 #tabla{
-    height: 300px;
-    width: 100%;
+    width: calc(100% + 16px);
+    height: 14rem;
     overflow-y: scroll;
-    background-color: #fff;
-}
-
-#head{
-    width: 130%;
-}
-
-#filaMain{
-    width: 76%;
 }
 
 h1{
-    margin-left: 35%;
+    margin-top: 20px;
+    font-family: 'Arial', sans-serif; /* Puedes especificar una lista de fuentes preferidas */
+    font-size: 24px; /* Tamaño de la fuente */
+    font-weight: bold; /* Peso de la fuente (normal, bold, etc.) */
+    color: #333;
 }
 
-ion-grid{
-    width: 80%;
+.head{
+    background-color: white;
+    color: red;
+    border: solid 1px red;
+    text-align: center;
+}
+
+.body{
+    background-color: #221d45;
+    color: white;
+    border: solid 1px #fff;
+    text-align: center;
 }
 
 ion-col {
@@ -32,8 +49,4 @@ ion-col {
     border: solid 1px #fff;
     color: #fff;
     text-align: center;
-}
-
-ion-button{
-    margin-left: 20px;
 }

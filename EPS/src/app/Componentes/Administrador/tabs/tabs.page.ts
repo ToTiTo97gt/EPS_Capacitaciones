@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MenuController } from '@ionic/angular';
 import { ActivatedRoute, Router } from '@angular/router'
-import { HttpClient } from '@angular/common/http';
 import jwt_decode from 'jwt-decode';
 import { AdminInfoPage } from '../modals/admin-info/admin-info.page';
 import { AdminService } from '../../../Servicios/admin.servicio';
@@ -23,6 +22,8 @@ export class TabsPage implements OnInit {
   public decoded: any
 
   ngOnInit(){
+    this.Actualizar0()
+    this.Actualizar1()
     var datos = this.parametros.snapshot.paramMap.get('token')
     if(datos !== null){
       this.decoded = jwt_decode(datos)
@@ -65,6 +66,14 @@ export class TabsPage implements OnInit {
 
   onTabChange() {
     this.menuController.enable(true); // Habilita el menú
+  }
+
+  async Actualizar0(){
+    let resp0 = await this.adminService.Actualizar0()
+  }
+
+  async Actualizar1(){
+    let resp1 = await this.adminService.Actualizar1()
   }
 
 }

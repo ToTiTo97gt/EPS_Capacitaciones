@@ -5,6 +5,10 @@ var AWS = require('aws-sdk')
 const s3 = new AWS.S3(aws_keys.s3)
 const nodemailer = require('nodemailer')
 
+const fetch = require('node-fetch') //npm install node-fetch@2.6.1
+const {PDFDocument, StandardFonts} = require('pdf-lib')
+const fs = require('fs').promises
+
 exports.Prueba = async (req, res) => {
     bd.query(`SELECT * FROM tipoTarea`, function (err, result) {
         if (err) throw err;
@@ -136,6 +140,18 @@ function insertarAsistencia(idUser, idCapacitacion){
     });
 }
 
+exports.Diplomas = async(req, res) => {
+    var idUser = req.body.idUser
+    try {
+        bd.query(`select nomCapacitacion, descripcion from capacitacion a, usuario b, asistencia c where b.idUsuario = ${idUser} and a.idCapacitacion = c.idCapacitacion and b.idUsuario = c.idUsuario and c.inscrito = 1 and c.presente = 1`, (err, result) => {
+            if(err) throw err;
+            return res.send(result)
+        })
+    } catch (error) {
+        console.log('Error al solicitar las reuniones con derecho a diploma')
+    }
+}
+
 exports.Inscripcion = async(req, res) => {//recordar la inscripcion
     var idUser = req.body.idUser
     var idCapacitacion = req.body.idCapacitacion
@@ -159,5 +175,141 @@ exports.CalendarioDiplomado = async(req, res) => {
         })
     } catch (error) {
         console.log("error al solicitar el calendario del diplomado")
+    }
+}
+
+exports.GenerarPDF = async(req, res) => {
+    try {
+        
+        // Crea un nuevo documento PDF
+        const pdfDoc = await PDFDocument.create();
+        const jpgUrl = 'https://bucket-jornadas.s3.amazonaws.com/Extras/PlantillaDiploma.jpg'
+        const jpgImageBytes = await fetch(jpgUrl).then((res) => res.arrayBuffer())
+        const pageWidth = 792; //792 - 600
+        const pageHeight = 612; //612 - 400
+        const page = pdfDoc.addPage([pageWidth, pageHeight]);
+
+        const jpgImage = await pdfDoc.embedJpg(jpgImageBytes)
+        const scaleFactor = Math.min(pageWidth / jpgImage.width, pageHeight / jpgImage.height)
+        const scaledWidth = jpgImage.width * scaleFactor;
+        const scaledHeight = jpgImage.height * scaleFactor;
+        page.drawImage(jpgImage, {
+            x: 0,
+            y: 0,
+            width: scaledWidth,
+            height: scaledHeight,
+        })
+    
+        // Incrusta la fuente en el documento
+        const customFont = await pdfDoc.embedFont(StandardFonts.Helvetica);
+    
+        // Usa la fuente personalizada en el texto
+        const nombre = req.body.nombre + " " + req.body.apellido;
+
+        const fontSize = 12;
+        const longitudTexto = customFont.widthOfTextAtSize(nombre, fontSize);
+        var PosX = (pageWidth - longitudTexto) / 2;
+
+        page.drawText(nombre, { font: customFont, x: (PosX - 35), y: 368, fontSize: fontSize });
+    
+        // Guarda el documento
+        const pdfBytes = await pdfDoc.save();
+        const buffer = Buffer.from(pdfBytes)
+        //console.log(base64String)
+
+        var nombrei = "Extras/"+ req.body.nombre + req.body.apellido +"_"+ req.body.capacitacion +".pdf";
+        //se convierte la base64 a bytes
+        const params1 = {
+            Bucket: "bucket-jornadas",
+            Key: nombrei,
+            Body: buffer,
+            ACL: 'public-read'
+        };
+        putResult = s3.putObject(params1).promise();
+  
+        // Envía el PDF al cliente
+        var URLArmado = 'https://bucket-jornadas.s3.amazonaws.com/Extras/'+req.body.nombre + req.body.apellido+'_'+req.body.capacitacion.replace(/\s+/g, '+')+'.pdf'
+        console.log(URLArmado)
+        return res.send({Mensaje:'Archivo Generado', URL: URLArmado})
+    
+    
+        // Crear un nuevo documento PDF
+        /* const pdfDoc = await PDFDocument.create();
+    
+        const jpgUrl = 'https://bucket-jornadas.s3.amazonaws.com/Extras/PlantillaDiploma.jpg'
+        const jpgImageBytes = await fetch(jpgUrl).then((res) => res.arrayBuffer())
+        const pageWidth = 792; //792 - 600
+        const pageHeight = 612; //612 - 400
+    
+        // Agregar una nueva página
+        const page = pdfDoc.addPage([pageWidth, pageHeight]);
+    
+        const jpgImage = await pdfDoc.embedJpg(jpgImageBytes)
+        const scaleFactor = Math.min(pageWidth / jpgImage.width, pageHeight / jpgImage.height)
+        const scaledWidth = jpgImage.width * scaleFactor;
+        const scaledHeight = jpgImage.height * scaleFactor;
+        page.drawImage(jpgImage, {
+            x: 0,
+            y: 0,
+            width: scaledWidth,
+            height: scaledHeight,
+        })
+    
+        // Agregar texto a la página
+        const url = 'https://pdf-lib.js.org/assets/ubuntu/Ubuntu-R.ttf'
+        const fontBytes = await fetch(url).then(res => res.arrayBuffer())
+        const font = await pdfDoc.embedFont(fontBytes)
+        var nombre = 'Carlos Gil'
+        const fontSize = 12;
+        const longitudTexto = font.widthOfTextAtSize(nombre, fontSize);
+        
+        var PosX = (pageWidth - longitudTexto) / 2;
+        page.drawText(nombre, { x: PosX, y: 368 });
+    
+        // Generar el PDF como una matriz de bytes
+        const pdfBytes = await pdfDoc.save();
+    
+        // Crear un Blob desde la matriz de bytes
+        const pdfBlob = new Blob([pdfBytes], { type: 'application/pdf' }); */
+    
+        // Descargar el PDF o realizar otras acciones según tus necesidades
+        /* const downloadLink = document.createElement('a');
+        downloadLink.href = URL.createObjectURL(pdfBlob);
+        downloadLink.download = capacitacion+'.pdf';
+        downloadLink.click(); */
+  
+    } catch (error) {
+      console.error('Error al generar el PDF: ', error)
+      res.status(500).send('Error interno del server')
+    }
+}
+
+function SubirArchivo(Archivo, idArchivo, tipo){
+    try {
+        var nombrei = "files/" + Archivo +uuid()+tipo;
+        //se convierte la base64 a bytes
+        let buff = new Buffer.from(idArchivo, 'base64');
+        
+        if(tipo == ".pdf"){
+            const params1 = {
+                Bucket: "bucket-jornadas",
+                Key: nombrei,
+                Body: buff,
+                ACL: 'public-read'
+            };
+            putResult = s3.putObject(params1).promise();
+        } else {
+            const params2 = {
+                Bucket: "appweb-6p1",
+                Key: nombrei,
+                Body: buff,
+                ContentType: "image",
+                ACL: 'public-read'
+            };
+            putResult = s3.putObject(params2).promise();
+        }
+        return nombrei;
+    } catch (error) {
+        return "error";
     }
 }

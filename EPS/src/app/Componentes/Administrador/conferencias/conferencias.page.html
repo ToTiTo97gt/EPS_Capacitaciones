@@ -1,121 +1,44 @@
 <ion-content [fullscreen]="true">
-  <div id="pantalla">
-    <br>
-    <ion-input class="Conferencia" label="Cargar Diplomas de conferencias" labelPlacement="floating" fill="outline" type="file"></ion-input>
-    <input class="Conferencia" type="file" id="file" accept=".csv"
-        (change)="onFileChange($event)">
-    <br>
-    <ion-button (click)="cargarArchivo()"> Cargar Datos </ion-button>
-    <ion-grid>
-      <div id="head">
-        <ion-row id="filaMain">
-          <ion-col ><b>CUI</b></ion-col>
-          <ion-col ><b>Carne</b></ion-col>
-          <ion-col ><b>Nombre</b></ion-col>
-          <ion-col ><b>E-mail</b></ion-col>
-          <ion-col ><b>Diploma</b></ion-col>
-        </ion-row>
-      </div>
-      <div id="tabla">
+  <div class="pantalla">
+    <div class="filtros">
+      <ion-datetime class="filt" presentation="year" [preferWheel]="true" (ionChange)="dateChanged($event)"></ion-datetime>
+    
+      <ion-select class="jornada" placeholder="Jornadas" (ionChange)="jornadaChange($event)">
+        <ion-select-option *ngFor="let jornada of jornadas" [value]="jornada.idJornada" >{{jornada.ciclo}}</ion-select-option>
+      </ion-select>
+
+      <ion-select class="capacitacion" [(ngModel)]="idCapacitacion" placeholder="Capacitacion" (ionChange)="tipoChange($event)">
+        <ion-select-option *ngFor="let capacitacion of capacitaciones" [value]="capacitacion.idCapacitacion">{{capacitacion.nomCapacitacion}}</ion-select-option>
+      </ion-select>
+      
+      <ion-input class="Conferencia" label="Cargar Asistencias" labelPlacement="floating" fill="outline" type="file" accept=".csv" (change)="onFileChange($event)"></ion-input>
+      
+    </div>
+    <div class="filtros2">
+      <ion-button (click)="cargarArchivo()"> Cargar Datos </ion-button>
+    </div>
+    <div class="grid">
+      <ion-grid>
         <ion-row>
-          <ion-col>xxxx5515xxxx</ion-col>
-          <ion-col>20xx05015</ion-col>
-          <ion-col>Daniel perez</ion-col>
-          <ion-col>DanPer@email.com</ion-col>
-          <ion-col><ion-button>Descargar diploma</ion-button></ion-col>
+          <ion-col class="head"><b>CUI</b></ion-col>
+          <ion-col class="head"><b>Carne</b></ion-col>
+          <ion-col class="head"><b>Nombre</b></ion-col>
+          <ion-col class="head"><b>E-mail</b></ion-col>
         </ion-row>
-        <ion-row>
-          <ion-col>xxxx5515xxxx</ion-col>
-          <ion-col>20xx05015</ion-col>
-          <ion-col>Daniel perez</ion-col>
-          <ion-col>DanPer@email.com</ion-col>
-          <ion-col><ion-button>Descargar diploma</ion-button></ion-col>
-        </ion-row>
-        <ion-row>
-          <ion-col>xxxx5515xxxx</ion-col>
-          <ion-col>20xx05015</ion-col>
-          <ion-col>Daniel perez</ion-col>
-          <ion-col>DanPer@email.com</ion-col>
-          <ion-col><ion-button>Descargar diploma</ion-button></ion-col>
-        </ion-row>
-        <ion-row>
-          <ion-col>xxxx5515xxxx</ion-col>
-          <ion-col>20xx05015</ion-col>
-          <ion-col>Daniel perez</ion-col>
-          <ion-col>DanPer@email.com</ion-col>
-          <ion-col><ion-button>Descargar diploma</ion-button></ion-col>
-        </ion-row>
-        <ion-row>
-          <ion-col>xxxx5515xxxx</ion-col>
-          <ion-col>20xx05015</ion-col>
-          <ion-col>Daniel perez</ion-col>
-          <ion-col>DanPer@email.com</ion-col>
-          <ion-col><ion-button>Descargar diploma</ion-button></ion-col>
-        </ion-row>
-        <ion-row>
-          <ion-col>xxxx5515xxxx</ion-col>
-          <ion-col>20xx05015</ion-col>
-          <ion-col>Daniel perez</ion-col>
-          <ion-col>DanPer@email.com</ion-col>
-          <ion-col><ion-button>Descargar diploma</ion-button></ion-col>
-        </ion-row>
-        <ion-row>
-          <ion-col>xxxx5515xxxx</ion-col>
-          <ion-col>20xx05015</ion-col>
-          <ion-col>Daniel perez</ion-col>
-          <ion-col>DanPer@email.com</ion-col>
-          <ion-col><ion-button>Descargar diploma</ion-button></ion-col>
-        </ion-row>
-        <ion-row>
-          <ion-col>xxxx5515xxxx</ion-col>
-          <ion-col>20xx05015</ion-col>
-          <ion-col>Daniel perez</ion-col>
-          <ion-col>DanPer@email.com</ion-col>
-          <ion-col><ion-button>Descargar diploma</ion-button></ion-col>
-        </ion-row>
-        <ion-row>
-          <ion-col>xxxx5515xxxx</ion-col>
-          <ion-col>20xx05015</ion-col>
-          <ion-col>Daniel perez</ion-col>
-          <ion-col>DanPer@email.com</ion-col>
-          <ion-col><ion-button>Descargar diploma</ion-button></ion-col>
-        </ion-row>
-        <ion-row>
-          <ion-col>xxxx5515xxxx</ion-col>
-          <ion-col>20xx05015</ion-col>
-          <ion-col>Daniel perez</ion-col>
-          <ion-col>DanPer@email.com</ion-col>
-          <ion-col><ion-button>Descargar diploma</ion-button></ion-col>
-        </ion-row>
-        <ion-row>
-          <ion-col>xxxx5515xxxx</ion-col>
-          <ion-col>20xx05015</ion-col>
-          <ion-col>Daniel perez</ion-col>
-          <ion-col>DanPer@email.com</ion-col>
-          <ion-col><ion-button>Descargar diploma</ion-button></ion-col>
-        </ion-row>
-        <ion-row>
-          <ion-col>xxxx5515xxxx</ion-col>
-          <ion-col>20xx05015</ion-col>
-          <ion-col>Daniel perez</ion-col>
-          <ion-col>DanPer@email.com</ion-col>
-          <ion-col><ion-button>Descargar diploma</ion-button></ion-col>
-        </ion-row>
-        <ion-row>
-          <ion-col>xxxx5515xxxx</ion-col>
-          <ion-col>20xx05015</ion-col>
-          <ion-col>Daniel perez</ion-col>
-          <ion-col>DanPer@email.com</ion-col>
-          <ion-col><ion-button>Descargar diploma</ion-button></ion-col>
-        </ion-row>
-        <ion-row>
-          <ion-col>xxxx5515xxxx</ion-col>
-          <ion-col>20xx05015</ion-col>
-          <ion-col>Daniel perez</ion-col>
-          <ion-col>DanPer@email.com</ion-col>
-          <ion-col><ion-button>Descargar diploma</ion-button></ion-col>
-        </ion-row>
-      </div>
-    </ion-grid>
+        <div id="tabla">
+          <ion-row *ngFor="let dat of data">
+            <ion-col class="body">{{dat['CUI']}}</ion-col>
+            <ion-col class="body">{{dat['Carne']}}</ion-col>
+            <ion-col class="body">{{dat['Nombre']}}</ion-col>
+            <ion-col class="body">{{dat['Correo Electrónico']}}</ion-col>
+          </ion-row>
+        </div>
+      </ion-grid>
+    </div>
+    <div class="filtros2">
+      <ion-button (click)="MarcarAsistencias()"> Marcar asistencias </ion-button>
+    </div>
   </div>
+  
+      
 </ion-content>
