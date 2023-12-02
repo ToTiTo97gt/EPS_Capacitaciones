@@ -6,7 +6,7 @@ const s3 = new AWS.S3(aws_keys.s3)
 const nodemailer = require('nodemailer')
 
 const fetch = require('node-fetch') //npm install node-fetch@2.6.1
-const {PDFDocument, StandardFonts} = require('pdf-lib')
+const {PDFDocument, StandardFonts, rgb} = require('pdf-lib')
 const fs = require('fs').promises
 
 exports.Prueba = async (req, res) => {
@@ -143,7 +143,7 @@ function insertarAsistencia(idUser, idCapacitacion){
 exports.Diplomas = async(req, res) => {
     var idUser = req.body.idUser
     try {
-        bd.query(`select nomCapacitacion, descripcion from capacitacion a, usuario b, asistencia c where b.idUsuario = ${idUser} and a.idCapacitacion = c.idCapacitacion and b.idUsuario = c.idUsuario and c.inscrito = 1 and c.presente = 1`, (err, result) => {
+        bd.query(`select nomCapacitacion, descripcion, fecha from capacitacion a, usuario b, asistencia c, agenda d where b.idUsuario = ${idUser} and a.idCapacitacion = c.idCapacitacion and b.idUsuario = c.idUsuario and d.idCapacitacion = a.idCapacitacion and c.inscrito = 1 and c.presente = 1`, (err, result) => {
             if(err) throw err;
             return res.send(result)
         })
@@ -201,23 +201,53 @@ exports.GenerarPDF = async(req, res) => {
         })
     
         // Incrusta la fuente en el documento
-        const customFont = await pdfDoc.embedFont(StandardFonts.Helvetica);
+        const customFont = await pdfDoc.embedFont(StandardFonts.CourierBold);
     
         // Usa la fuente personalizada en el texto
-        const nombre = req.body.nombre + " " + req.body.apellido;
+        const nombre = req.body.datos.nombre + " " + req.body.datos.apellido;
 
-        const fontSize = 12;
+        const fontSize = 24;
         const longitudTexto = customFont.widthOfTextAtSize(nombre, fontSize);
-        var PosX = (pageWidth - longitudTexto) / 2;
+        const PosX = (pageWidth - longitudTexto) / 2;
 
-        page.drawText(nombre, { font: customFont, x: (PosX - 35), y: 368, fontSize: fontSize });
-    
+        page.drawText(nombre, { font: customFont, x: (PosX + 5), y: 368, size: fontSize });
+        
+        const txt1 = "Por su participacion en la conferencia";
+        const capaci = `"${req.body.capacitacion}"`
+        const txt2 = 'Con una duracion de dos horas virtuales';
+        const txt3 = 'Dado en la Ciudad de Guatemala, '+req.body.fecha;
+        
+        const font2 = await pdfDoc.embedFont(StandardFonts.Helvetica)
+        const font1 = await pdfDoc.embedFont(StandardFonts.TimesRomanBold)
+        const tam = 18
+        const l1 = font2.widthOfTextAtSize(txt1, tam)
+        const l2 = font1.widthOfTextAtSize(capaci, tam)
+        const l3 = font2.widthOfTextAtSize(txt2, tam)
+        const l4 = font2.widthOfTextAtSize(txt3, tam)
+        const color = rgb(1, 0, 1)
+
+        page.drawText(txt1, {
+            font: font2,
+            x: ((pageWidth - l1) / 2),
+            y: 334, size: tam, color});
+        page.drawText(capaci, {
+            font: font1,
+            x: ((pageWidth - l2) / 2),
+            y: 308, size: tam, color});
+        page.drawText(txt2, {
+            font: font2,
+            x: ((pageWidth - l3) / 2),
+            y: 284, size: tam, color});
+        page.drawText(txt3, {
+            font: font2,
+            x: ((pageWidth - l4) / 2),
+            y: 258, size: tam, color});
         // Guarda el documento
         const pdfBytes = await pdfDoc.save();
         const buffer = Buffer.from(pdfBytes)
         //console.log(base64String)
 
-        var nombrei = "Extras/"+ req.body.nombre + req.body.apellido +"_"+ req.body.capacitacion +".pdf";
+        var nombrei = "Extras/"+ req.body.datos.nombre +"_"+ req.body.capacitacion +".pdf";
         //se convierte la base64 a bytes
         const params1 = {
             Bucket: "bucket-jornadas",
@@ -228,55 +258,9 @@ exports.GenerarPDF = async(req, res) => {
         putResult = s3.putObject(params1).promise();
   
         // Envía el PDF al cliente
-        var URLArmado = 'https://bucket-jornadas.s3.amazonaws.com/Extras/'+req.body.nombre + req.body.apellido+'_'+req.body.capacitacion.replace(/\s+/g, '+')+'.pdf'
+        var URLArmado = 'https://bucket-jornadas.s3.amazonaws.com/Extras/'+req.body.datos.nombre +'_'+req.body.capacitacion.replace(/\s+/g, '+')+'.pdf'
         console.log(URLArmado)
         return res.send({Mensaje:'Archivo Generado', URL: URLArmado})
-    
-    
-        // Crear un nuevo documento PDF
-        /* const pdfDoc = await PDFDocument.create();
-    
-        const jpgUrl = 'https://bucket-jornadas.s3.amazonaws.com/Extras/PlantillaDiploma.jpg'
-        const jpgImageBytes = await fetch(jpgUrl).then((res) => res.arrayBuffer())
-        const pageWidth = 792; //792 - 600
-        const pageHeight = 612; //612 - 400
-    
-        // Agregar una nueva página
-        const page = pdfDoc.addPage([pageWidth, pageHeight]);
-    
-        const jpgImage = await pdfDoc.embedJpg(jpgImageBytes)
-        const scaleFactor = Math.min(pageWidth / jpgImage.width, pageHeight / jpgImage.height)
-        const scaledWidth = jpgImage.width * scaleFactor;
-        const scaledHeight = jpgImage.height * scaleFactor;
-        page.drawImage(jpgImage, {
-            x: 0,
-            y: 0,
-            width: scaledWidth,
-            height: scaledHeight,
-        })
-    
-        // Agregar texto a la página
-        const url = 'https://pdf-lib.js.org/assets/ubuntu/Ubuntu-R.ttf'
-        const fontBytes = await fetch(url).then(res => res.arrayBuffer())
-        const font = await pdfDoc.embedFont(fontBytes)
-        var nombre = 'Carlos Gil'
-        const fontSize = 12;
-        const longitudTexto = font.widthOfTextAtSize(nombre, fontSize);
-        
-        var PosX = (pageWidth - longitudTexto) / 2;
-        page.drawText(nombre, { x: PosX, y: 368 });
-    
-        // Generar el PDF como una matriz de bytes
-        const pdfBytes = await pdfDoc.save();
-    
-        // Crear un Blob desde la matriz de bytes
-        const pdfBlob = new Blob([pdfBytes], { type: 'application/pdf' }); */
-    
-        // Descargar el PDF o realizar otras acciones según tus necesidades
-        /* const downloadLink = document.createElement('a');
-        downloadLink.href = URL.createObjectURL(pdfBlob);
-        downloadLink.download = capacitacion+'.pdf';
-        downloadLink.click(); */
   
     } catch (error) {
       console.error('Error al generar el PDF: ', error)

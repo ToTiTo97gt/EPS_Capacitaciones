@@ -16,7 +16,9 @@ export class DiplomasPage implements OnInit {
   constructor(private adminService:AdminService, private userService: UserService, private http: HttpClient) { }
 
   ngOnInit() {
-    console.log(this.userService.datosUser)
+    //console.log(this.userService.datosUser)
+    this.datos.nombre = this.userService.datosUser.nombre
+    this.datos.apellido = this.userService.datosUser.apellido
     this.getDiplomas()
   }
 
@@ -25,10 +27,14 @@ export class DiplomasPage implements OnInit {
   async getDiplomas(){
     this.datas = await this.userService.Diplomas(this.userService.idG)
   }
+
+  datos = {
+    nombre: this.userService.datosUser.nombre,
+    apellido: this.userService.datosUser.apellido
+  }
   public diploma: any
-  async generarPDF(capacitacion: any){
-    
-    this.diploma = await this.userService.GenerarPDF(this.userService.datosUser.nombre, this.userService.datosUser.apellido, capacitacion)
+  async generarPDF(capacitacion: any, fecha: any){
+    this.diploma = await this.userService.GenerarPDF(this.datos, capacitacion, this.convertir(fecha))
     //console.log(this.diploma.URL)
     if (this.diploma && this.diploma.URL) {
       // Utilizar window.location.href para iniciar la descarga del archivo
@@ -37,6 +43,19 @@ export class DiplomasPage implements OnInit {
       console.error('Error al obtener el enlace del archivo desde el servidor.');
     }
 
+  }
+
+  convertir(fecha: string){
+    var objc = new Date(fecha)
+
+    return this.convertirFechaATexto(objc)
+  }
+
+  convertirFechaATexto(fecha: Date): string {
+    const opciones: Intl.DateTimeFormatOptions = { day: 'numeric', month: 'long', year: 'numeric' };
+    const formatoFecha = new Intl.DateTimeFormat('es-ES', opciones);
+    
+    return formatoFecha.format(fecha);
   }
 
 }

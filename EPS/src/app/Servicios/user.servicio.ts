@@ -73,9 +73,9 @@ export class UserService{
         return this.httpClient.post(ruta, data).toPromise()
     }
 
-    GenerarPDF(nombre: any, apellido: any, capacitacion:any){
+    GenerarPDF(datos: any, capacitacion: any, fecha:any){
         const ruta = this.url+"User/GenerarPDF"
-        const data = {nombre, apellido, capacitacion}
+        const data = {datos, capacitacion, fecha}
         return this.httpClient.post(ruta, data).toPromise()
     }
 
