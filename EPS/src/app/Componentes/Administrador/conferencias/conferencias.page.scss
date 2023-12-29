@@ -2,6 +2,7 @@
     width: 100%;
     height: 100%;
     gap: 10px;
+    overflow-y: auto;
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
@@ -26,7 +27,7 @@
 
 .grid{
     height: 262px;
-    width: 70%;
+    width: 80%;
     gap: 10px;
     display: flex;
     flex-wrap: wrap;
@@ -53,6 +54,30 @@
     text-align: center;
 }
 
+.headd{
+    width: 10%;
+    background-color: white;
+    color: red;
+    border: solid 1px red;
+    text-align: center;
+}
+
+.bodyy{
+    width: 10%;
+    height: 2rem;
+    background-color: #221d45;
+    color: white;
+    border: solid 1px #fff;
+    text-align: center;
+}
+
+.Nota{
+    margin-top: -2px;
+    height: 1.5rem;
+    width: 50px;
+    color: black;
+}
+
 #filaMain{
     width: 65.9rem;
 }
@@ -66,6 +91,13 @@
 
 .jornada{
     width: 20rem;
+    height: 3rem;
+    border: 2px solid red;
+    background-color: white;
+}
+
+.categoria{
+    width: 12rem;
     height: 3rem;
     border: 2px solid red;
     background-color: white;

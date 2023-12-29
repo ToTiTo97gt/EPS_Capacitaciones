@@ -1,9 +1,17 @@
 
 <ion-content [fullscreen]="true">
   <div id="pantalla">
-    <h1>
-      Reuniones en las que he participado
-    </h1>
+    <div class="titulo">
+      <h1>
+        Mis Reconocimientos
+      </h1>
+    </div>
+    
+    <div class="titulo">
+      <h2>
+        Conferencias
+      </h2>
+    </div>
     <div class="grid">
       <ion-grid>
         <ion-row>
@@ -15,10 +23,60 @@
           <ion-row *ngFor="let data of datas">
             <ion-col class="body" size="3">{{data.nomCapacitacion}}</ion-col>
             <ion-col class="body" size="6">{{data.descripcion}}</ion-col>
-            <ion-col class="body"><ion-button (click)="generarPDF(data.nomCapacitacion, data.fecha)"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="1.5" stroke-linecap="square" stroke-linejoin="bevel"><path d="M13 2H6a2 2 0 0 0-2 2v16c0 1.1.9 2 2 2h12a2 2 0 0 0 2-2V9l-7-7z"/><path d="M13 3v6h6"/></svg></ion-button></ion-col>
+            <ion-col class="body">
+              <ion-button *ngIf="data.dat == 0" (click)="generarPDF(data)">
+                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="1.5" stroke-linecap="square" stroke-linejoin="bevel">
+                  <path d="M13 2H6a2 2 0 0 0-2 2v16c0 1.1.9 2 2 2h12a2 2 0 0 0 2-2V9l-7-7z"/>
+                  <path d="M13 3v6h6"/>
+                </svg>
+              </ion-button>
+              <ion-button *ngIf="data.dat == 1" (click)="generarPDF(data)">
+                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="1.5" stroke-linecap="square" stroke-linejoin="bevel">
+                  <path d="M3 15v4c0 1.1.9 2 2 2h14a2 2 0 0 0 2-2v-4M17 9l-5 5-5-5M12 12.8V2.5"/>
+                </svg>
+              </ion-button>
+            </ion-col>
           </ion-row>
         </div>
       </ion-grid>
     </div>
+    <div class="titulo">
+      <h2>
+        Diplomados
+      </h2>
+    </div>
+    <div class="grid">
+      <ion-grid>
+        <ion-row>
+          <ion-col class="head" size="3"><b>Diplomado</b></ion-col>
+          <ion-col class="head" size="6"><b>Descripcion</b></ion-col>
+          <ion-col class="head"><b>Generar Diploma</b></ion-col>
+        </ion-row>
+        <div id="tabla">
+          <ion-row *ngFor="let data of datas1">
+            <ion-col class="body" size="3">{{data.nomCapacitacion}}</ion-col>
+            <ion-col class="body" size="6">{{data.descripcion}}</ion-col>
+            <ion-col class="body">
+              <ion-button *ngIf="data.nota >= 70 && data.dat == 0" (click)="generarDiplomado(data)">
+                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="1.5" stroke-linecap="square" stroke-linejoin="bevel">
+                  <path d="M13 2H6a2 2 0 0 0-2 2v16c0 1.1.9 2 2 2h12a2 2 0 0 0 2-2V9l-7-7z"/>
+                  <path d="M13 3v6h6"/>
+                </svg>
+              </ion-button>
+              <ion-button *ngIf="data.nota >= 70 && data.dat == 1" (click)="generarDiplomado(data)">
+                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="1.5" stroke-linecap="square" stroke-linejoin="bevel">
+                  <path d="M3 15v4c0 1.1.9 2 2 2h14a2 2 0 0 0 2-2v-4M17 9l-5 5-5-5M12 12.8V2.5"/>
+                </svg>
+              </ion-button>
+              <label *ngIf="data.nota < 70">Reprobado con: {{data.nota}}</label>
+            </ion-col>
+          </ion-row>
+        </div>
+      </ion-grid>
+    </div>
+    <div class="foot">
+    
+    </div>
   </div>
+  
 </ion-content>

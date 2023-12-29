@@ -161,9 +161,15 @@ export class AdminService{
         return this.httpClient.post(ruta, data).toPromise()
     }
 
-    MarcarAsistencias(idCapacitacion:any, datos:any){
+    Usuarios(datosExtra?: any){
+        const ruta = this.url+"Admin/GetUsuarios"
+        const data = {datosExtra}
+        return this.httpClient.post(ruta, data).toPromise()
+    }
+
+    MarcarAsistencias(idCapacitacion:any, datos:any, tipo: any){
         const ruta = this.url+"Admin/Asistencias"
-        const data = {idCapacitacion, datos}
+        const data = {idCapacitacion, datos, tipo}
         return this.httpClient.post(ruta, data).toPromise()
     }
 
@@ -182,5 +188,29 @@ export class AdminService{
     enviarCsv(datos: any){
         const ruta = this.url+"CSV"
         return this.httpClient.post(ruta, datos).toPromise()
+    }
+
+    CargarPlantilla(base64: String){
+        const ruta = this.url+"Admin/CargarPlantilla"
+        const data = {base64}
+        return this.httpClient.post(ruta, data).toPromise()
+    }
+
+    CargarPlantillaDiplo(idCapacitacion: any, nomCapacitacion: any, base64: String){
+        const ruta = this.url+"Admin/CargarPlantillaDiplo"
+        const data = {idCapacitacion, nomCapacitacion, base64}
+        return this.httpClient.post(ruta, data).toPromise()
+    }
+
+    AsingarDiploma(idCapacitacion: any, datos: any){
+        const ruta = this.url+"Admin/AsignarDiplomas"
+        const data = {idCapacitacion, datos}
+        return this.httpClient.post(ruta, data).toPromise()
+    }
+
+    ListaActual(idCapacitacion: any){
+        const ruta = this.url+"Admin/ListaActual"
+        const data = {idCapacitacion}
+        return this.httpClient.post(ruta, data).toPromise()
     }
 }

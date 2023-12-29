@@ -38,7 +38,9 @@
           
         </ion-grid>
       </div>
+      <div class="foot">
     
+      </div>
     </div>
     <div id="Conferencias" *ngIf="menu=='Conferencias'">
       <div id="Conf1">
@@ -47,24 +49,32 @@
         <ion-textarea class="descripcion" [(ngModel)]="capacitacion.descripcion" placeholder="Descripcion de conferencia"></ion-textarea>
       
         <ion-input class="Conferencia" label="Nombre del Presentador" [(ngModel)]="capacitacion.presentador" labelPlacement="floating" fill="outline" type="text"></ion-input>
+
+        <ion-input class="Conferencia" label="Link de Zoom" [(ngModel)]="capacitacion.zoomLink" labelPlacement="floating" fill="outline" type="text"></ion-input>
+      
+        <ion-input class="Conferencia" label="Link de FaceBook" [(ngModel)]="capacitacion.fbLink" labelPlacement="floating" fill="outline" type="text"></ion-input>
+        
+        <ion-input class="Conferencia" label="Duracion (en horas)" [(ngModel)]="capacitacion.duracion" labelPlacement="floating" fill="outline" type="text"></ion-input>
       </div>
       <div id="Conf2">
-      <label for="file">Select File
-        <img [src]="imageUrl" alter="Image Review" style="width: 275px; height: 275px;">
-      </label><br>
-      <input class="Conferencia" type="file" id="file" accept="image/jpeg,image/png" hidden #fileInput
+      
+      <input class="PConfe" type="file" id="file" accept="image/jpeg,image/png" #fileInput
         [(ngModel)]="capacitacion.poster" (change)="onSelectNewFile()">
-      <ion-input class="Conferencia" label="Link de Zoom" [(ngModel)]="capacitacion.zoomLink" labelPlacement="floating" fill="outline" type="text"></ion-input>
-      <ion-input class="Conferencia" label="Link de FaceBook" [(ngModel)]="capacitacion.fbLink" labelPlacement="floating" fill="outline" type="text"></ion-input>
+      <label *ngIf="show == 1" for="file">
+        <img [src]="imageUrl" alter="Image Review" style="width: 325px; height: 275px;">
+      </label>
+      <ion-select aria-label="Fruit" placeholder="Modalidad" [(ngModel)]="capacitacion.modalidad">
+        <ion-select-option [value]="1" >Virtual</ion-select-option>
+        <ion-select-option [value]="2" >Presencial</ion-select-option>
+        <ion-select-option [value]="3" >Mixto</ion-select-option>
+      </ion-select>
       <ion-button (click)="CrearCapacitacion()">Crear Capacitacion</ion-button>
-      <br>
-      <br>
-      <div class="Info" style="width: 100%; text-align: center;">  
-        <h1>Informacion</h1>
-      </div>
       </div>
       <div id="Conf3">
         <ion-datetime [min]="2023" [(ngModel)]="fechaYhora"></ion-datetime>
+      </div>
+      <div class="Info" style="width: 100%; text-align: center; margin-top: 2rem;">  
+        <h1>Informacion</h1>
       </div>
       <div class="filtro">
         <div class="filtro1">
@@ -95,25 +105,48 @@
           </div>
         </ion-grid>
       </div>
-
+      <div class="foot">
+    
+      </div>
     </div>
     <div id="Diplomados" *ngIf="menu=='Diplomados'">
       <div id="Conf1">
         <ion-input class="Conferencia" label="Titulo de Diplomado" [(ngModel)]="capacitacion.nomCapacitacion" labelPlacement="floating" fill="outline" type="text"></ion-input>
         
-        <ion-textarea class="descripcion" [(ngModel)]="capacitacion.descripcion" placeholder="Descripcion de conferencia"></ion-textarea>
+        <ion-textarea class="descripcion" [(ngModel)]="capacitacion.descripcion" placeholder="Descripcion de diplomado"></ion-textarea>
         
         <ion-input class="Conferencia" label="Link de Zoom" [(ngModel)]="capacitacion.zoomLink" labelPlacement="floating" fill="outline" type="text"></ion-input>
         
         <ion-input class="Conferencia" label="Link de FaceBook" [(ngModel)]="capacitacion.fbLink" labelPlacement="floating" fill="outline" type="text"></ion-input>
+      
+        <ion-input class="Conferencia" label="Duracion (en horas)" [(ngModel)]="capacitacion.duracion" labelPlacement="floating" fill="outline" type="text"></ion-input>
       </div>
       <div id="Conf2">
-      <label for="file">Select File
-        <img [src]="imageUrl" alter="Image Review" style="width: 275px; height: 275px;">
-      </label><br>
-      <input class="Conferencia" type="file" id="file" accept="image/jpeg,image/png" hidden #fileInput
+      
+      <input class="PConfe" type="file" id="file" accept="image/jpeg,image/png" #fileInput
         [(ngModel)]="capacitacion.poster" (change)="onSelectNewFile()">
+      <label *ngIf="show == 1" for="file">
+        <img [src]="imageUrl" alter="Image Review" style="width: 325px; height: 275px;">
+      </label>
 
+      <ion-select aria-label="Fruit" placeholder="Modalidad" [(ngModel)]="capacitacion.modalidad">
+        <ion-select-option [value]="1" >Virtual</ion-select-option>
+        <ion-select-option [value]="2" >Presencial</ion-select-option>
+        <ion-select-option [value]="3" >Mixto</ion-select-option>
+      </ion-select>
+
+      </div>
+
+      <div class="DerechoDiploma">
+        <h3>Usuarios que tendran derecho a diploma</h3>
+        <ion-list class="lista2">
+          <ion-item *ngFor="let tipo of tipos">
+            <ion-label>{{ tipo.tipo }}</ion-label>
+            <ion-checkbox [(ngModel)]="tiposSeleccionados[tipo.idTipo]">{{ tipo.tipo }}</ion-checkbox>
+          </ion-item>
+        </ion-list>
+        
+        <ion-button (click)="guardarSeleccion()">Guardar Selección</ion-button>
       </div>
       <div id="Diplo">
         <ion-datetime class="fecha" presentation="date" [min]="2023" [(ngModel)]="horaYFecha.fecha"></ion-datetime>
@@ -157,11 +190,99 @@
           </div>
         </ion-grid>
       </div>
+      <div class="foot">
+    
+      </div>
     </div>
     <div id="Usuarios" *ngIf="menu=='Usuarios'">
+      <br>
+      <div class="contenido">
+        <ion-select class="tipo" aria-label="Fruit" [(ngModel)]="datosExtra.idTipo" placeholder="Tipos de Usuario" >
+          <ion-select-option *ngFor="let tipo of tipos" [value]="tipo.idTipo" >{{tipo.tipo}}</ion-select-option>
+        </ion-select>
+        <ion-select class="genero" aria-label="Fruit" [(ngModel)]="datosExtra.genero" placeholder="Genero">
+          <ion-select-option value="1">Hombre</ion-select-option>
+          <ion-select-option value="2">Mujer</ion-select-option>
+        </ion-select>
+        <ion-select class="departamento" aria-label="Fruit" placeholder="Departamento" (ionChange)="DepartamentoChange($event)">
+          <ion-select-option *ngFor="let departamento of departamentos" [value]="departamento.idDepartamento" >{{departamento.departamento}}</ion-select-option>
+        </ion-select>
+        <ion-select class="municipio" aria-label="Fruit" [(ngModel)]="datosExtra.idmunicipio" placeholder="Municipio">
+          <ion-select-option *ngFor="let municipio of municipios" [value]="municipio.idMunicipio" >{{municipio.municipio}}</ion-select-option>
+        </ion-select>
+        <ion-select class="asistencia" aria-label="Fruit" [(ngModel)]="datosExtra.presente" placeholder="Se Presento?">
+          <ion-select-option value="1">SI</ion-select-option>
+          <ion-select-option value="0">NO</ion-select-option>
+        </ion-select>
+        <ion-button (click)="Parametros()">Aplicar Filtro</ion-button>
+      </div>
+
+      <div class="gridd">
+        <ion-grid>
+          <ion-row class="GridHeadd">
+            <ion-col class="headd"><h3>CUI</h3></ion-col>
+            <ion-col class="headd"><h3>Carne</h3></ion-col>
+            <ion-col class="headd"><h3>Nombre</h3></ion-col>
+          </ion-row>
+          <div class="tabb">
+            <ion-row *ngFor="let usuario of Usuarios">
+              <ion-col>{{usuario.cui}}</ion-col>
+              <ion-col>{{usuario.carne}}</ion-col>
+              <ion-col>{{usuario.nombre}} {{usuario.apellido}}</ion-col>
+            </ion-row>
+          </div>
+          
+        </ion-grid>
+      </div>
+      <div class="foot">
     
+      </div>
     </div>
+    <div id="Plantillas" *ngIf="menu=='Plantillas'">
+      <div class="Info" style="width: 100%; text-align: center;">  
+        <h1>Plantilla para Conferencias</h1>
+      </div>
+      <div class="PConferencia">
+        <input class="PConfe" type="file" id="file" accept="image/jpeg,image/png" #fileInput (change)="onSelectNewFile()">
+        <label *ngIf="show == 1" for="file">
+          <img [src]="imageUrl" alter="Image Review" style="width: 325px; height: 275px;">
+        </label>
+        <p>El tamaño de esta plantilla debe ser 3300 x 2550 pixeles.
+          <br> el nombre del archivo debe ser: PlantillaDiploma.jpg</p>
+        <br>
+        <ion-button *ngIf="show == 1" (click)="CargarPlantilla()">Cargar Plantilla</ion-button>
+      </div>
+      <br>
+      <div class="Info" style="width: 100%; text-align: center; margin-bottom: 1rem;">  
+        <h1>Plantillas para Diplomados</h1>
+      </div>
+      <div class="filtro">
+        <ion-datetime class="filt" presentation="year" [preferWheel]="true" (ionChange)="dateChanged($event)"></ion-datetime>
+      
+        <ion-select aria-label="Fruit" placeholder="Jornadas" (ionChange)="jornadaChange($event)" style="width: 15rem;">
+          <ion-select-option *ngFor="let jornada of jornadas" [value]="jornada.idJornada" >{{jornada.ciclo}}</ion-select-option>
+        </ion-select>
+        <ion-select aria-label="Fruit" placeholder="Diplomados" style="width: 10rem;" [(ngModel)]="idDiplo">
+          <ion-select-option *ngFor="let capacitacion of capacitaciones" [value]="capacitacion">{{capacitacion.nomCapacitacion}}</ion-select-option>
+        </ion-select>
+      </div>
+      <div class="PConferencia">
+        <input class="PConfe" type="file" id="file" accept="image/jpeg,image/png" #fileInput1 (change)="onSelectNewFile1()">
+        <label *ngIf="show1 == 1" for="file">
+          <img [src]="imageUrl1" alter="Image Review" style="width: 325px; height: 275px;">
+        </label>
+        <p>El tamaño de esta plantilla debe ser 3300 x 2550 pixeles.
+          <br> el nombre del archivo debe ser: PlantillaDiploma.jpg</p>
+        <br>
+        <ion-button *ngIf="show1 == 1" (click)="CargarPlantillaDiplo()">Cargar Plantilla Diplomado</ion-button>
+      </div>
+      <div class="foot">
+    
+      </div>
+    </div>
+    
   </div>
+  
   
   
 </ion-content>

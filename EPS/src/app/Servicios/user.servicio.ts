@@ -43,15 +43,15 @@ export class UserService{
         return this.httpClient.post(ruta, data).toPromise()
     }
 
-    GetCapacitaciones(idUser: any, Inscrito: any){
-        const ruta = this.url+"User/GetCapacitaciones"
-        const data = {idUser, Inscrito}
+    ModificarUsuario(User: any){
+        const ruta = this.url+"User/ModificarUsuario"
+        const data = {User}
         return this.httpClient.post(ruta, data).toPromise()
     }
 
-    AsignacionAuto(idUser:any){
-        const ruta = this.url+"User/AsignacionAuto"
-        const data = {idUser}
+    GetCapacitaciones(idUser: any, Inscrito: any){
+        const ruta = this.url+"User/GetCapacitaciones"
+        const data = {idUser, Inscrito}
         return this.httpClient.post(ruta, data).toPromise()
     }
 
@@ -73,9 +73,21 @@ export class UserService{
         return this.httpClient.post(ruta, data).toPromise()
     }
 
+    Diplomados(idUser: any){
+         const ruta = this.url+"User/Diplomados"
+         const data = {idUser}
+         return this.httpClient.post(ruta, data).toPromise()
+    }
+
     GenerarPDF(datos: any, capacitacion: any, fecha:any){
         const ruta = this.url+"User/GenerarPDF"
         const data = {datos, capacitacion, fecha}
+        return this.httpClient.post(ruta, data).toPromise()
+    }
+
+    GenerarDiplomadoPDF(datos: any, capacitacion: any, fechas: any, diploma:any){
+        const ruta = this.url+"User/GenerarDiplomadoPDF"
+        const data = {datos, capacitacion, fechas, diploma}
         return this.httpClient.post(ruta, data).toPromise()
     }
 

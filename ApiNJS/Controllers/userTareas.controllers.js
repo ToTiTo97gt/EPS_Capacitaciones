@@ -46,13 +46,30 @@ exports.RegistrarUsuario = async(req, res) => {
         bd.query(`Insert into usuario(carne, cui, nombre, apellido, correo, passwo, genero, direccion, idmunicipio, idTipo, estado)
           values('${carne}', '${cui}', '${nombre}', '${apellido}', '${correo}', '${passwo}', ${genero}, '${direccion}', ${idMunicipio}, ${idTipo}, ${estado})`, function(err, result){
             if(err) throw err
+
+            const idUsuario = result.insertId;
+            console.log(idUsuario + "-*-*-*-*")
+            AsignacionAuto(idUsuario);
+
             return res.send(result)
         })
     } catch (error) {
         console.log('error al registrar al nuevo usuario')
         return res.send("error")
     }
-    
+}
+
+exports.ModificarUsuario = async (req, res) => {
+    var idUsuario = req.body.User.idUsuario
+    console.log(req.body.User)
+    try {
+        bd.query(`update usuario set carne='${req.body.User.carne}', cui='${req.body.User.cui}', nombre='${req.body.User.nombre}', apellido='${req.body.User.apellido}', correo='${req.body.User.correo}', genero=${req.body.User.genero}, direccion='${req.body.User.direccion}' , idmunicipio=${req.body.User.idmunicipio} where idUsuario = ${idUsuario}`, (err, result) => {
+            if(err) throw err;
+            return res.send({mensaje: 'Exito al modificar los datos del usuario'})
+        })
+    } catch (error) {
+        console.log('error al intenter modificar los datos del usuario\n'+error)
+    }
 }
 
 exports.GetUser = async (req, res) => {//modificar esta peticion para que acepta usuarios activos
@@ -89,8 +106,7 @@ exports.GetCapacitaciones = async (req, res) => {
         })
 }
 
-exports.AsignacionAuto = async (req, res) => {
-    var idUser = req.body.idUser;
+async function AsignacionAuto (idUser) {
     try {
         const capacitaciones = await capacitacionesUser()
 
@@ -102,16 +118,15 @@ exports.AsignacionAuto = async (req, res) => {
                     console.error(`${capacitacion.idCapacitacion} Ya Existe para el usuario ${idUser}`);
                 } else {
                     // Otro tipo de error
-                    console.error('Error inesperado:', error);
-                    return res.status(500).json({ error: 'Error interno del servidor' });
+                    console.error('Error inesperado11:', error);
+                    //return res.status(500).json({ error: 'Error interno del servidor' });
                 }
             }
         }
-
-        return res.status(200).json({mensaje: 'Existo al asignar los datos'})
+        //return res.status(200).json({mensaje: 'Existo al asignar los datos'})
     } catch (error) {
-        console.error('Error inesperado:', error);
-        return res.status(500).json({ error: 'Error interno del servidor' });
+        console.error('Error inesperado22:', error);
+        //return res.status(500).json({ error: 'Error interno del servidor' });
     }
 }
 
@@ -143,7 +158,28 @@ function insertarAsistencia(idUser, idCapacitacion){
 exports.Diplomas = async(req, res) => {
     var idUser = req.body.idUser
     try {
-        bd.query(`select nomCapacitacion, descripcion, fecha from capacitacion a, usuario b, asistencia c, agenda d where b.idUsuario = ${idUser} and a.idCapacitacion = c.idCapacitacion and b.idUsuario = c.idUsuario and d.idCapacitacion = a.idCapacitacion and c.inscrito = 1 and c.presente = 1`, (err, result) => {
+        bd.query(`select a.nomCapacitacion, a.descripcion, a.duracion, a.modalidad, d.fecha, 0 as dat, 'l' as link from capacitacion a, usuario b, asistencia c, agenda d where a.idCategoria = 1 and b.idUsuario = ${idUser} and a.idCapacitacion = c.idCapacitacion and b.idUsuario = c.idUsuario and d.idCapacitacion = a.idCapacitacion and c.inscrito = 1 and c.presente = 1`, (err, result) => {
+            if(err) throw err;
+            return res.send(result)
+        })
+    } catch (error) {
+        console.log('Error al solicitar las reuniones con derecho a diploma')
+    }
+}
+
+exports.Diplomados = async(req, res) => {
+    var idUser = req.body.idUser
+    try {
+        bd.query(`select a.idCapacitacion, a.nomCapacitacion, a.descripcion, Min(d.fecha) as inicio, Max(d.fecha) as fin, e.nota, a.diploma, a.duracion, a.modalidad, 0 as dat, 'l' as link
+          from capacitacion a
+          join asistencia c on a.idCapacitacion = c.idCapacitacion
+          join usuario b on b.idUsuario = c.idUsuario
+          join agenda d on a.idCapacitacion = d.idCapacitacion
+          join nota e on a.idCapacitacion = e.idCapacitacion
+          join tipousuariodiploma g on g.idCapacitacion = a.idCapacitacion
+          join tipousuario f on f.idTipo = g.idTipo
+          where a.idCategoria = 2 and b.idUsuario = ${idUser} and c.inscrito = 1 and c.presente = 1 and b.idTipo = f.idTipo
+          group by a.idCapacitacion, a.nomCapacitacion, a.descripcion;`, (err, result) => {
             if(err) throw err;
             return res.send(result)
         })
@@ -180,10 +216,18 @@ exports.CalendarioDiplomado = async(req, res) => {
 
 exports.GenerarPDF = async(req, res) => {
     try {
-        
         // Crea un nuevo documento PDF
+        var modalidad = ""
+        if(req.body.datos.modalidad == 1){
+            modalidad = "virtuales"
+        } else if(req.body.datos.modalidad == 2){
+            modalidad = "presenciales"
+        } else if(req.body.datos.modalidad == 3){
+            modalidad = "mixtas"
+        }
+        const duracion = req.body.datos.duracion
         const pdfDoc = await PDFDocument.create();
-        const jpgUrl = 'https://bucket-jornadas.s3.amazonaws.com/Extras/PlantillaDiploma.jpg'
+        const jpgUrl = 'https://bucket-jornadas.s3.amazonaws.com/Plantillas/PlantillaDiploma.jpg'
         const jpgImageBytes = await fetch(jpgUrl).then((res) => res.arrayBuffer())
         const pageWidth = 792; //792 - 600
         const pageHeight = 612; //612 - 400
@@ -197,7 +241,7 @@ exports.GenerarPDF = async(req, res) => {
             x: 0,
             y: 0,
             width: scaledWidth,
-            height: scaledHeight,
+            height: scaledHeight
         })
     
         // Incrusta la fuente en el documento
@@ -209,12 +253,13 @@ exports.GenerarPDF = async(req, res) => {
         const fontSize = 24;
         const longitudTexto = customFont.widthOfTextAtSize(nombre, fontSize);
         const PosX = (pageWidth - longitudTexto) / 2;
-
-        page.drawText(nombre, { font: customFont, x: (PosX + 5), y: 368, size: fontSize });
+        const color = rgb(0, 0, 1)
+        
+        page.drawText(nombre, { font: customFont, x: (PosX + 5), y: 368, size: fontSize, color });
         
         const txt1 = "Por su participacion en la conferencia";
         const capaci = `"${req.body.capacitacion}"`
-        const txt2 = 'Con una duracion de dos horas virtuales';
+        const txt2 = `Con una duracion de ${duracion} horas ${modalidad}`;
         const txt3 = 'Dado en la Ciudad de Guatemala, '+req.body.fecha;
         
         const font2 = await pdfDoc.embedFont(StandardFonts.Helvetica)
@@ -224,8 +269,7 @@ exports.GenerarPDF = async(req, res) => {
         const l2 = font1.widthOfTextAtSize(capaci, tam)
         const l3 = font2.widthOfTextAtSize(txt2, tam)
         const l4 = font2.widthOfTextAtSize(txt3, tam)
-        const color = rgb(1, 0, 1)
-
+        
         page.drawText(txt1, {
             font: font2,
             x: ((pageWidth - l1) / 2),
@@ -247,7 +291,7 @@ exports.GenerarPDF = async(req, res) => {
         const buffer = Buffer.from(pdfBytes)
         //console.log(base64String)
 
-        var nombrei = "Extras/"+ req.body.datos.nombre +"_"+ req.body.capacitacion +".pdf";
+        var nombrei = "Diplomas/"+ req.body.datos.apellido+req.body.datos.nombre +"_"+ req.body.capacitacion +".pdf";
         //se convierte la base64 a bytes
         const params1 = {
             Bucket: "bucket-jornadas",
@@ -258,7 +302,105 @@ exports.GenerarPDF = async(req, res) => {
         putResult = s3.putObject(params1).promise();
   
         // Envía el PDF al cliente
-        var URLArmado = 'https://bucket-jornadas.s3.amazonaws.com/Extras/'+req.body.datos.nombre +'_'+req.body.capacitacion.replace(/\s+/g, '+')+'.pdf'
+        var URLArmado = 'https://bucket-jornadas.s3.amazonaws.com/Diplomas/'+req.body.datos.apellido+req.body.datos.nombre+'_'+req.body.capacitacion.replace(/\s+/g, '+')+'.pdf'
+        console.log(URLArmado)
+        return res.send({Mensaje:'Archivo Generado', URL: URLArmado})
+  
+    } catch (error) {
+      console.error('Error al generar el PDF: ', error)
+      res.status(500).send('Error interno del server')
+    }
+}
+
+exports.GenerarDiplomadoPDF = async(req, res) => {
+    try {
+        // Crea un nuevo documento PDF
+        var modalidad = ""
+        if(req.body.datos.modalidad == 1){
+            modalidad = "virtuales"
+        } else if(req.body.datos.modalidad == 2){
+            modalidad = "presenciales"
+        } else if(req.body.datos.modalidad == 3){
+            modalidad = "mixtas"
+        }
+        const duracion = req.body.datos.duracion
+        const pdfDoc = await PDFDocument.create(); 
+        const jpgUrl = 'https://bucket-jornadas.s3.amazonaws.com/Plantillas/Plantilla_Este%20es%20un%20modificado.jpg'
+        const jpgImageBytes = await fetch(jpgUrl).then((res) => res.arrayBuffer())
+        const pageWidth = 816; //hoja doble oficio
+        const pageHeight = 1248; //hoja doble oficio
+        const page = pdfDoc.addPage([pageWidth, pageHeight]);
+
+        const jpgImage = await pdfDoc.embedJpg(jpgImageBytes)
+        const scaleFactor = Math.min(pageWidth / jpgImage.width, pageHeight / jpgImage.height)
+        const scaledWidth = jpgImage.width * scaleFactor;
+        const scaledHeight = jpgImage.height * scaleFactor;
+        page.drawImage(jpgImage, {
+            x: 0,
+            y: 0,
+            width: scaledWidth,
+            height: scaledHeight
+        })
+    
+        // Incrusta la fuente en el documento
+        const customFont = await pdfDoc.embedFont(StandardFonts.Helvetica);
+    
+        // Usa la fuente personalizada en el texto
+        const nombre = req.body.datos.nombre + " " + req.body.datos.apellido;
+
+        const fontSize = 42;
+        const longitudTexto = customFont.widthOfTextAtSize(nombre, fontSize);
+        const PosX = (pageWidth - longitudTexto) / 2;
+        const color = rgb(0, 0, 1)
+        
+        page.drawText(nombre, { font: customFont, x: (PosX-5), y: 570, size: fontSize});
+
+        const capaci = `"${req.body.capacitacion}"`
+        const txt2 = `Realizado del ${req.body.fechas. inicio} al ${req.body.fechas.fin},`;
+        const txt3 = `con una duracion de ${duracion} horas`;
+        const txt4 = `Dado en la Ciudad de Guatemala en la fecha del ${req.body.fechas.fin}`
+        
+        const font2 = await pdfDoc.embedFont(StandardFonts.Helvetica)
+        const font1 = await pdfDoc.embedFont(StandardFonts.TimesRoman)
+        const tam = 18, tam2 = 14, tam3 = 38
+        const l1 = font1.widthOfTextAtSize(capaci, tam3)
+        const l2 = font2.widthOfTextAtSize(txt2, tam2)
+        const l3 = font2.widthOfTextAtSize(txt3, tam2)
+        const l4 = font2.widthOfTextAtSize(txt4, tam2)
+        
+        page.drawText(capaci, {
+            font: font1,
+            x: ((pageWidth - l1) / 2),
+            y: 465, size: tam3});
+        page.drawText(txt2, {
+            font: font2,
+            x: ((pageWidth - l2) / 2),
+            y: 425, size: tam2});
+        page.drawText(txt3, {
+            font: font2,
+            x: ((pageWidth - l3) / 2),
+            y: 400, size: tam2});
+        page.drawText(txt4, {
+            font: font2,
+            x: ((pageWidth - l4) / 2),
+            y: 370, size: tam2});
+        // Guarda el documento
+        const pdfBytes = await pdfDoc.save();
+        const buffer = Buffer.from(pdfBytes)
+        //console.log(base64String)
+
+        var nombrei = "Diplomados/"+ req.body.datos.apellido+req.body.datos.nombre +"_"+ req.body.capacitacion +".pdf";
+        //se convierte la base64 a bytes
+        const params1 = {
+            Bucket: "bucket-jornadas",
+            Key: nombrei,
+            Body: buffer,
+            ACL: 'public-read'
+        };
+        putResult = s3.putObject(params1).promise();
+  
+        // Envía el PDF al cliente
+        var URLArmado = 'https://bucket-jornadas.s3.amazonaws.com/Diplomados/'+ req.body.datos.apellido+req.body.datos.nombre +'_'+req.body.capacitacion.replace(/\s+/g, '+')+'.pdf'
         console.log(URLArmado)
         return res.send({Mensaje:'Archivo Generado', URL: URLArmado})
   

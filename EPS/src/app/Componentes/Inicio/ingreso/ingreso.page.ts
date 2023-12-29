@@ -27,31 +27,53 @@ export class IngresoPage implements OnInit {
   async Ingresar(){
     if(this.isEmail(this.dato1)){
       let datos = await this.AdminService.GetAdminUser(this.dato1, this.dato2);
-      let json = JSON.stringify(datos)
-      let obj = JSON.parse(json)
-      try {
-        let json : any = {
-          token: obj.token
+
+      if(datos !== undefined && datos !== null){
+        let msg = (datos as any).msg
+        if(msg == 'success') {
+          let json = JSON.stringify(datos)
+          let obj = JSON.parse(json)
+          try {
+            let json : any = {
+              token: obj.token
+            }
+            this.router.navigate(['/tabs', json])
+          } catch (error) {
+            alert("Error en el ingreso\nVerifique los datos que ingreso")
+            location.reload()
+            console.log("Error al decodificar el Token JWT ", error)
+          }
+        } else {
+          alert('Acceso negado: Verificar credenciales de ingreso')
         }
-        this.router.navigate(['/tabs', json]);
-      } catch (error) {
-        alert("Error en el ingreso\nVerifique sus datos de administrador")
-        console.log("Error al decodificar el Token JWT ", error)
+      } else {
+        console.log('error no se recibio respuesta')
       }
     } else {
       let datos = await this.UserService.GetUsuario(this.dato1, this.dato2)
-      let json = JSON.stringify(datos)
-      let obj = JSON.parse(json)
-      try {
-        let json : any = {
-          token: obj.token
+      
+      if(datos !== undefined && datos !== null){
+        let msg = (datos as any).msg
+        if(msg == 'success') {
+          let json = JSON.stringify(datos)
+          let obj = JSON.parse(json)
+          try {
+            let json : any = {
+              token: obj.token
+            }
+            this.router.navigate(['/tabsu', json,'conferencias'])
+          } catch (error) {
+            alert("Error en el ingreso\nVerifique los datos que ingreso")
+            location.reload()
+            console.log("Error al decodificar el Token JWT ", error)
+          }
+        } else {
+          alert('Acceso negado: Verificar credenciales de ingreso')
         }
-        this.router.navigate(['/tabsu', json,'conferencias'])
-      } catch (error) {
-        alert("Error en el ingreso\nVerifique los datos que ingreso")
-        location.reload()
-        console.log("Error al decodificar el Token JWT ", error)
+      } else {
+        console.log('error no se recibio respuesta')
       }
+      
     }
    /*  if(this.dato1 == 'admin' && this.dato2 == 'admin'){
       this.router.navigate(['/tabs']);

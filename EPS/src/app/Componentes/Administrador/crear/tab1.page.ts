@@ -13,7 +13,8 @@ export class Tab1Page implements OnInit{
     { title: 'Jornadas', url: 'Jornadas' },
     { title: 'Conferencias', url: 'Conferencias' },
     { title: 'Diplomados', url: 'Diplomados' },
-    { title: 'Usuarios', url: 'Usuarios'}
+    { title: 'Usuarios', url: 'Usuarios'},
+    { title: 'Plantillas', url: 'Plantillas'}
   ];
   constructor(private menuController: MenuController) {}
 

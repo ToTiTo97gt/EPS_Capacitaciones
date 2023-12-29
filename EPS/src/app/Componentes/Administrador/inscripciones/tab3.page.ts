@@ -9,7 +9,6 @@ import { ModalController } from '@ionic/angular';
   styleUrls: ['tab3.page.scss']
 })
 export class Tab3Page implements OnInit {
-  typesOfShoes: string[] = ['Boots', 'Clogs', 'Loafers', 'Moccasins', 'Sneakers'];
   constructor(private adminService:AdminService,private modalCtrl:ModalController) {}
 
   public anio: any

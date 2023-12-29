@@ -1,5 +1,6 @@
 import { Component, OnInit, inject, ElementRef, ViewChild } from '@angular/core';
 import { AdminService } from 'src/app/Servicios/admin.servicio';
+import { UserService } from 'src/app/Servicios/user.servicio';
 import { ActivatedRoute } from '@angular/router';
 import { ModalController } from '@ionic/angular';
 import { CrearInfoPage } from '../../modals/crear-info/crear-info.page';
@@ -27,8 +28,9 @@ export class MenuComponent  implements OnInit {
   fileSelected?:Blob;
   imageUrl?:string;
 
-  @ViewChild('fileInput',{static:false}) fileInput!: ElementRef;  
-  constructor(private sant: DomSanitizer, private adminService:AdminService,private modalCtrl:ModalController) {
+  @ViewChild('fileInput',{static:false}) fileInput!: ElementRef;
+  @ViewChild('fileInput1',{static:false}) fileInput1!: ElementRef;
+  constructor(private sant: DomSanitizer, private adminService:AdminService, private UserService:UserService,private modalCtrl:ModalController) {
     this.menu = "Jornadas"
   }
 
@@ -37,6 +39,13 @@ export class MenuComponent  implements OnInit {
     this.menu = this.activatedRoute.snapshot.paramMap.get('id') as string
     this.GetJornadas()
     this.GetCapacitaciones()
+
+    this.GetUsuarios()
+    this.tiposUsuarios()
+    this.getDepartamentos()
+
+    var anioActual = new Date()
+    this.getPorAnio(anioActual.getFullYear())
   }
 
   convertFileToBase64(){
@@ -52,6 +61,7 @@ export class MenuComponent  implements OnInit {
   poster = ""
 
   onSelectNewFile():void{
+      this.show = 1
     this.fileSelected=this.fileInput.nativeElement.files[0];
     if(this.fileSelected){
       var arr = this.capacitacion.poster.split("\\")
@@ -111,21 +121,6 @@ export class MenuComponent  implements OnInit {
     this.jornadas = await this.adminService.GetJornadas()
   }
 
-  vaciar(){
-    this.jornada.ciclo = ""
-    this.jornada.FechaInicio = ""
-    this.jornada.FechaFinal = ""
-    this.capacitacion.nomCapacitacion = ""
-    this.capacitacion.descripcion = ""
-    this.capacitacion.presentador = ""
-    this.capacitacion.poster = ""
-    this.capacitacion.fbLink = ""
-    this.capacitacion.zoomLink = ""
-    this.capacitacion.idJornada = ""
-    this.base64 = "Base64..."
-    this.imageUrl = ""
-  }
-
   convertir(fecha: string){
     var objc = new Date(fecha)
     return objc.toISOString().split('T')[0]
@@ -141,7 +136,6 @@ export class MenuComponent  implements OnInit {
   }
 
   //Segunda pestaña
-  
   fechaYhora = ""
   public capacitaciones: any
 
@@ -152,6 +146,8 @@ export class MenuComponent  implements OnInit {
     poster: "",
     zoomLink: "",
     fbLink: "",
+    duracion: "",
+    modalidad: 0,
     idJornada: "",
     idCategoria: 1
   }
@@ -176,29 +172,33 @@ export class MenuComponent  implements OnInit {
     const fechaHora = new Date(this.fechaYhora);
     this.agenda.fecha = this.formatoFecha(fechaHora, 'yyyy-mm-dd')
     this.agenda.hora = fechaHora.toLocaleTimeString();
-    let respuesta1 = await this.adminService.GetJornadaEspecifica(this.agenda)
-    if (Array.isArray(respuesta1) && respuesta1.length > 0) {
-      const primerElemento = respuesta1[0];
-      if (primerElemento.hasOwnProperty('idJornada')) {
-        this.capacitacion.idJornada = primerElemento.idJornada;
-        if(this.capacitacion.poster != "") {
-          let reader = new FileReader();
-          reader.readAsDataURL(this.fileSelected as Blob);
-          reader.onloadend= async ()=>{
-            this.base64=reader.result as string;
-            let arrayAux=this.base64.split(",",2)
-            this.base64 = arrayAux[1]
-            this.capac()
-          } 
+    if(this.capacitacion.duracion == "" || this.capacitacion.modalidad == 0){
+      alert('Indicar la duracion (en horas ej: cuarenta y cuatro)\ny la modalidad de la capacitacion')
+    } else {
+      let respuesta1 = await this.adminService.GetJornadaEspecifica(this.agenda)
+      if (Array.isArray(respuesta1) && respuesta1.length > 0) {
+        const primerElemento = respuesta1[0];
+        if (primerElemento.hasOwnProperty('idJornada')) {
+          this.capacitacion.idJornada = primerElemento.idJornada;
+          if(this.capacitacion.poster != "") {
+            let reader = new FileReader();
+            reader.readAsDataURL(this.fileSelected as Blob);
+            reader.onloadend= async ()=>{
+              this.base64=reader.result as string;
+              let arrayAux=this.base64.split(",",2)
+              this.base64 = arrayAux[1]
+              this.capac()
+            } 
+          } else {
+            this.capac
+          }
         } else {
-          this.capac
+          console.log('El primer elemento no tiene la propiedad "idJornada".');
         }
       } else {
-        console.log('El primer elemento no tiene la propiedad "idJornada".');
+        alert('La fecha ingresada no conicide con ninguna jornada')
+        console.log('El arreglo está vacío o no es un arreglo válido.');
       }
-    } else {
-      alert('La fecha ingresada no conicide con ninguna jornada')
-      console.log('El arreglo está vacío o no es un arreglo válido.');
     }
   }
 
@@ -252,7 +252,11 @@ export class MenuComponent  implements OnInit {
         zoomLink: capacitacion.zoomLink,
         fbLink: capacitacion.fbLink,
         idJornada: capacitacion.jornada,
-        idCategoria: capacitacion.idCategoria
+        idCategoria: capacitacion.idCategoria,
+        estado: capacitacion.estado,
+        diploma: capacitacion.diploma,
+        duracion: capacitacion.duracion,
+        modalidad: capacitacion.modalidad
       }
     });
     await modal.present();
@@ -303,32 +307,55 @@ export class MenuComponent  implements OnInit {
   }
   a = 0
 
+  tiposSeleccionados: any = {};
+  datos: any
+  guardarSeleccion(){
+    this.datos = Object.keys(this.tiposSeleccionados)
+    .filter(key => this.tiposSeleccionados[key])
+    .map(key => ({ idTipo: key, tipo: this.tiposSeleccionados[key]}));
+    if(this.datos.length === 0){
+      alert('Seleccione usuarios para asignar diploma')
+    } else {
+      alert(this.datos[0].idTipo)
+    }
+  }
+
   async CrearDiplomado(){
-    this.capacitacion.idCategoria = 2
-    let respuesta1 = await this.adminService.GetJornadaEspecifica(this.Fechas[0])
-    if (Array.isArray(respuesta1) && respuesta1.length > 0) {
-      const primerElemento = respuesta1[0];
-      if (primerElemento.hasOwnProperty('idJornada')) {
-        this.capacitacion.idJornada = primerElemento.idJornada;
-        if(this.capacitacion.poster != ""){
-          let reader = new FileReader();
-          reader.readAsDataURL(this.fileSelected as Blob);
-          reader.onloadend= async ()=>{
-            this.base64=reader.result as string;
-            let arrayAux=this.base64.split(",",2)
-            this.base64 = arrayAux[1]
-            this.diplo()
+    if(this.capacitacion.duracion == "" || this.capacitacion.modalidad == 0){
+      alert('Indicar la duracion (en horas ej: cuarenta y cuatro)\ny la modalidad del diplomado')
+    } else {
+      this.datos = Object.keys(this.tiposSeleccionados)
+      .filter(key => this.tiposSeleccionados[key])
+      .map(key => ({ idTipo: key, tipo: this.tiposSeleccionados[key]}));
+      if(this.datos.length === 0 ){
+        alert('Seleccione usuarios para asignar diploma')
+      } else {
+        this.capacitacion.idCategoria = 2
+        let respuesta1 = await this.adminService.GetJornadaEspecifica(this.Fechas[0])
+        if (Array.isArray(respuesta1) && respuesta1.length > 0) {
+          const primerElemento = respuesta1[0];
+          if (primerElemento.hasOwnProperty('idJornada')) {
+            this.capacitacion.idJornada = primerElemento.idJornada;
+            if(this.capacitacion.poster != ""){
+              let reader = new FileReader();
+              reader.readAsDataURL(this.fileSelected as Blob);
+              reader.onloadend= async ()=>{
+                this.base64=reader.result as string;
+                let arrayAux=this.base64.split(",",2)
+                this.base64 = arrayAux[1]
+                this.diplo()
+              }
+            } else {
+              this.diplo()
+            }
+          } else {
+            console.log('El primer elemento no tiene la propiedad "idJornada".');
           }
         } else {
-          this.diplo()
+          alert('La fecha ingresada no conicide con ninguna jornada')
+          console.log('El arreglo está vacío o no es un arreglo válido.');
         }
-        
-      } else {
-        console.log('El primer elemento no tiene la propiedad "idJornada".');
       }
-    } else {
-      alert('La fecha ingresada no conicide con ninguna jornada')
-      console.log('El arreglo está vacío o no es un arreglo válido.');
     }
   }
 
@@ -351,6 +378,7 @@ export class MenuComponent  implements OnInit {
               try {
                 resp4 = respuesta4 as {mensaje?: string}
                 if(resp.mensaje !== undefined){
+                  //
                   mensaje2 = resp4.mensaje
                 } else {
                   console.log('Error al registrar la fecha y hora \n'+ resp4)
@@ -359,11 +387,13 @@ export class MenuComponent  implements OnInit {
               } catch (error) {
                 console.log(error)
                 alert('error al registrar la hora y fecha')
+                
                 break
               }
             }
             alert(mensaje +"||" + mensaje2)
-            
+            let res = await this.adminService.AsingarDiploma(Elemento.idCapacitacion, this.datos)
+            location.reload()
           } 
         }
         this.vaciar()
@@ -408,6 +438,132 @@ export class MenuComponent  implements OnInit {
       console.log(id)
       this.Fechas.splice(id, 1)
     }
+  }
+
+  // Cuarta Pestaña - Usuarios
+
+  public datosExtra = {
+    idTipo: 0,
+    genero: 0,
+    idDepartamento: 0,
+    idmunicipio: 0,
+    presente: 2
+  }
+  public Usuarios: any
+  public tipos: any
+  public departamentos: any
+  public municipios: any
+
+  async getDepartamentos(){
+    this.departamentos = await this.UserService.GetDepartamentos();
+  }
+
+  async getMunicipios(idDepartamento: any){
+    this.municipios = await this.UserService.GetMunicipios(idDepartamento)
+  }
+
+  async GetUsuarios(){
+    this.Usuarios = await this.adminService.Usuarios()
+  }
+
+  async tiposUsuarios(){
+    this.tipos = await this.UserService.TiposUsuarios()
+  }
+
+  DepartamentoChange(event: any){
+    const valorSeleccionado = event.detail.value;
+    this.datosExtra.idmunicipio = 0
+    this.datosExtra.idDepartamento = valorSeleccionado
+    this.getMunicipios(valorSeleccionado)
+  }
+
+  async Parametros(){
+    if(this.datosExtra.idTipo == 0 && this.datosExtra.genero == 0 && this.datosExtra.idDepartamento == 0 && this.datosExtra.idmunicipio == 0 && this.datosExtra.presente == 2){
+      this.Usuarios = await this.adminService.Usuarios()
+    } else {
+      this.Usuarios = await this.adminService.Usuarios(this.datosExtra)
+    }
+    console.log(this.datosExtra)
+    this.vaciar()
+  }
+
+  // Quinta Pestaña - Plantillas
+  public show = 0;
+  public show1 = 0;
+  public idDiplo: any
+
+  async CargarPlantilla(){
+    let reader = new FileReader();
+    reader.readAsDataURL(this.fileSelected as Blob);
+    reader.onloadend= async ()=>{
+      this.base64=reader.result as string;
+      let arrayAux=this.base64.split(",",2)
+      this.base64 = arrayAux[1]
+      //console.log(this.PlantillaConferencia + " - " + this.fileSelected)
+      this.adminService.CargarPlantilla(this.base64)
+    } 
+    this.vaciar()
+  }
+
+  async CargarPlantillaDiplo(){
+    let reader = new FileReader();
+    reader.readAsDataURL(this.fileSelected1 as Blob);
+    reader.onloadend= async ()=>{
+      this.base641=reader.result as string;
+      let arrayAux=this.base641.split(",",2)
+      this.base641 = arrayAux[1]
+      this.adminService.CargarPlantillaDiplo(this.idDiplo.idCapacitacion, this.idDiplo.nomCapacitacion, this.base641)
+    } 
+    this.vaciar()
+  }
+
+  jornadaChange1(event: any){
+    const valorSeleccionado = event.detail.value;
+    this.getCapacitacionesPorJornada(valorSeleccionado)
+  }
+  
+  base641: string="Base64...";
+  fileSelected1?:Blob;
+  imageUrl1?:string;
+  onSelectNewFile1():void{
+
+    this.show1 = 1
+    this.fileSelected1=this.fileInput1.nativeElement.files[0];
+    if(this.fileSelected1){
+      this.imageUrl1=this.sant.bypassSecurityTrustUrl(window.URL.createObjectURL(this.fileSelected1)) as string;
+    }else{
+      alert('error al seleccionar el archivo')
+    }
+    
+  }
+
+
+  vaciar(){
+    this.jornada.ciclo = ""
+    this.jornada.FechaInicio = ""
+    this.jornada.FechaFinal = ""
+    this.capacitacion.nomCapacitacion = ""
+    this.capacitacion.descripcion = ""
+    this.capacitacion.presentador = ""
+    this.capacitacion.poster = ""
+    this.capacitacion.fbLink = ""
+    this.capacitacion.zoomLink = ""
+    this.capacitacion.idJornada = ""
+    this.capacitacion.duracion = ""
+    this.capacitacion.modalidad = 0
+    this.base64 = "Base64..."
+    this.base641 = "Base64..."
+    this.imageUrl = ""
+    this.imageUrl1 = ""
+
+    this.datosExtra.idTipo = 0
+    this.datosExtra.genero = 0
+    this.datosExtra.idDepartamento = 0
+    this.datosExtra.idmunicipio = 0
+    this.datosExtra.presente = 2
+
+    this.show = 0
+    this.show1 = 0
   }
 
 }

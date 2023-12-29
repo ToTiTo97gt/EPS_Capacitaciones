@@ -8,7 +8,7 @@
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <div id="Conferencias" >
+  <div id="Conferencias">
     <div id="Conf1">
       <ion-input class="Conferencia" label="Titulo de Conferencia" [(ngModel)]="nomCapacitacion" labelPlacement="floating" fill="outline" type="text"></ion-input>
       
@@ -41,6 +41,38 @@
         <ion-button class="boton" (click)="AgregarFecha(horaYFecha.fecha, horaYFecha.hora)">Agregar fecha y hora</ion-button>
         
       </div>
+      <div class="Actuales" *ngIf="idCategoria == 2">
+        <h3 style="color: white;">Lista Actual</h3>
+        <ion-list class="lista3">
+          <ion-item *ngFor="let dato of actuales">
+            <ion-label>{{dato.tipo}}</ion-label>
+          </ion-item>
+        </ion-list>
+      </div>
+      <div class="DerechoDiploma" *ngIf="idCategoria == 2">
+        <h3 style="color: white">Usuarios que tendran derecho a diploma</h3>
+        <ion-list class="lista2">
+          <ion-item *ngFor="let tipo of tipos">
+            <ion-label>{{ tipo.tipo }}</ion-label>
+            <ion-checkbox [(ngModel)]="tiposSeleccionados[tipo.idTipo]">{{ tipo.tipo }}</ion-checkbox>
+          </ion-item>
+        </ion-list>
+        <ion-button (click)="guardarSeleccion()">Guardar Selección</ion-button>
+      </div>
+      <div class="datos">
+        <ion-input class="duracion" label="Duracion (en horas)" [(ngModel)]="duracion" labelPlacement="floating" fill="outline" type="text"></ion-input>
+        <ion-select aria-label="Fruit" placeholder="Modalidad" [(ngModel)]="modalidad">
+          <ion-select-option [value]="1" >Virtual</ion-select-option>
+          <ion-select-option [value]="2" >Presencial</ion-select-option>
+          <ion-select-option [value]="3" >Mixto</ion-select-option>
+        </ion-select>
+        <ion-select aria-label="Fruit" placeholder="Estado" [(ngModel)]="estado">
+          <ion-select-option [value]="1" >Vigente</ion-select-option>
+          <ion-select-option [value]="0" >Cancelado</ion-select-option>
+          
+        </ion-select>
+      </div>
+      
       <ion-button *ngIf="idCategoria == 1" class="Modif" (click)="modificarCapacitacion()">Modificar</ion-button>
       <ion-button *ngIf="idCategoria == 2" class="Modif" (click)="modificarDiplomado()">Modificar</ion-button>
     </div>

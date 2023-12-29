@@ -76,6 +76,11 @@ export class DatosUsuarioPage implements OnInit {
     this.nuevoUser.estado = this.Datos.estado
   }
 
+  async ModificarDatos(){
+    await this.UserService.ModificarUsuario(this.nuevoUser)
+    location.reload()
+  }
+
   togglePassVisibility(){
     this.mostrar1 = !this.mostrar1
   }

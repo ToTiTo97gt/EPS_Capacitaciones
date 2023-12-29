@@ -26,10 +26,42 @@ exports.RegistrarAdmin = async (req, res) => {
         bd.query(`insert into administrador(nombre, apellido, email, passw, telefono) 
           values ('${req.body.nombre}', '${req.body.apellido}', '${req.body.email}', '${req.body.passw}', '${req.body.telefono}')`,function(err, result){
             if(err) throw err
-            sendMail1(req.body, info => {
-                console.log(`El Email fue enviado`)
-                res.send(info)
-            })
+            let transporter = nodemailer.createTransport({
+                host: "smtp.gmail.com",
+                port: 587,
+                secure: false, // true for 465, false for other ports
+                auth: {
+                  user: 'sender97gt@gmail.com',
+                  pass: 'toto1897'
+                },
+                tls: {
+                    rejectUnauthorized: false
+                }
+              });
+            
+              let mailOptions = {
+                from: 'sender97gt@gmail.com', // sender address
+                to: req.body.email, // list of receivers
+                subject: "Bienvenido al sistema de administradores", // Subject line
+                html: `
+                <html>
+                  <body>
+                      <h1>Bienvenido(a) ${req.body.nombre} ${req.body.apellido}</h1><br>
+                      <h2>Usted fue elegido(a) para ser parte de los administradores de este modulo</h2><br>
+                      <p>La contraseña que se la asigno es: ${req.body.passw}</p>
+                      <p>y para ingresar use este mismo correo con el cual fue registrado(a)</p>
+                  </body>
+                </html>`
+              };
+            
+              // send mail with defined transport object
+              let info = transporter.sendMail(mailOptions, function(error, info){
+                  if(error){
+                      console.log(error)
+                  } else {
+                      console.log('Email enviado')
+                  }
+              });
         })
     } catch (error) {
         console.log('error al registrar al admin')
@@ -43,7 +75,7 @@ exports.AdminUser = async (req, res) => {
     var payload, clave="token1"
     bd.query(`select * from administrador where email='${email}' and passw='${passw}';`, function(err, result){
         if(err) throw err;
-        payload = {
+        payload = { 
             "datos": result
         }
         jwt.sign(payload, clave, (err, token) => {
@@ -225,6 +257,54 @@ exports.eliminarJornada = async (req, res) => {
     })
 }
 
+async function AsignacionAuto (idCapa) {
+    try {
+        const Usuarios = await Users()
+
+        for(const Usuario of Usuarios){
+            try {
+                await insertarAsistencia(Usuario.idUsuario, idCapa)
+            } catch (error) {
+                if (error.code === 'ER_DUP_ENTRY') {
+                    console.error(`${idCapa} Ya Existe para el usuario ${Usuario.idUsuario}`);
+                } else {
+                    // Otro tipo de error
+                    console.error('Error inesperado11:', error);
+                    //return res.status(500).json({ error: 'Error interno del servidor' });
+                }
+            }
+        }
+        //return res.status(200).json({mensaje: 'Existo al asignar los datos'})
+    } catch (error) {
+        console.error('Error inesperado22:', error);
+        //return res.status(500).json({ error: 'Error interno del servidor' });
+    }
+}
+
+function Users() {
+    return new Promise((resolve, reject) => {
+        bd.query(`SELECT idUsuario FROM usuario`, (err, result) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(result);
+            }
+        });
+    })
+}
+
+function insertarAsistencia(idUser, idCapacitacion){
+    return new Promise((resolve, reject) => {
+        bd.query(`Insert into asistencia(idUsuario, inscrito, presente, idCapacitacion) values (${idUser}, 0, 0, ${idCapacitacion})`, (err, result) => {
+            if (err) {
+              reject(err);
+            } else {
+              resolve(result);
+            }
+        });
+    });
+}
+
 exports.CrearCapacitacion = async (req, res) => {
     try {
         var nomCapacitacion = req.body.capacitacion.nomCapacitacion
@@ -233,12 +313,16 @@ exports.CrearCapacitacion = async (req, res) => {
         var poster = req.body.capacitacion.poster
         var zoomLink = req.body.capacitacion.zoomLink
         var fbLink = req.body.capacitacion.fbLink
+        var duracion = req.body.capacitacion.duracion
+        var modalidad = req.body.capacitacion.modalidad
         var idJornada = req.body.capacitacion.idJornada
         var idCategoria = req.body.capacitacion.idCategoria
         if(poster == "" || poster === undefined){
-            bd.query(`insert into capacitacion(nomCapacitacion, descripcion, presentador, poster, zoomLink, fbLink, idJornada, idCategoria, estado)
-              values('${nomCapacitacion}', '${descripcion}', '${presentador}', '${poster}', '${zoomLink}', '${fbLink}', ${idJornada}, ${idCategoria}, 1)`, function(err, result){
+            bd.query(`insert into capacitacion(nomCapacitacion, descripcion, presentador, poster, zoomLink, fbLink, idJornada, idCategoria, estado, duracion, modalidad)
+              values('${nomCapacitacion}', '${descripcion}', '${presentador}', '${poster}', '${zoomLink}', '${fbLink}', ${idJornada}, ${idCategoria}, 1, '${duracion}', ${modalidad})`, function(err, result){
                 if(err) throw err
+                const idCapa = result.insertId
+                AsignacionAuto(idCapa)
                 if(idCategoria == 1){
                     res.status(201).json({mensaje:'Capacitacion Creada con exito'})
                 } else {
@@ -249,9 +333,11 @@ exports.CrearCapacitacion = async (req, res) => {
             var idArchivo = req.body.base64
             let archiv = "https://bucket-jornadas.s3.amazonaws.com/"+SubirArchivo(poster, idArchivo)
             if(archiv != "error"){
-                bd.query(`insert into capacitacion(nomCapacitacion, descripcion, presentador, poster, zoomLink, fbLink, idJornada, idCategoria, estado)
-                  values('${nomCapacitacion}', '${descripcion}', '${presentador}', '${archiv}', '${zoomLink}', '${fbLink}', ${idJornada}, ${idCategoria}, 1)`, function(err, result){
+                bd.query(`insert into capacitacion(nomCapacitacion, descripcion, presentador, poster, zoomLink, fbLink, idJornada, idCategoria, estado, duracion, modalidad)
+                  values('${nomCapacitacion}', '${descripcion}', '${presentador}', '${archiv}', '${zoomLink}', '${fbLink}', ${idJornada}, ${idCategoria}, 1, '${duracion}', ${modalidad})`, function(err, result){
                     if(err) throw err
+                    const idCapa = result.insertId
+                    AsignacionAuto(idCapa)
                     if(idCategoria == 1){
                         res.status(201).json({mensaje:'Capacitacion Creada con exito'})
                     } else {
@@ -260,8 +346,6 @@ exports.CrearCapacitacion = async (req, res) => {
                 })
             }
         }
-        
-        
     } catch (error) {
         console.log(error)
         res.status(500).json({error: 'error al registrar la capacitacion nueva'})
@@ -272,18 +356,16 @@ exports.modificarCapacitacion = async (req, res) => {
     try {
         //oldPoster trae la ultima parte de la ruta del antiguo poster
         //poster trae el nuevo archivo
-        const {idCapacitacion, nomCapacitacion, descripcion, presentador, poster, zoomLink, fbLink, idJornada} = req.body.capacitacion
+        const {idCapacitacion, nomCapacitacion, descripcion, presentador, poster, zoomLink, fbLink, idJornada, estado, diploma, duracion, modalidad} = req.body.capacitacion
         var base64 = req.body.base64
         var oldPoster = req.body.oldPoster
         if(oldPoster == poster){
-            bd.query(`update capacitacion set nomCapacitacion = '${nomCapacitacion}', descripcion = '${descripcion}', presentador = '${presentador}', poster = '${poster}', zoomLink = '${zoomLink}', fbLink = '${fbLink}', idJornada=${idJornada} where idCapacitacion = ${idCapacitacion}`, function(err, result){
+            bd.query(`update capacitacion set nomCapacitacion = '${nomCapacitacion}', descripcion = '${descripcion}', presentador = '${presentador}', poster = '${poster}', zoomLink = '${zoomLink}', fbLink = '${fbLink}', estado=${estado}, diploma='${diploma}', duracion='${duracion}', modalidad=${modalidad} where idCapacitacion = ${idCapacitacion}`, function(err, result){
                 if(err) throw err
                 res.status(201).json({mensaje:'Modificacion Exitosa'})
             })
         } else {
-            
             if(oldPoster !== undefined){
-                console.log("--entre aqui--")
                 const params1 = {
                     Bucket: "bucket-jornadas",
                     Key: oldPoster
@@ -293,7 +375,7 @@ exports.modificarCapacitacion = async (req, res) => {
             }
             let archiv = "https://bucket-jornadas.s3.amazonaws.com/"+SubirArchivo(poster, base64)
             if(archiv != "Error"){
-                bd.query(`update capacitacion set nomCapacitacion = '${nomCapacitacion}', descripcion = '${descripcion}', presentador = '${presentador}', poster = '${archiv}', zoomLink = '${zoomLink}', fbLink = '${fbLink}' where idCapacitacion = ${idCapacitacion}`, function(err, result){
+                bd.query(`update capacitacion set nomCapacitacion = '${nomCapacitacion}', descripcion = '${descripcion}', presentador = '${presentador}', poster = '${archiv}', zoomLink = '${zoomLink}', fbLink = '${fbLink}', estado=${estado}, diploma='${diploma}', duracion='${duracion}', modalidad=${modalidad} where idCapacitacion = ${idCapacitacion}`, function(err, result){
                     if(err) throw err
                     res.status(201).json({mensaje:'Modificacion Exitosa'})
                 })
@@ -302,6 +384,30 @@ exports.modificarCapacitacion = async (req, res) => {
     } catch (error) {
         console.log(error)
         res.status(500).json({error: 'error al modificar la informacion de la capacitacion'})
+    }
+}
+
+exports.AsignarDiplomas = async (req, res) => {
+    var idCapacitacion = req.body.idCapacitacion
+    try {
+        bd.query(`delete from tipousuariodiploma where idCapacitacion = ${idCapacitacion}`)
+        for (var i = 0; i < req.body.datos.length; i++){
+            var {idTipo, tipo} = req.body.datos[i]
+            bd.query(`insert into tipousuariodiploma(idCapacitacion, idTipo) values (${idCapacitacion}, ${idTipo})`)
+        }
+        res.status(201).json({mensaje:'Permisos Asignados'})
+    } catch (error) {
+        try {
+            console.log(error+'\nNo habia datos previos para borrar')
+            for (var i = 0; i < req.body.datos.length; i++){
+                var {idTipo, tipo} = req.body.datos[i]
+                bd.query(`insert into tipousuariodiploma(idCapacitacion, idTipo) values (${idCapacitacion}, ${idTipo})`)
+            } 
+            res.status(201).json({mensaje:'Permisos Asignados'})
+        } catch (error1) {
+            console.error('error: '+error1)
+            res.status(500).json({error: 'error al asignar permisos de diploma'})
+        }
     }
 }
 
@@ -397,23 +503,62 @@ exports.getAgenda = async (req, res) => {
 
 exports.Asistencias = async (req, res) => {
     var idCapacitacion = req.body.idCapacitacion
+    var tipo = req.body.tipo
     console.log(idCapacitacion)
     try {
-        for(let data of req.body.datos){
-            bd.query(`update asistencia set presente = 1 where idUsuario = (select idUsuario from usuario where carne = '${data['Carne']}' and cui='${data['CUI']}' and correo='${data['Correo Electrónico']}') and inscrito = 1 and idCapacitacion = ${idCapacitacion}`, function(err, result){
-                if(err){
-                    if(err.code === 'ER_BAD_FIELD_ERROR'){
-                        console.error('Columna no encontrada en la tabla.');
+        if (tipo == 1){
+            for(let data of req.body.datos){
+                bd.query(`update asistencia set presente = 1 where idUsuario = (select idUsuario from usuario where carne = '${data['Carne']}' and cui='${data['CUI']}' and correo='${data['Correo Electrónico']}') and inscrito = 1 and idCapacitacion = ${idCapacitacion}`, function(err, result){
+                    if(err){
+                        if(err.code === 'ER_BAD_FIELD_ERROR'){
+                            console.error('Columna no encontrada en la tabla.');
+                        } else {
+                            // Otro tipo de error, manejar según sea necesario
+                            console.error('Error en la consulta:', err);
+                        }
                     } else {
-                        // Otro tipo de error, manejar según sea necesario
-                        console.error('Error en la consulta:', err);
+                        console.log('Asistencia Registrada')
+                        //return res.send({message: 'Asistencia registrada con exito'})
                     }
-                } else {
-                    console.log('Asistencia Registrada')
-                    //return res.send({message: 'Asistencia registrada con exito'})
-                }
-            })
+                })
+            }
+        } else if(tipo == 2) {
+            var nota = 0
+            for(let data of req.body.datos){
+                bd.query(`update asistencia set presente = 1 where idUsuario = (select idUsuario from usuario where carne = '${data['Carne']}' and cui='${data['CUI']}' and correo='${data['Correo Electrónico']}') and inscrito = 1 and idCapacitacion = ${idCapacitacion}`, function(err, result){
+                    if(err){
+                        if(err.code === 'ER_BAD_FIELD_ERROR'){
+                            console.error('Columna no encontrada en la tabla.');
+                        } else {
+                            // Otro tipo de error, manejar según sea necesario
+                            console.error('Error en la consulta:', err);
+                        }
+                    } else {
+                        bd.query(`Select a.idUsuario from usuario a, asistencia b where a.carne = '${data['Carne']}' and a.cui='${data['CUI']}' and a.correo='${data['Correo Electrónico']}' and a.idUsuario = b.idUsuario and b.inscrito = 1 and b.idCapacitacion = ${idCapacitacion};`, function(err, result){
+                            if(err){
+                                console.error('Error en la consulta ')
+                                return;
+                            }
+
+                            if(!result || result.length === 0 || !result[0].idUsuario){
+                                console.log('Usuario inexistente o no se inscribio')
+                            } else {
+                                if(data['nota'] === undefined){
+                                    nota = 0
+                                } else {
+                                    nota = data['nota']
+                                }
+                                const user = result[0].idUsuario;
+                                console.log('Nota Registrada')
+                                bd.query(`insert into nota (idUsuario, idCapacitacion, nota) values (${user}, ${idCapacitacion}, ${nota}) On duplicate key update nota = ${nota}`)
+                            }
+                        })
+                        //return res.send({message: 'Asistencia registrada con exito'})
+                    }
+                })
+            }
         }
+        
         return res.send({message: 'Asistencias Registradas'})
     } catch (error) {
         console.log(error)
@@ -486,6 +631,114 @@ exports.getInscripciones = async (req, res) => {
     }
 }
 
+exports.getUsuarios = async (req, res) => {
+    try {
+        if(req.body.datosExtra === undefined){
+            bd.query(`select a.* from usuario a, tipousuario b, municipio c, departamento d
+              where b.idTipo = a.idTipo and a.idmunicipio = c.idMunicipio and c.idDepartamento = d.idDepartamento`, function(err, result){
+                if(err) throw err;
+                return res.send(result)
+            })
+        } else {
+            var parametrosExtra = ""
+            if(req.body.datosExtra.idTipo != 0){
+                parametrosExtra += " and b.idTipo = " + req.body.datosExtra.idTipo
+            }
+            if(req.body.datosExtra.genero != 0){
+                parametrosExtra += " and a.genero = " + req.body.datosExtra.genero
+            }
+            if(req.body.datosExtra.idDepartamento != 0){
+                parametrosExtra += " and d.idDepartamento = " + req.body.datosExtra.idDepartamento
+            }
+            if(req.body.datosExtra.idmunicipio != 0){
+                parametrosExtra += " and c.idmunicipio = " + req.body.datosExtra.idmunicipio
+            }
+            if(req.body.datosExtra.presente != 2){
+                parametrosExtra += " and e.presente = " + req.body.datosExtra.presente
+            }
+            console.log(parametrosExtra + " -*--*-*-*-*-*-")
+            bd.query(`select a.* from usuario a, tipousuario b, municipio c, departamento d
+              where b.idTipo = a.idTipo and a.idmunicipio = c.idMunicipio and c.idDepartamento = d.idDepartamento${parametrosExtra}`, function(err, result){
+                if(err) throw err;
+                return res.send(result)
+            })
+        }
+    } catch (error) {
+        console.log(error)
+        console.log('Problema en la ejecucion del query para inscripciones')
+    }
+}
+
+exports.CargarPlantilla = async (req, res) => {
+    try {
+        var Archivo64 = req.body.base64
+        //var Archivo = req.body.PlantillaConferencia
+        var nombrei = "Plantillas/PlantillaDiploma.jpg";
+        let buff = new Buffer.from(Archivo64, 'base64')
+        //se convierte la base64 a bytes
+        const params1 = {
+            Bucket: "bucket-jornadas",
+            Key: nombrei,
+            Body: buff,
+            ContentType: "image/jpeg",
+            ACL: 'public-read'
+        };
+        s3.upload(params1, (err, data) => {
+            if(err){
+                console.error('Error en la carga', err)
+            } else {
+                console.log('Carga exitosa: ' , data.Location)
+            }
+        });
+        return res.send(nombrei)
+    } catch (error) {
+        console.log(error)
+        console.log('Error al cargar la plantilla de conferencias')
+    }
+}
+
+exports.CargarPlantillaDiplo = async (req, res) => {
+    try {
+        var Archivo64 = req.body.base64
+        //var Archivo = req.body.PlantillaConferencia
+        var nombrei = "Plantillas/Plantilla_"+ req.body.nomCapacitacion +".jpg";
+        let buff = new Buffer.from(Archivo64, 'base64')
+        //se convierte la base64 a bytes
+        const params1 = {
+            Bucket: "bucket-jornadas",
+            Key: nombrei,
+            Body: buff,
+            ContentType: "image/jpeg",
+            ACL: 'public-read'
+        };
+        s3.upload(params1, (err, data) => {
+            if(err){
+                console.error('Error en la carga', err)
+            } else {
+                console.log('Carga exitosa: ' , data.Location)
+                bd.query(`update capacitacion set diploma='${data.Location}' where idCapacitacion = ${req.body.idCapacitacion}`)
+            }
+        });
+        return res.send(nombrei)
+    } catch (error) {
+        console.log(error)
+        console.log('Error al cargar la plantilla de diplomado')
+    }
+}
+
+exports.ListaActual = async (req, res) => {
+    try {
+        var idCapacitacion = req.body.idCapacitacion
+        bd.query(`Select a.* from tipousuario a, capacitacion b, tipousuariodiploma c where b.idCapacitacion = ${idCapacitacion} and b.idCapacitacion = c.idCapacitacion and a.idTipo = c.idTipo ` , function(err, result){
+            if(err) throw err;
+            return res.send(result)
+        })
+    } catch (error) {
+        console.error(error+ " Error al obtener el listado actual")
+        res.status(500).json({error: 'error al registrar las asistencias'})
+    }
+}
+
 function SubirArchivo(Archivo, idArchivo){
     try {
         var nombrei = "Posts/" + Archivo;
@@ -506,7 +759,7 @@ function SubirArchivo(Archivo, idArchivo){
     }
 }
 
-function sendMail1(user, callback) {
+function sendMail1(user) {
     // create reusable transporter object using the default SMTP transport
     let transporter = nodemailer.createTransport({
       host: "smtp.gmail.com",
@@ -515,9 +768,6 @@ function sendMail1(user, callback) {
       auth: {
         user: 'sender97gt@gmail.com',
         pass: 'toto1897'
-      },
-      tls: {
-        rejectUnauthorized: false
       }
     });
   

@@ -2,6 +2,7 @@ import { Component, OnInit, Input, inject, ElementRef, ViewChild} from '@angular
 import { HttpErrorResponse } from '@angular/common/http';
 import { ModalController } from '@ionic/angular';
 import { AdminService } from 'src/app/Servicios/admin.servicio';
+import { UserService } from 'src/app/Servicios/user.servicio';
 import { dateInputsHaveChanged } from '@angular-material-components/datetime-picker/lib/datepicker-input-base';
 import { DomSanitizer } from '@angular/platform-browser';
 import { EmptyError } from 'rxjs';
@@ -22,12 +23,17 @@ export class CapacitacionInfoPage implements OnInit {
   @Input() fbLink: any
   @Input() idCategoria: any
 
+  @Input() estado: any
+  @Input() diploma: any
+  @Input() duracion: any
+  @Input() modalidad: any
+
   base64: string="Base64...";
   fileSelected?:Blob;
   imageUrl?:string;
   @ViewChild('fileInput',{static:false}) fileInput!: ElementRef;
 
-  constructor(private sant:DomSanitizer, private modalCtrl:ModalController, private adminService:AdminService) { }
+  constructor(private sant:DomSanitizer, private modalCtrl:ModalController, private adminService:AdminService, private userService:UserService) { }
 
   public agenda: any
   datosAgenda = {
@@ -43,11 +49,16 @@ export class CapacitacionInfoPage implements OnInit {
     poster: "",
     zoomLink: "",
     fbLink: "",
-    idJornada: ""
+    idJornada: "",
+    
+    estado: "",
+    diploma: "",
+    duracion: "",
+    modalidad: ""
   }
 
   public oldPoster: any
-  public oldTitle = ""
+  public oldTitle = "" 
 
   fechaYhora = ""
   datetime: Date = new Date()
@@ -58,6 +69,8 @@ export class CapacitacionInfoPage implements OnInit {
     this.oldPoster = this.poster
     this.imageUrl = this.poster
     this.getAgenda()
+    this.getTipo()
+    this.listaTipoActual()
   }
 
   onSelectNewFile():void{
@@ -103,6 +116,10 @@ export class CapacitacionInfoPage implements OnInit {
     this.capacitacion.poster = this.poster
     this.capacitacion.zoomLink = this.zoomLink
     this.capacitacion.fbLink = this.fbLink
+
+    this.capacitacion.estado = this.estado
+    this.capacitacion.duracion = this.duracion
+    this.capacitacion.modalidad = this.modalidad
     let respuesta1 = await this.adminService.GetJornadaEspecifica(this.datosAgenda)
     if (Array.isArray(respuesta1) && respuesta1.length > 0) {
       const primerElemento = respuesta1[0];
@@ -163,6 +180,29 @@ export class CapacitacionInfoPage implements OnInit {
       alert('error en la modificacion')
     }
   }
+  async getTipo(){
+    this.tipos = await this.userService.TiposUsuarios()
+  }
+
+  async listaTipoActual(){
+    this.actuales = await this.adminService.ListaActual(this.idCapacitacion)
+  }
+
+  actuales: any
+  tipos: any
+  tiposSeleccionados: any = {};
+  datos: any
+  async guardarSeleccion(){
+    this.datos = Object.keys(this.tiposSeleccionados)
+    .filter(key => this.tiposSeleccionados[key])
+    .map(key => ({ idTipo: key, tipo: this.tiposSeleccionados[key]}));
+    if(this.datos.length === 0){
+      alert('Seleccione los usuarios para asignar diploma')
+    } else {
+      let res = await this.adminService.AsingarDiploma(this.idCapacitacion, this.datos)
+      location.reload()
+    }
+  }
 
   async modificarDiplomado(){
     this.capacitacion.idCapacitacion = this.idCapacitacion
@@ -172,6 +212,11 @@ export class CapacitacionInfoPage implements OnInit {
     this.capacitacion.poster = this.poster
     this.capacitacion.zoomLink = this.zoomLink
     this.capacitacion.fbLink = this.fbLink
+
+    this.capacitacion.diploma = this.diploma
+    this.capacitacion.estado = this.estado
+    this.capacitacion.duracion = this.duracion
+    this.capacitacion.modalidad = this.modalidad
     let respuesta1 = await this.adminService.GetJornadaEspecifica(this.Fechas[0])
     if (Array.isArray(respuesta1) && respuesta1.length > 0) {
       const primerElemento = respuesta1[0];

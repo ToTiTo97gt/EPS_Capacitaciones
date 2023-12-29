@@ -31,6 +31,11 @@ router.post('/CapacitacionReciente', admin.CapacitacionReciente)
 router.post('/Actualizar0', admin.Actualizar0)
 router.post('/Actualizar1', admin.Actualizar1)
 router.post('/GetInscripciones', admin.getInscripciones)
+router.post('/GetUsuarios', admin.getUsuarios)
 router.post('/Asistencias', admin.Asistencias)
+router.post('/CargarPlantilla', admin.CargarPlantilla)
+router.post('/CargarPlantillaDiplo', admin.CargarPlantillaDiplo)
+router.post('/AsignarDiplomas', admin.AsignarDiplomas)
+router.post('/ListaActual', admin.ListaActual)
 
 module.exports = router
