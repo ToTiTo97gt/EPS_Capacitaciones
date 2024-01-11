@@ -1,137 +1,42 @@
 <ion-content [fullscreen]="true">
   <div id="pantalla">
     <br>
-    <ion-select aria-label="Fruit" placeholder="Filtro">
-      <ion-select-option value="Estudiante">Resuelto</ion-select-option>
-      <ion-select-option value="Catedratico">No resuelto</ion-select-option>
-    </ion-select>
-    <br>
-    <ion-button> Aplicar filtro </ion-button>
-    <ion-grid>
-      <div id="head">
-        <ion-row id="filaMain">
-          <ion-col ><b>CUI</b></ion-col>
-          <ion-col ><b>Nombre</b></ion-col>
-          <ion-col ><b>E-mail</b></ion-col>
-          <ion-col ><b>Asunto</b></ion-col>
-          <ion-col ><b>Descripcion</b></ion-col>
-          <ion-col ><b>Estado</b></ion-col>
-        </ion-row>
-      </div>
-      <div id="tabla">
+    <div>
+      <ion-select aria-label="Fruit" placeholder="Categoria" [(ngModel)]="estado">
+        <ion-select-option [value]="0" >Pendiente</ion-select-option>
+        <ion-select-option [value]="1" >Resuelto</ion-select-option>
+      </ion-select>
+      <ion-input label="Buscar por CUI" labelPlacement="floating" fill="outline" type="text" [(ngModel)]="cui"></ion-input>
+      <br>
+      <ion-button (click)="Filtrar()"> Aplicar filtro </ion-button>
+    </div>
+    
+    <div class="tabla">
+      <ion-grid>
         <ion-row>
-          <ion-col>xxxx5515xxxx</ion-col>
-          <ion-col>Juan Perez</ion-col>
-          <ion-col>DanPer@email.com</ion-col>
-          <ion-col>Problema con la descarga del diploma</ion-col>
-          <ion-col>El sistema no me deja descargar mi diploma, podrian mandarlo por e-mail?</ion-col>
-          <ion-col>Resuelto</ion-col>
+          <ion-col class="head" size="1.2"><b>CUI</b></ion-col>
+          <ion-col class="head" size="1.2"><b>Nombre</b></ion-col>
+          <ion-col class="head"><b>E-mail</b></ion-col>
+          <ion-col class="head" size="2"><b>Asunto</b></ion-col>
+          <ion-col class="head" size="3.2"><b>Descripcion</b></ion-col>
+          <ion-col class="head" size="1.3"><b>Estado</b></ion-col>
         </ion-row>
-        <ion-row>
-          <ion-col>xxxx5515xxxx</ion-col>
-          <ion-col>Juan Perez</ion-col>
-          <ion-col>DanPer@email.com</ion-col>
-          <ion-col>Problema con la descarga del diploma</ion-col>
-          <ion-col>El sistema no me deja descargar mi diploma, podrian mandarlo por e-mail?</ion-col>
-          <ion-col>No resuelto</ion-col>
-        </ion-row>
-        <ion-row>
-          <ion-col>xxxx5515xxxx</ion-col>
-          <ion-col>Juan Perez</ion-col>
-          <ion-col>DanPer@email.com</ion-col>
-          <ion-col>Problema con la descarga del diploma</ion-col>
-          <ion-col>El sistema no me deja descargar mi diploma, podrian mandarlo por e-mail?</ion-col>
-          <ion-col>Resuelto</ion-col>
-        </ion-row>
-        <ion-row>
-          <ion-col>xxxx5515xxxx</ion-col>
-          <ion-col>Juan Perez</ion-col>
-          <ion-col>DanPer@email.com</ion-col>
-          <ion-col>Problema con la descarga del diploma</ion-col>
-          <ion-col>El sistema no me deja descargar mi diploma, podrian mandarlo por e-mail?</ion-col>
-          <ion-col>No resuelto</ion-col>
-        </ion-row>
-        <ion-row>
-          <ion-col>xxxx5515xxxx</ion-col>
-          <ion-col>Juan Perez</ion-col>
-          <ion-col>DanPer@email.com</ion-col>
-          <ion-col>Problema con la descarga del diploma</ion-col>
-          <ion-col>El sistema no me deja descargar mi diploma, podrian mandarlo por e-mail?</ion-col>
-          <ion-col>No resuelto</ion-col>
-        </ion-row>
-        <ion-row>
-          <ion-col>xxxx5515xxxx</ion-col>
-          <ion-col>Juan Perez</ion-col>
-          <ion-col>DanPer@email.com</ion-col>
-          <ion-col>Problema con la descarga del diploma</ion-col>
-          <ion-col>El sistema no me deja descargar mi diploma, podrian mandarlo por e-mail?</ion-col>
-          <ion-col>No resuelto</ion-col>
-        </ion-row>
-        <ion-row>
-          <ion-col>xxxx5515xxxx</ion-col>
-          <ion-col>Juan Perez</ion-col>
-          <ion-col>DanPer@email.com</ion-col>
-          <ion-col>Problema con la descarga del diploma</ion-col>
-          <ion-col>El sistema no me deja descargar mi diploma, podrian mandarlo por e-mail?</ion-col>
-          <ion-col>Resuelto</ion-col>
-        </ion-row>
-        <ion-row>
-          <ion-col>xxxx5515xxxx</ion-col>
-          <ion-col>Juan Perez</ion-col>
-          <ion-col>DanPer@email.com</ion-col>
-          <ion-col>Problema con la descarga del diploma</ion-col>
-          <ion-col>El sistema no me deja descargar mi diploma, podrian mandarlo por e-mail?</ion-col>
-          <ion-col>Resuelto</ion-col>
-        </ion-row>
-        <ion-row>
-          <ion-col>xxxx5515xxxx</ion-col>
-          <ion-col>Juan Perez</ion-col>
-          <ion-col>DanPer@email.com</ion-col>
-          <ion-col>Problema con la descarga del diploma</ion-col>
-          <ion-col>El sistema no me deja descargar mi diploma, podrian mandarlo por e-mail?</ion-col>
-          <ion-col>Resuelto</ion-col>
-        </ion-row>
-        <ion-row>
-          <ion-col>xxxx5515xxxx</ion-col>
-          <ion-col>Juan Perez</ion-col>
-          <ion-col>DanPer@email.com</ion-col>
-          <ion-col>Problema con la descarga del diploma</ion-col>
-          <ion-col>El sistema no me deja descargar mi diploma, podrian mandarlo por e-mail?</ion-col>
-          <ion-col>Resuelto</ion-col>
-        </ion-row>
-        <ion-row>
-          <ion-col>xxxx5515xxxx</ion-col>
-          <ion-col>Juan Perez</ion-col>
-          <ion-col>DanPer@email.com</ion-col>
-          <ion-col>Problema con la descarga del diploma</ion-col>
-          <ion-col>El sistema no me deja descargar mi diploma, podrian mandarlo por e-mail?</ion-col>
-          <ion-col>Resuelto</ion-col>
-        </ion-row>
-        <ion-row>
-          <ion-col>xxxx5515xxxx</ion-col>
-          <ion-col>Juan Perez</ion-col>
-          <ion-col>DanPer@email.com</ion-col>
-          <ion-col>Problema con la descarga del diploma</ion-col>
-          <ion-col>El sistema no me deja descargar mi diploma, podrian mandarlo por e-mail?</ion-col>
-          <ion-col>Resuelto</ion-col>
-        </ion-row>
-        <ion-row>
-          <ion-col>xxxx5515xxxx</ion-col>
-          <ion-col>Juan Perez</ion-col>
-          <ion-col>DanPer@email.com</ion-col>
-          <ion-col>Problema con la descarga del diploma</ion-col>
-          <ion-col>El sistema no me deja descargar mi diploma, podrian mandarlo por e-mail?</ion-col>
-          <ion-col>Resuelto</ion-col>
-        </ion-row>
-        <ion-row>
-          <ion-col>xxxx5515xxxx</ion-col>
-          <ion-col>Juan Perez</ion-col>
-          <ion-col>DanPer@email.com</ion-col>
-          <ion-col>Problema con la descarga del diploma</ion-col>
-          <ion-col>El sistema no me deja descargar mi diploma, podrian mandarlo por e-mail?</ion-col>
-          <ion-col>Resuelto</ion-col>
-        </ion-row>
-      </div>
-    </ion-grid>
+        <div class="tab">
+          <ion-row *ngFor="let solicitud of solicitudes">
+            <ion-col class="body" size="1.2">{{solicitud.cui}}</ion-col>
+            <ion-col class="body" size="1.2">{{solicitud.nombre}} {{solicitud.apellido}}</ion-col>
+            <ion-col class="body">{{solicitud.correo}}</ion-col>
+            <ion-col class="body" size="2">{{solicitud.Asunto}}</ion-col>
+            <ion-col class="body" size="3.2">{{solicitud.descripcion}}</ion-col>
+            <ion-col class="body" size="1.3">
+              <ion-button *ngIf="solicitud.estado == 0" (click)="cambiarEstado(solicitud.idUsuario, solicitud.Asunto)">Pendiente</ion-button>
+              <label *ngIf="solicitud.estado == 1">Resuelto</label>
+              
+            </ion-col>
+          </ion-row>
+        </div>
+        
+      </ion-grid>
+    </div>
   </div>
 </ion-content>

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-
+import { AdminService } from 'src/app/Servicios/admin.servicio';
 @Component({
   selector: 'app-ayudas',
   templateUrl: './ayudas.page.html',
@@ -7,9 +7,28 @@ import { Component, OnInit } from '@angular/core';
 })
 export class AyudasPage implements OnInit {
 
-  constructor() { }
+  constructor(private adminService:AdminService) { }
+
+  public solicitudes: any
+  public cui = ""
+  public estado = ""
 
   ngOnInit() {
+    this.GetSolicitudes()
+  }
+
+  async Filtrar(){
+    //alert(this.cui + " " + this.estado)
+    this.solicitudes = await this.adminService.FiltrarSolicitudes(this.cui, this.estado)
+  }
+
+  async GetSolicitudes(){
+    this.solicitudes = await this.adminService.solcitudesAyuda()
+  }
+
+  async cambiarEstado(idUsuario: any, asunto: any){
+    await this.adminService.EstadoSolicitud(idUsuario, asunto)
+    location.reload()
   }
 
 }

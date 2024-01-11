@@ -41,6 +41,10 @@ const routes: Routes = [
   {
     path: 'inscripcion-info',
     loadChildren: () => import('./Componentes/Administrador/modals/inscripcion-info/inscripcion-info.module').then( m => m.InscripcionInfoPageModule)
+  },
+  {
+    path: 'user-info',
+    loadChildren: () => import('./Componentes/Administrador/modals/user-info/user-info.module').then( m => m.UserInfoPageModule)
   }
 ];
 @NgModule({

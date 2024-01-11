@@ -16,21 +16,22 @@ import jwt_decode from 'jwt-decode';
 export class TabsuPage implements OnInit {
 
   constructor(private userService:UserService, private adminService:AdminService,private modalCtrl:ModalController,
-  private menuController: MenuController, public route: Router, public parametros:ActivatedRoute) { }
+  private menuController: MenuController, public route: Router, public parametros:ActivatedRoute) {}
 
-    public decoded: any
+  public decoded: any
+  public decoded2: any  
   
-
   ngOnInit() {
-    var datos = this.parametros.snapshot.paramMap.get('token')
-    if(datos !== null){
-      this.decoded = jwt_decode(datos)
-      this.userService.idG = this.decoded.datos[0].idUsuario
-      this.userService.datosUser = this.decoded.datos[0]
-      //this.userService.AsignacionAuto(this.userService.idG)
-    } else {
-      alert('error en el token, esta vacio')
-    }
+      var datos = this.parametros.snapshot.paramMap.get('token')
+      if(datos !== null){
+        this.decoded = jwt_decode(datos)
+        this.userService.idG = this.decoded.datos[0].idUsuario
+        this.userService.datosUser = this.decoded.datos[0]
+        //this.userService.AsignacionAuto(this.userService.idG)
+      } else {
+        alert('error en el token, esta vacio')
+      }
+    
   }
 
   async mostrarUsuario(){
@@ -41,7 +42,42 @@ export class TabsuPage implements OnInit {
         Datos: this.decoded.datos[0]
       }
     });
+
+    modal.onDidDismiss().then(async data => {
+      let datos = await this.userService.GetNuevosDatos(this.userService.idG)
+
+      let json = JSON.stringify(datos)
+      let obj = JSON.parse(json)
+      try {
+        let json : any = {
+          token: obj.token
+        }
+        this.decoded2 = jwt_decode(obj.token)
+        this.comparar(this.decoded.datos[0], this.decoded2.datos[0])
+        if(this.verif == true){
+          //console.log('cambio')
+          this.route.navigate(['/tabsu', json,'conferencias'])
+        }
+      } catch (error) {
+        alert("Error en el ingreso\nVerifique los datos que ingreso")
+        location.reload()
+        console.log("Error al decodificar el Token JWT ", error)
+      }
+    })
+
     await modal.present();
+  }
+
+  public verif = false
+
+  comparar(obj1: any, obj2: any, path = '') {
+    for (let key in obj1) {
+      if (typeof obj1[key] === 'object' && typeof obj2[key] === 'object') {
+          this.comparar(obj1[key], obj2[key], `${path}.${key}`);
+      } else if (obj1[key] !== obj2[key]) {
+        this.verif = true
+      }
+    }
   }
 
   onTabChange() {

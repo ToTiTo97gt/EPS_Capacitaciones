@@ -1,0 +1,64 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>{{Usuario.nombre}} {{Usuario.apellido}}</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="Regresar()"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.5" stroke-linecap="square" stroke-linejoin="bevel"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <div id="pantalla">
+    <br>
+    <div>
+      <h3>Carne: {{Usuario.carne}}</h3>
+      <h3>CUI: {{Usuario.cui}}</h3>
+      <h3>Correo: {{Usuario.correo}}</h3>
+    </div>
+    <div class="parametros">
+      <ion-datetime class="filt" presentation="year" [preferWheel]="true" (ionChange)="dateChanged($event)"></ion-datetime>
+    
+      <ion-select aria-label="Fruit" placeholder="Jornadas" (ionChange)="jornadaChange($event)">
+        <ion-select-option *ngFor="let jornada of jornadas" [value]="jornada.idJornada" >{{jornada.ciclo}}</ion-select-option>
+      </ion-select>
+
+      <ion-select aria-label="Fruit" placeholder="Categoria" (ionChange)="tipoChange($event)">
+        <ion-select-option value="1">Capacitaciones</ion-select-option>
+        <ion-select-option value="2">Diplomados</ion-select-option>
+      </ion-select>
+      
+    </div>
+    <br><br><br>
+    <div class="tabla">
+      <ion-grid>
+        <ion-row>
+          <ion-col class="head" size="5"><b>Capacitacion</b></ion-col>
+          <ion-col class="head"><b>Asistio</b></ion-col>
+          <ion-col class="head"><b>Generar Diploma</b></ion-col>
+        </ion-row>
+        <div class="tab">
+          <ion-row *ngFor="let capacitacion of capacitaciones">
+            <ion-col class="body" size="5">{{capacitacion.nomCapacitacion}}</ion-col>
+            <ion-col class="body">
+              <label *ngIf="capacitacion.presente == 1"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.5" stroke-linecap="square" stroke-linejoin="bevel"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="8.5" cy="7" r="4"></circle><polyline points="17 11 19 13 23 9"></polyline></svg></label>
+              <label *ngIf="capacitacion.presente == 0"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.5" stroke-linecap="square" stroke-linejoin="bevel"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="8.5" cy="7" r="4"></circle><line x1="18" y1="8" x2="23" y2="13"></line><line x1="23" y1="8" x2="18" y2="13"></line></svg></label>
+            </ion-col>
+            <ion-col class="body"><ion-button (click)="GenerarDiploma(capacitacion)"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="square" stroke-linejoin="bevel"><path d="M20 14.66V20a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h5.34"></path><polygon points="18 2 22 6 12 16 8 16 8 12 18 2"></polygon></svg></ion-button></ion-col>
+          </ion-row>
+        </div>
+        
+      </ion-grid>
+    </div>
+    <div class="Otros">
+      <ion-select class="tipo" aria-label="Fruit" [(ngModel)]="tipoUsuario" (ionChange)="userTipoChange($event)" placeholder="Tipos de Usuario" >
+        <ion-select-option *ngFor="let tipo of tipos" [value]="tipo.idTipo" >{{tipo.tipo}}</ion-select-option>
+      </ion-select>
+
+      <ion-select class="tipo" aria-label="Fruit" [(ngModel)]="estado" (ionChange)="estadoChange($event)" placeholder="Estado del Usuario" >
+        <ion-select-option [value]="1" >Activo</ion-select-option>
+        <ion-select-option [value]="0" >Bloqueado</ion-select-option>
+      </ion-select>
+    </div>
+    
+  </div>
+</ion-content>

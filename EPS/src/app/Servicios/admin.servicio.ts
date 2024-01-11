@@ -27,6 +27,24 @@ export class AdminService{
         return this.httpClient.post(ruta, data).toPromise();
     }
 
+    NuevosDatos(idAdmin:any){
+        const ruta = this.url+"Admin/NuevoDatos"
+        const data = {idAdmin}
+        return this.httpClient.post(ruta, data).toPromise();
+    }
+
+    ModificarDatos(Datos: any){
+        const ruta = this.url+"Admin/ModificarDatos"
+        const data = {Datos}
+        return this.httpClient.post(ruta, data).toPromise();
+    }
+
+    CambiarPass(Contra: any, idAdmin: any){
+        const ruta = this.url+"Admin/CambiarPass"
+        const data = {Contra, idAdmin}
+        return this.httpClient.post(ruta, data).toPromise();
+    }
+
     GetAdminPermiso(idAdmin:string){
         const ruta = this.url+"Admin/GetAdminPermisos"
         const data = {idAdmin}
@@ -57,9 +75,9 @@ export class AdminService{
         return this.httpClient.post(ruta, data).toPromise()
     }
 
-    EliminarAdmin(idAdmin: any){
-        const ruta = this.url+"Admin/EliminarAdmin"
-        const data = {idAdmin}
+    BloquearAdmin(idAdmin: any, estado: any){
+        const ruta = this.url+"Admin/BloquearAdmin"
+        const data = {idAdmin, estado}
         return this.httpClient.post(ruta, data).toPromise()
     }
 
@@ -70,6 +88,12 @@ export class AdminService{
     }
 
     //Servicios para la pestaña Crear 
+
+    modificarEstado(idCapacitacion: any, estado: any){
+        const ruta = this.url+"Admin/EstadoCapacitacion"
+        const data = {idCapacitacion, estado}
+        return this.httpClient.post(ruta, data).toPromise()
+    }
 
     CrearJornada(jornada: any){
         const ruta = this.url+"Admin/JornadaNueva"
@@ -122,6 +146,18 @@ export class AdminService{
     CapacitacionesPorJornada(idJornada: any, idCategoria: any){
         const ruta = this.url+"Admin/CapacitacionesXJornada"
         const data = {idJornada, idCategoria}
+        return this.httpClient.post(ruta, data).toPromise()
+    }
+
+    DiplomaCapacitaciones(idUser: any, idJornada: any){
+        const ruta = this.url+"Admin/DiplomasCapacitaciones"
+        const data = {idUser, idJornada}
+        return this.httpClient.post(ruta, data).toPromise()
+    }
+
+    DiplomaDiplomados(idUser: any, idJornada: any){
+        const ruta = this.url+"Admin/DiplomasDiplomados"
+        const data = {idUser, idJornada}
         return this.httpClient.post(ruta, data).toPromise()
     }
 
@@ -211,6 +247,36 @@ export class AdminService{
     ListaActual(idCapacitacion: any){
         const ruta = this.url+"Admin/ListaActual"
         const data = {idCapacitacion}
+        return this.httpClient.post(ruta, data).toPromise()
+    }
+
+    CambiarTipo(idUsuario: any, idTipo: any){
+        const ruta = this.url+"Admin/CambiarTipo"
+        const data = {idUsuario, idTipo}
+        return this.httpClient.post(ruta, data).toPromise()
+    }
+
+    CambiarEstado(idUsuario: any, estado: any){
+        const ruta = this.url+"Admin/CambiarEstado"
+        const data = {idUsuario, estado}
+        return this.httpClient.post(ruta, data).toPromise()
+    }
+
+    solcitudesAyuda(){
+        const ruta = this.url+"Admin/ayudas"
+        const data = {}
+        return this.httpClient.post(ruta, data).toPromise()
+    }
+
+    FiltrarSolicitudes(usuario: any, estado: any){
+        const ruta = this.url+"Admin/FiltrarAyudas"
+        const data = {usuario, estado}
+        return this.httpClient.post(ruta, data).toPromise()
+    }
+
+    EstadoSolicitud(usuario: any, asunto: any){
+        const ruta = this.url+"Admin/EstadoAyuda"
+        const data = {usuario, asunto}
         return this.httpClient.post(ruta, data).toPromise()
     }
 }

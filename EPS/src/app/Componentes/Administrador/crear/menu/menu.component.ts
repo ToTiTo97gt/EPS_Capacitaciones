@@ -5,6 +5,7 @@ import { ActivatedRoute } from '@angular/router';
 import { ModalController } from '@ionic/angular';
 import { CrearInfoPage } from '../../modals/crear-info/crear-info.page';
 import { CapacitacionInfoPage } from '../../modals/capacitacion-info/capacitacion-info.page';
+import { UserInfoPage } from '../../modals/user-info/user-info.page';
 import { DomSanitizer } from '@angular/platform-browser';
 
 @Component({
@@ -464,10 +465,22 @@ export class MenuComponent  implements OnInit {
 
   async GetUsuarios(){
     this.Usuarios = await this.adminService.Usuarios()
+    
   }
 
   async tiposUsuarios(){
     this.tipos = await this.UserService.TiposUsuarios()
+  }
+
+  async mostrarUsuario(Usuario: any){
+    const modal = await this.modalCtrl.create({
+      component: UserInfoPage,
+      cssClass: 'my-custom-modal-css',
+      componentProps: {
+        Usuario: Usuario
+      }
+    });
+    return await modal.present();
   }
 
   DepartamentoChange(event: any){

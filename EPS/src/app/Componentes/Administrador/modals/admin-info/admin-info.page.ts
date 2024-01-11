@@ -13,6 +13,7 @@ export class AdminInfoPage implements OnInit {
   @Input() nombre: any;
   @Input() apellido: any;
   @Input() idAdmin: any;
+  @Input() estado: any
   @Input() datosP: any
   @Input() dato: any
   @ViewChild('miSelect') miSelect: any
@@ -24,6 +25,7 @@ export class AdminInfoPage implements OnInit {
   public mostrar2: boolean = false
 
   public AdminPerfil = {
+    idAdmin: 0,
     nombre: "",
     apellido: "",
     correo: "",
@@ -37,10 +39,11 @@ export class AdminInfoPage implements OnInit {
     if(this.dato == 1){
       this.getPermisos()
     } else {
+      this.AdminPerfil.idAdmin = this.idAdmin
       this.AdminPerfil.nombre = this.datosP.nombre
       this.AdminPerfil.apellido = this.datosP.apellido
       this.AdminPerfil.correo = this.datosP.email
-      this.AdminPerfil.OldPass = this.datosP.passw
+      //this.AdminPerfil.OldPass = this.datosP.passw
       this.AdminPerfil.telefono = this.datosP.telefono
     }
   }
@@ -77,14 +80,19 @@ export class AdminInfoPage implements OnInit {
     }
   }
 
-  async EliminarAdmin(idAdmin: any){
+  async EliminarAdmin(idAdmin: any, estado: any){
     try {
-      const respuesta = await this.adminService.EliminarAdmin(idAdmin)
+      var respuesta
+      if(estado == 1){
+        respuesta = await this.adminService.BloquearAdmin(idAdmin, 0)
+      } else {
+        respuesta = await this.adminService.BloquearAdmin(idAdmin, 1)
+      }
       const resp = respuesta as {mensaje?:string}
       if(resp.mensaje !== undefined){
         const mensaje = resp.mensaje
         alert(mensaje)
-        window.location.reload()
+        location.reload()
       }
     } catch (error) {
       alert('error al ejecutar la peticion de EliminarAdmin. ' + error)
@@ -101,6 +109,22 @@ export class AdminInfoPage implements OnInit {
       }
     } catch (error) {
       alert('error al ejecutar la peticion de RevocarPermiso. ' + error)
+    }
+  }
+
+  async modificarDatos(){
+    await this.adminService.ModificarDatos(this.AdminPerfil)
+  }
+
+  async CambiarContra(){
+    if(this.AdminPerfil.NewPass == this.AdminPerfil.ConfirmPass){
+      if (this.datosP.passw == this.AdminPerfil.OldPass){
+        await this.adminService.CambiarPass(this.AdminPerfil.NewPass, this.adminService.idG)
+      } else {
+        alert('Por favor, verifique qué este bien su contraseña actual')
+      }
+    } else {
+      alert('Asegurese que la contraseña y su confirmacion coincidan')
     }
   }
 

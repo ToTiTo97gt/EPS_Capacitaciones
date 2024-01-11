@@ -294,6 +294,17 @@ export class CapacitacionInfoPage implements OnInit {
     hora: ""
   }
 
+  async modificarEstado(idCapacitacion: any){
+    if(this.estado == 1){
+      await this.adminService.modificarEstado(idCapacitacion, 0)
+      alert('Cancelado')
+    } else {
+      await this.adminService.modificarEstado(idCapacitacion, 1)
+      alert('Rehabilitado')
+    }
+    location.reload()
+  }
+
   huboCambios(jsonActual: any[]) {
     // Comparar jsonActual con jsonAnterior
     if (JSON.stringify(jsonActual) !== JSON.stringify(this.FechasAnteriores)) {

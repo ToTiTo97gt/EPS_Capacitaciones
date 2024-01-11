@@ -6,6 +6,17 @@
         Mis Reconocimientos
       </h1>
     </div>
+
+    <div class="filtro">
+      <div class="filtro1">
+        <ion-datetime class="selectt" presentation="year" [preferWheel]="true" (ionChange)="dateChanged($event)"></ion-datetime>
+      </div>
+      <div class="filtro2">
+        <ion-select class="jornada" aria-label="Fruit" placeholder="Jornadas" (ionChange)="jornadaChange($event)">
+          <ion-select-option *ngFor="let jornada of jornadas" [value]="jornada.idJornada" >{{jornada.ciclo}}</ion-select-option>
+        </ion-select>
+      </div>
+    </div>
     
     <div class="titulo">
       <h2>

@@ -1,0 +1,88 @@
+
+
+#pantalla{
+    width: 100%;
+    height: 100%;
+    gap: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+#reuniones{
+    margin-left: 25%;
+    margin-top: -8.6%;
+}
+
+.tabla{
+    height: 300px;
+    width: 90%;
+}
+
+.tab{
+    width: calc(100% + 16px);
+    height: 14rem;
+    overflow-y: scroll;
+}
+
+.parametros{
+    width: 100%;
+    gap: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.head{
+    background-color: white;
+    color: red;
+    border: solid 1px red;
+    text-align: center;
+}
+
+.Otros{
+    width: 30rem;
+    height: 15rem;
+    gap: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.tipo{
+    width: 19rem;
+}
+
+.body{
+    background-color: #221d45;
+    color: white;
+    border: solid 1px #fff;
+    text-align: center;
+}
+
+ion-datetime{
+    height: 8rem;
+    margin-left: -5rem;
+}
+
+ion-select{
+    width: 25%;
+    height: 3rem;
+    background-color: white;
+    margin-left: 4%;
+    margin-top: 5px;
+    border: solid 1px #221d45;
+}
+
+ion-content{
+    --background: #221d45;
+}
+
+ion-toolbar{
+    color: #fff;
+    --background: #ff0000;
+}
+
+h3{
+    color: white;
+}

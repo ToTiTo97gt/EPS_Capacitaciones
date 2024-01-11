@@ -1,18 +1,44 @@
 #pantalla{
     width: 100%;
     height: 100%;
-    background-color: gray;
+    gap: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
 }
 
-#tabla{
+.tabla{
     height: 300px;
-    width: 100%;
-    overflow-y: scroll;
-    background-color: #fff;
+    width: 90%;
 }
 
-#head{
-    width: 130%;
+.tab{
+    width: calc(100% + 16px);
+    height: 14rem;
+    overflow-y: scroll;
+}
+
+.categoria{
+    width: 7rem;
+}
+
+.select{
+    width: 100%;
+    height: 2rem;
+}
+
+.head{
+    background-color: white;
+    color: red;
+    border: solid 1px red;
+    text-align: center;
+}
+
+.body{
+    background-color: #221d45;
+    color: white;
+    border: solid 1px #fff;
+    text-align: center;
 }
 
 #filaMain{
@@ -31,12 +57,11 @@ ion-col {
     text-align: center;
 }
 
-ion-button{
-    margin-left: 20px;
+ion-input{
+    width: 10rem;
 }
 
 ion-select{
-    width: 20%;
+    width: 10rem;
     background-color: #fff;
-    margin-left: 20px;
 }

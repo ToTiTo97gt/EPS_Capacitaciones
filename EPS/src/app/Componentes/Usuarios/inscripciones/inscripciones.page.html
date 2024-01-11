@@ -19,6 +19,12 @@
           <ion-button (click)="MostrarCalendarioDiplomado(conferencia)">
             Mas Informacion
           </ion-button>
+          <ion-button>
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="square" stroke-linejoin="bevel"> <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg>
+          </ion-button>
+          <ion-button>
+            ZOOM
+          </ion-button>
           <!-- 
           <p style="font-size: 23px;">Presentador: {{conferencia.presentador}}</p>
           <p style="font-size: 20px;">Fecha: {{convertir(conferencia.fecha)}}</p>
@@ -45,6 +51,12 @@
           </div>
           <ion-button (click)="MostrarCalendarioDiplomado(conferencia)">
             Mas Informacion
+          </ion-button>
+          <ion-button (click)="fb(conferencia.fbLink)">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="square" stroke-linejoin="bevel"> <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg>
+          </ion-button>
+          <ion-button (click)="zoom(conferencia.zoomLink)">
+            ZOOM
           </ion-button>
           <!-- 
           <p style="font-size: 23px;">Presentador: {{conferencia.presentador}}</p>

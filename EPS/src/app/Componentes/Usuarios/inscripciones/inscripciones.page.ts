@@ -5,6 +5,7 @@ import { UserService } from 'src/app/Servicios/user.servicio';
 import { ActivatedRoute, Router } from '@angular/router'
 import { ModalController } from '@ionic/angular';
 import { CalendarioPage } from '../modals/calendario/calendario.page';
+import { Platform } from '@ionic/angular';
 
 @Component({
   selector: 'app-inscripciones',
@@ -51,6 +52,14 @@ export class InscripcionesPage implements OnInit {
     alert('Inscripcion anulada')
     console.log(res)
     location.reload()
+  }
+
+  fb(linkfb: any){
+    window.open(linkfb, '_system')
+  }
+
+  zoom(linkZoom: any){
+    window.open(linkZoom, '_system')
   }
 
   formatoFecha(fecha: Date, formato: string) {

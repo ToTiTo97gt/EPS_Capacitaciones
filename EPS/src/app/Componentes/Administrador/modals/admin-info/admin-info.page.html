@@ -29,7 +29,13 @@
       </ion-grid>
     </div>
     <br>
-    <ion-button class="Eliminar" (click)="EliminarAdmin(idAdmin)">Eliminar Administrador</ion-button>
+    <div *ngIf="estado == 1">
+      <ion-button class="Eliminar" (click)="EliminarAdmin(idAdmin, estado)">Bloquear Administrador</ion-button>
+    </div>
+    <div *ngIf="estado == 0">
+      <ion-button class="Eliminar" (click)="EliminarAdmin(idAdmin, estado)">Desbloquear Administrador</ion-button>
+    </div>
+    
   </div>
   <div class="perfil" *ngIf="dato == 0">
     <div id="col11">
@@ -40,7 +46,9 @@
       <ion-input class="input" [(ngModel)]="AdminPerfil.telefono" label="Telefono" label-placement="floating" fill="outline" type="text"></ion-input>
       <br>
       <ion-input class="input" [(ngModel)]="AdminPerfil.correo" label="E-mail" label-placement="floating" fill="outline" type="text"></ion-input>
-      </div>
+      <br>
+      <ion-button class="boton" (click)="modificarDatos()">Modificar datos</ion-button>
+    </div>
     <div id="col2">
       <ion-item>
         <ion-label position="stacked">Contraseña Actual</ion-label>
@@ -63,10 +71,8 @@
           <ion-icon [name]="mostrar1 ? 'eye-off' : 'eye'"></ion-icon>
         </ion-button>
       </ion-item>
-      <ion-button class="boton">Cambiar Contraseña(P)</ion-button>
+      <ion-button class="boton" (click)="CambiarContra()">Cambiar Contraseña</ion-button>
     </div>
   </div>
-  
-
   
 </ion-content>

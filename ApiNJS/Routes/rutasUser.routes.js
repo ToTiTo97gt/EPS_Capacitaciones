@@ -8,7 +8,9 @@ router.post("/getMunicipios", usuario.GetMunicipios)
 router.post("/tiposUsuarios", usuario.tiposUsuarios)
 router.post("/RegistrarUsuario", usuario.RegistrarUsuario)
 router.post("/ModificarUsuario", usuario.ModificarUsuario)
+router.post("/CambiarPass", usuario.CambiarPass)
 router.post("/GetUsuario", usuario.GetUser)
+router.post("/GetNuevosDatos", usuario.GetNuevosDatos)
 router.post("/GetCapacitaciones", usuario.GetCapacitaciones)
 //router.post("/AsignacionAuto", usuario.AsignacionAuto)
 router.post("/Inscripcion", usuario.Inscripcion)
@@ -17,6 +19,7 @@ router.post("/Diplomas", usuario.Diplomas)
 router.post("/Diplomados", usuario.Diplomados)
 router.post('/GenerarPDF', usuario.GenerarPDF)
 router.post('/GenerarDiplomadoPDF', usuario.GenerarDiplomadoPDF)
+router.post('/EnviarAyuda', usuario.EnviarAyuda)
 
 
 module.exports = router

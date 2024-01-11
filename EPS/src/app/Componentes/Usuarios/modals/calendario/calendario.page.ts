@@ -45,6 +45,14 @@ export class CalendarioPage implements OnInit {
     return this.formatoFecha(objc,'dd/mm/yyyy') 
   }
 
+  fb(linkfb: any){
+    window.open(linkfb, '_system')
+  }
+
+  zoom(linkZoom: any){
+    window.open(linkZoom, '_system')
+  }
+
   formatoFecha(fecha: Date, formato: string) {
     const map: { [key: string]: any } = {
       dd: fecha.getDate(),

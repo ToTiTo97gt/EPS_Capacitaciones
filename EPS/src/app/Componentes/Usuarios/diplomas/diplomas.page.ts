@@ -19,16 +19,18 @@ export class DiplomasPage implements OnInit {
     //console.log(this.userService.datosUser)
     this.datos.nombre = this.userService.datosUser.nombre
     this.datos.apellido = this.userService.datosUser.apellido
-    this.getDiplomas()
+    var anioActual = new Date()
+    this.getPorAnio(anioActual.getFullYear())
+    //this.getDiplomas()
   }
 
   public datas: any
   public datas1: any
 
-  async getDiplomas(){
-    this.datas = await this.userService.Diplomas(this.userService.idG)
-    this.datas1 = await this.userService.Diplomados(this.userService.idG)
-  }
+  // async getDiplomas(){
+  //   this.datas = await this.userService.Diplomas(this.userService.idG)
+  //   this.datas1 = await this.userService.Diplomados(this.userService.idG)
+  // }
 
   datos = {
     nombre: this.userService.datosUser.nombre,
@@ -80,6 +82,29 @@ export class DiplomasPage implements OnInit {
       }
     }
     //console.log(capacitacion + "/" + this.fechas.inicio + "-" +this.fechas.fin + "/" + diploma)
+  }
+
+  public anio = "";
+  public jornadas: any
+
+  dateChanged(event: any){
+    const newDate = event.detail.value;
+    this.anio = newDate.split('-')[0]
+    this.getPorAnio(this.anio)
+  }
+
+  jornadaChange(event: any){
+    const valorSeleccionado = event.detail.value;
+    this.getCapacitacionesPorJornada(valorSeleccionado)
+  }
+
+  async getPorAnio(anio: any){
+    this.jornadas = await this.adminService.JornadasPorAnio(anio)
+  }
+
+  async getCapacitacionesPorJornada(idJornada: any){
+    this.datas = await this.userService.Diplomas(this.userService.idG, idJornada)
+    this.datas1 = await this.userService.Diplomados(this.userService.idG, idJornada)
   }
 
   convertir(fecha: string){
@@ -167,9 +192,5 @@ export class DiplomasPage implements OnInit {
     return fechaEscrita
 
   }
-
-  
-
-  
 
 }

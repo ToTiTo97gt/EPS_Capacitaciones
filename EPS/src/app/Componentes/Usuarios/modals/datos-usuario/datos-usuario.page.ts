@@ -1,6 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ModalController } from '@ionic/angular';
+import { ActivatedRoute, Router } from '@angular/router'
 import { AdminService } from 'src/app/Servicios/admin.servicio';
 import { UserService } from 'src/app/Servicios/user.servicio';
 
@@ -35,7 +36,8 @@ export class DatosUsuarioPage implements OnInit {
   }
   public oldPass = ""
 
-  constructor(private modalCtrl:ModalController, private adminService:AdminService, private UserService:UserService) { }
+  constructor(private modalCtrl:ModalController, private adminService:AdminService, private UserService:UserService,
+              private router:Router) { }
 
   ngOnInit() {
     this.DatosUsuario()
@@ -78,7 +80,18 @@ export class DatosUsuarioPage implements OnInit {
 
   async ModificarDatos(){
     await this.UserService.ModificarUsuario(this.nuevoUser)
-    location.reload()
+  }
+
+  async CambiarContra(){
+    if(this.nuevoUser.passwo == this.nuevoUser.confirmarPasswo){
+      if (this.oldPass == this.Datos.passwo){
+        await this.UserService.CambiarPass(this.nuevoUser.passwo, this.nuevoUser.idUsuario)
+      } else {
+        alert('Por favor, verifique qué este bien su contraseña actual')
+      }
+    } else {
+      alert('Asegurese que la contraseña y su confirmacion coincidan')
+    }
   }
 
   togglePassVisibility(){

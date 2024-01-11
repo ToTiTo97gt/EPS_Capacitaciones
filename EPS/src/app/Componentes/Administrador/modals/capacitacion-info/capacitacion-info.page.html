@@ -75,6 +75,9 @@
       
       <ion-button *ngIf="idCategoria == 1" class="Modif" (click)="modificarCapacitacion()">Modificar</ion-button>
       <ion-button *ngIf="idCategoria == 2" class="Modif" (click)="modificarDiplomado()">Modificar</ion-button>
+      
+      <ion-button *ngIf="estado == 1" (click)="modificarEstado(idCapacitacion)">Cancelar</ion-button>
+      <ion-button *ngIf="estado == 0" (click)="modificarEstado(idCapacitacion)">Retomar</ion-button>
     </div>
 
   </div>

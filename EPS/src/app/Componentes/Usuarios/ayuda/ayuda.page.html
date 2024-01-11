@@ -3,11 +3,11 @@
   <div id="pantalla">
     <br><br>
     <div id="contenido">
-      <ion-input class="Conferencia" label="Asunto del problema" labelPlacement="floating" fill="outline" type="text"></ion-input>
+      <ion-input class="Conferencia" label="Asunto del problema" [(ngModel)]="Asunto" labelPlacement="floating" fill="outline" type="text"></ion-input>
       <br>
-      <ion-textarea class="descripcion" label="Descripcion" placeholder="Descripcion del problema"></ion-textarea>      
+      <ion-textarea class="descripcion" label="Descripcion" [(ngModel)]="Descripcion" placeholder="Descripcion del problema"></ion-textarea>      
       <br>
-      <ion-button>Enviar</ion-button>
+      <ion-button (click)="EnviarAyuda()">Enviar</ion-button>
     </div>
 
   </div>

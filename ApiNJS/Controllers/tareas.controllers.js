@@ -73,7 +73,7 @@ exports.AdminUser = async (req, res) => {
     var email = req.body.email;
     var passw = req.body.passw;
     var payload, clave="token1"
-    bd.query(`select * from administrador where email='${email}' and passw='${passw}';`, function(err, result){
+    bd.query(`select * from administrador where email='${email}' and passw='${passw}' and estado = 1;`, function(err, result){
         if(err) throw err;
         payload = { 
             "datos": result
@@ -89,6 +89,52 @@ exports.AdminUser = async (req, res) => {
         })
 
     }) 
+}
+
+exports.NuevosDatos = async (req, res) => {
+    var idAdmin = req.body.idAdmin;
+    var payload, clave="token1"
+    bd.query(`select * from administrador where idAdmin = ${idAdmin};`, function(err, result){
+        if(err) throw err;
+        payload = { 
+            "datos": result
+        }
+        jwt.sign(payload, clave, (err, token) => {
+            if(err){
+                return res.status(400).send({msg : 'Error'})
+            } else if(Object.keys(result).length === 0) {
+                return res.send({msg:'Registro no encontrado', token: token})
+            } else {
+                return res.send({msg:'success', token: token})
+            }
+        })
+    }) 
+}
+
+exports.ModificarDatos = async (req, res) => {
+    var idUsuario = req.body.Datos.idAdmin
+    console.log(req.body.User)
+    try {
+        bd.query(`update administrador set nombre='${req.body.Datos.nombre}', apellido='${req.body.Datos.apellido}', email='${req.body.Datos.correo}', telefono = '${req.body.Datos.telefono}' where idAdmin = ${idUsuario}`, (err, result) => {
+            if(err) throw err;
+            return res.send({msg: 'Exito al modificar los datos del Admin'})
+        })
+    } catch (error) {
+        console.log('error al intenter modificar los datos del Admin\n'+error)
+    }
+}
+
+exports.CambiarPass = async (req, res) => {
+    try {
+        var idUser = req.body.idAdmin
+        var newPass = req.body.Contra
+        bd.query(`update administrador set passw = '${newPass}' where idAdmin = ${idUser}`, (err, result) => {
+            if(err) throw err
+            return res.send({msg: 'Contraseña modificada con exito'})
+        })
+    } catch (error) {
+        console.log('Error al modificar la contraseña:\n', error)
+    }
 }
 
 exports.AdminPermisos = async (req, res) => {
@@ -108,7 +154,7 @@ exports.AdminLista = async (req, res) => {
 }
 
 exports.Permisos = async (req, res) => {
-    bd.query(`select * from permiso where permiso <> 'Principal' and permiso <> 'Informacion'`, function(err, result){
+    bd.query(`select * from permiso where permiso <> 'Principal' and permiso <> 'Informacion' and permiso <> 'Diplomados'`, function(err, result){
         if(err) throw err;
         return res.send(result)
     })
@@ -161,10 +207,11 @@ exports.RevocarPermiso = async (req, res) => {
     }
 }
 
-exports.EliminarAdmin = async (req, res) => {
+exports.BloquearAdmin = async (req, res) => {
     try {
         var idAdmin = req.body.idAdmin
-        bd.query(`delete from administrador where idAdmin = ${idAdmin}`, function(err, result){
+        var estado = req.body.estado
+        bd.query(`update administrador set estado = ${estado} where idAdmin = ${idAdmin}`, function(err, result){
             if(err) throw err
             res.status(201).json({mensaje: 'Administrador Eliminado'})
         })
@@ -387,6 +434,19 @@ exports.modificarCapacitacion = async (req, res) => {
     }
 }
 
+exports.EstadoCapacitacion = async (req, res) => {
+    try {
+        var idCapacitacion = req.body.idCapacitacion
+        var estado = req.body.estado
+        bd.query(`update capacitacion set estado = ${estado} where idCapacitacion = ${idCapacitacion}`, function(err, result) {
+            if(err) throw err
+            res.status(201).json({mensaje:'Modificacion Exitosa'})
+        })
+    } catch (error) {
+        console.log('Error en el servidor')
+    }
+}
+
 exports.AsignarDiplomas = async (req, res) => {
     var idCapacitacion = req.body.idCapacitacion
     try {
@@ -468,8 +528,9 @@ exports.CapacitacionReciente = async (req, res) => {
 
 exports.Capacitaciones = async (req, res) => {
     var idCategoria = req.body.idCategoria
+    var estado = req.body.estado
     bd.query(`Select a.* from capacitacion a, jornada b where a.idJornada = b.idJornada and CURDATE() >= b.fechaInicio
-	  and CURDATE() <= b.fechaFinal and a.idCategoria = ${idCategoria} and a.estado = 1;` , function(err, result){
+	  and CURDATE() <= b.fechaFinal and a.idCategoria = ${idCategoria};` , function(err, result){
         if(err) throw err;
         return res.send(result)
     })
@@ -491,6 +552,72 @@ exports.CapacitacionesPorJornada = async (req, res) => {
         }
     })
     
+}
+
+exports.Participaciones = async (req, res) => {
+    try {
+        var idJornada = req.body.idJornada
+        var idCategoria = req.body.idCategoria
+        var idUsuario = req.body.idUsuario
+        bd.query(`Select a.idCapacitacion, a.nomCapacitacion, a.descripcion, a.diploma, c.presente from capacitacion a, usuario b, asistencia c where a.idJornada = ${idJornada} and a.idCategoria = ${idCategoria} and c.inscrito = 1 and a.estado = 1 and c.idUsuario = ${idUsuario} and a.idCapacitacion = c.idCapacitacion and c.idUsuario = b.idUsuario;` , function(err, result){
+            if(err){
+                if(err.code === 'ER_BAD_FIELD_ERROR'){
+                    console.error('Columna no encontrada en la tabla.');
+                } else {
+                    console.error('Error en la consulta:', err);
+                }
+            } else {
+                return res.send(result)
+            }
+        })
+    } catch (error) {
+        console.log('Error del server '+error)
+    }
+}
+
+exports.DiplomaCapacitaciones = async(req, res) => {
+    var idUser = req.body.idUser
+    var idJornada = req.body.idJornada
+    //console.log('**---'+idUser+'  '+idJornada)
+    if(idJornada === undefined){
+        console.log('no se recivio dato de jornada')
+        return res.status(400).send('No se recivio dato de jornada')
+    }
+    try {
+        bd.query(`select a.nomCapacitacion, a.descripcion, a.duracion, a.modalidad, c.presente, d.fecha, 0 as dat, 'l' as link from capacitacion a, usuario b, asistencia c, agenda d, jornada e where a.idCategoria = 1  and a.idJornada = e.idJornada and a.idJornada = ${idJornada} and b.idUsuario = ${idUser} and a.idCapacitacion = c.idCapacitacion and b.idUsuario = c.idUsuario and d.idCapacitacion = a.idCapacitacion and c.inscrito = 1`, (err, result) => {
+            if(err) throw err;
+            return res.send(result)
+        })
+    } catch (error) {
+        console.log('Error al solicitar las reuniones con derecho a diploma')
+    }
+}
+
+exports.DiplomaDiplomados = async(req, res) => {
+    var idUser = req.body.idUser
+    var idJornada = req.body.idJornada
+    if(idJornada === undefined){
+        console.log('no se recivio dato de jornada')
+        return res.status(400).send('No se recivio dato de jornada')
+    }
+    try {
+        bd.query(`select a.nomCapacitacion, a.descripcion, c.presente, Min(d.fecha) as inicio, Max(d.fecha) as fin, e.nota, a.diploma, a.duracion, a.modalidad, 0 as dat, 'l' as link
+          from capacitacion a
+          join asistencia c on a.idCapacitacion = c.idCapacitacion
+          join usuario b on b.idUsuario = c.idUsuario
+          join agenda d on a.idCapacitacion = d.idCapacitacion
+          join nota e on a.idCapacitacion = e.idCapacitacion
+          join tipousuariodiploma g on g.idCapacitacion = a.idCapacitacion
+          join tipousuario f on f.idTipo = g.idTipo
+          join jornada h on h.idJornada = a.idJornada
+          where a.idCategoria = 2 and b.idUsuario = ${idUser} and a.idJornada = ${idJornada} and c.inscrito = 1 and b.idTipo = f.idTipo
+          group by a.idCapacitacion, a.nomCapacitacion, a.descripcion;`, (err, result) => {
+            if(err) throw err;
+            return res.send(result)
+        })
+    } catch (error) {
+        console.log('Error al solicitar las reuniones con derecho a diploma')
+    }
 }
 
 exports.getAgenda = async (req, res) => {
@@ -563,6 +690,57 @@ exports.Asistencias = async (req, res) => {
     } catch (error) {
         console.log(error)
         res.status(500).json({error: 'error al registrar las asistencias'})
+    }
+}
+
+exports.solicitudesAyuda = async(req, res) => {
+    try {
+        bd.query(`Select a.idUsuario, a.cui, a.nombre, a.apellido, a.correo, b.Asunto, b.descripcion, b.estado from usuario a, ayuda b where a.idUsuario = b.idUsuario` , function(err, result){
+        if(err) throw err;
+        return res.send(result)
+    })
+    } catch (error) {
+        console.log("error en el server: solicitudesAyuda")
+    }
+}
+
+exports.FiltrarAyudas = async(req, res) => {
+    try {
+        var estado = req.body.estado
+        var usuario = req.body.usuario
+        if((estado === undefined && usuario === undefined) || (estado === "" && usuario === "")){
+            bd.query(`Select a.idUsuario, a.cui, a.nombre, a.apellido, a.correo, b.Asunto, b.descripcion, b.estado from usuario a, ayuda b where a.idUsuario = b.idUsuario` , function(err, result){
+                if(err) throw err;
+                return res.send(result)
+            })
+        } else if (estado === undefined || estado === ""){
+            bd.query(`Select a.idUsuario, a.cui, a.nombre, a.apellido, a.correo, b.Asunto, b.descripcion, b.estado from usuario a, ayuda b where a.idUsuario = b.idUsuario and a.cui = '${usuario}'` , function(err, result){
+                if(err) throw err;
+                return res.send(result)
+            })
+        } else if (usuario === undefined || usuario === ""){
+            bd.query(`Select a.idUsuario, a.cui, a.nombre, a.apellido, a.correo, b.Asunto, b.descripcion, b.estado from usuario a, ayuda b where a.idUsuario = b.idUsuario and b.estado = ${estado}` , function(err, result){
+                if(err) throw err;
+                return res.send(result)
+            })
+        } else if((estado !== undefined && usuario !== undefined) || (estado !== "" && usuario !== "")){
+            bd.query(`Select a.idUsuario, a.cui, a.nombre, a.apellido, a.correo, b.Asunto, b.descripcion, b.estado from usuario a, ayuda b where a.idUsuario = b.idUsuario and a.cui = '${usuario}' and b.estado = ${estado}` , function(err, result){
+                if(err) throw err;
+                return res.send(result)
+            })
+        }
+    } catch (error) {
+        console.log("Error en la peticion FiltrarAyudas ",error)
+    }
+}
+
+exports.EstadoAyuda = async(req, res) => {
+    try {
+        var usuario = req.body.usuario
+        var asunto = req.body.asunto
+        bd.query(`update ayuda set estado = 1 where idUsuario = ${usuario} and Asunto = '${asunto}'`)
+    } catch (error) {
+        console.log("Error en la peticion EstadoAyuda ",error)
     }
 }
 
@@ -736,6 +914,34 @@ exports.ListaActual = async (req, res) => {
     } catch (error) {
         console.error(error+ " Error al obtener el listado actual")
         res.status(500).json({error: 'error al registrar las asistencias'})
+    }
+}
+
+exports.CambiarTipo = async (req, res) => {
+    var idUsuario = req.body.idUsuario
+    var idTipo = req.body.idTipo
+    //console.log(req.body.User)
+    try {
+        bd.query(`update usuario set idTipo=${idTipo} where idUsuario = ${idUsuario}`, (err, result) => {
+            if(err) throw err;
+            return res.send({msg: 'Exito al modificar los datos del usuario'})
+        })
+    } catch (error) {
+        console.log('error al intenter modificar los datos del usuario\n'+error)
+    }
+}
+
+exports.CambiarEstado = async (req, res) => {
+    var idUsuario = req.body.idUsuario
+    var estado = req.body.estado
+    //console.log(req.body.User)
+    try {
+        bd.query(`update usuario set estado=${estado} where idUsuario = ${idUsuario}`, (err, result) => {
+            if(err) throw err;
+            return res.send({msg: 'Exito al modificar los datos del usuario'})
+        })
+    } catch (error) {
+        console.log('error al intenter modificar los datos del usuario\n'+error)
     }
 }
 

@@ -20,6 +20,7 @@ export class TabsPage implements OnInit {
   public permiso: any
   public boolArray: boolean[] = [false, false, false, false, false, false, false] 
   public decoded: any
+  public decoded2: any
 
   ngOnInit(){
     this.Actualizar0()
@@ -49,6 +50,7 @@ export class TabsPage implements OnInit {
     console.log(this.boolArray)
   }
 
+  public verif = false
   async mostrarUsuario(){
     const modal = await this.modalCtrl.create({
       component: AdminInfoPage,
@@ -61,7 +63,40 @@ export class TabsPage implements OnInit {
         dato: 0
       }
     });
+
+    modal.onDidDismiss().then(async data => {
+      let datos = await this.adminService.NuevosDatos(this.adminService.idG)
+
+      let json = JSON.stringify(datos)
+      let obj = JSON.parse(json)
+      try {
+        let json : any = {
+          token: obj.token
+        }
+        this.decoded2 = jwt_decode(obj.token)
+        this.comparar(this.decoded.datos[0], this.decoded2.datos[0])
+        if(this.verif == true){
+          //console.log('cambio')
+          this.route.navigate(['/tabs', json])
+        }
+      } catch (error) {
+        alert("Error en el ingreso\nVerifique los datos que ingreso")
+        location.reload()
+        console.log("Error al decodificar el Token JWT ", error)
+      }
+      //alert('cerrado')
+    })
     await modal.present();
+  }
+
+  comparar(obj1: any, obj2: any, path = '') {
+    for (let key in obj1) {
+      if (typeof obj1[key] === 'object' && typeof obj2[key] === 'object') {
+          this.comparar(obj1[key], obj2[key], `${path}.${key}`);
+      } else if (obj1[key] !== obj2[key]) {
+        this.verif = true
+      }
+    }
   }
 
   onTabChange() {

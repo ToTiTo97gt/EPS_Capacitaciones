@@ -32,7 +32,7 @@ export class AListaComponent implements OnInit {
     this.datos = await this.adminService.GetAdminLista(id)
   }
 
-  async MostrarDatos(idadmin:any, nombre: any, apellido: any){
+  async MostrarDatos(idadmin:any, nombre: any, apellido: any, estado: any){
     const modal = await this.modalCtrl.create({
       component: AdminInfoPage,
       cssClass: 'custom-modal',
@@ -40,6 +40,7 @@ export class AListaComponent implements OnInit {
         idAdmin: idadmin,
         nombre: nombre,
         apellido: apellido,
+        estado: estado,
         dato: 1
       }
     });

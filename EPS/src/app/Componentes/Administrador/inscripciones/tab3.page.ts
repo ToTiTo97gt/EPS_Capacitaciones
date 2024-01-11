@@ -14,7 +14,6 @@ export class Tab3Page implements OnInit {
   public anio: any
   public jornadas: any
   public capacitaciones: any
-  public diplomados: any
 
   public jornada: any
   public tipo: any

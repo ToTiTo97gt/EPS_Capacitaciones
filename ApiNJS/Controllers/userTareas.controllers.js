@@ -48,7 +48,6 @@ exports.RegistrarUsuario = async(req, res) => {
             if(err) throw err
 
             const idUsuario = result.insertId;
-            console.log(idUsuario + "-*-*-*-*")
             AsignacionAuto(idUsuario);
 
             return res.send(result)
@@ -65,10 +64,23 @@ exports.ModificarUsuario = async (req, res) => {
     try {
         bd.query(`update usuario set carne='${req.body.User.carne}', cui='${req.body.User.cui}', nombre='${req.body.User.nombre}', apellido='${req.body.User.apellido}', correo='${req.body.User.correo}', genero=${req.body.User.genero}, direccion='${req.body.User.direccion}' , idmunicipio=${req.body.User.idmunicipio} where idUsuario = ${idUsuario}`, (err, result) => {
             if(err) throw err;
-            return res.send({mensaje: 'Exito al modificar los datos del usuario'})
+            return res.send({msg: 'Exito al modificar los datos del usuario'})
         })
     } catch (error) {
         console.log('error al intenter modificar los datos del usuario\n'+error)
+    }
+}
+
+exports.CambiarPass = async (req, res) => {
+    try {
+        var idUser = req.body.idUser
+        var newPass = req.body.newPass
+        bd.query(`update usuario set passwo = '${newPass}' where idUsuario = ${idUser}`, (err, result) => {
+            if(err) throw err
+            return res.send({msg: 'Contraseña modificada con exito'})
+        })
+    } catch (error) {
+        console.log('Error al modificar la contraseña:\n', error)
     }
 }
 
@@ -76,7 +88,27 @@ exports.GetUser = async (req, res) => {//modificar esta peticion para que acepta
     var dato1 = req.body.dato1;
     var passw = req.body.passw;
     var payload, clave="token1"
-    bd.query(`select a.*, b.idDepartamento from usuario as a, municipio as b where passwo='${passw}' and (carne='${dato1}' or cui='${dato1}') and a.idmunicipio = b.idMunicipio;`, function(err, result){
+    bd.query(`select a.*, b.idDepartamento from usuario a, municipio b where a.estado = 1 and a.passwo='${passw}' and (a.carne='${dato1}' or a.cui='${dato1}') and a.idmunicipio = b.idMunicipio;`, function(err, result){
+        if(err) throw err;
+        payload = {
+            "datos": result
+        }
+        jwt.sign(payload, clave, (err, token) => {
+            if(err){
+                return res.status(400).send({msg : 'Error'})
+            } else if(Object.keys(result).length === 0) {
+                return res.send({msg:'Registro no encontrado', token: token})
+            } else {
+                return res.send({msg:'success', token: token})
+            }
+        })
+    }) 
+}
+
+exports.GetNuevosDatos = async (req, res) => {//modificar esta peticion para que acepta usuarios activos
+    var idUsuario = req.body.idUser;
+    var payload, clave="token1"
+    bd.query(`select a.*, b.idDepartamento from usuario as a, municipio as b where idUsuario = ${idUsuario} and a.idmunicipio = b.idMunicipio;`, function(err, result){
         if(err) throw err;
         payload = {
             "datos": result
@@ -97,10 +129,10 @@ exports.GetCapacitaciones = async (req, res) => {
     var idUser = req.body.idUser;
     var Inscrito = req.body.Inscrito
         bd.query(`select a.*, c.fecha, c.hora from capacitacion a, jornada b, agenda c, asistencia d, usuario e where a.idJornada = b.idJornada and CURDATE() >= b.fechaInicio
-          and CURDATE() <= b.fechaFinal and a.idCapacitacion = c.idCapacitacion and a.idCategoria = 1 and e.idUsuario = d.idUsuario and e.idUsuario = ${idUser} and a.idCapacitacion = d.idCapacitacion and d.inscrito = ${Inscrito}
+          and CURDATE() <= b.fechaFinal and a.idCapacitacion = c.idCapacitacion and a.idCategoria = 1 and a.estado = 1 and e.idUsuario = d.idUsuario and e.idUsuario = ${idUser} and a.idCapacitacion = d.idCapacitacion and d.inscrito = ${Inscrito}
 	      UNION
           Select a.*, null as fecha, null as hora from capacitacion a, jornada b, asistencia d, usuario e where a.idJornada = b.idJornada and CURDATE() >= b.fechaInicio
-	      and CURDATE() <= b.fechaFinal and a.idCategoria = 2 and e.idUsuario = d.idUsuario and e.idUsuario = ${idUser} and a.idCapacitacion = d.idCapacitacion and d.inscrito = ${Inscrito};`, function(err, result){
+	      and CURDATE() <= b.fechaFinal and a.idCategoria = 2 and a.estado = 1 and e.idUsuario = d.idUsuario and e.idUsuario = ${idUser} and a.idCapacitacion = d.idCapacitacion and d.inscrito = ${Inscrito};`, function(err, result){
             if(err) throw err;
             return res.send(result)
         })
@@ -157,8 +189,14 @@ function insertarAsistencia(idUser, idCapacitacion){
 
 exports.Diplomas = async(req, res) => {
     var idUser = req.body.idUser
+    var idJornada = req.body.idJornada
+    //console.log('**---'+idUser+'  '+idJornada)
+    if(idJornada === undefined){
+        console.log('no se recivio dato de jornada')
+        return res.status(400).send('No se recivio dato de jornada')
+    }
     try {
-        bd.query(`select a.nomCapacitacion, a.descripcion, a.duracion, a.modalidad, d.fecha, 0 as dat, 'l' as link from capacitacion a, usuario b, asistencia c, agenda d where a.idCategoria = 1 and b.idUsuario = ${idUser} and a.idCapacitacion = c.idCapacitacion and b.idUsuario = c.idUsuario and d.idCapacitacion = a.idCapacitacion and c.inscrito = 1 and c.presente = 1`, (err, result) => {
+        bd.query(`select a.nomCapacitacion, a.descripcion, a.duracion, a.modalidad, d.fecha, 0 as dat, 'l' as link from capacitacion a, usuario b, asistencia c, agenda d, jornada e where a.idCategoria = 1  and a.idJornada = e.idJornada and a.idJornada = ${idJornada} and b.idUsuario = ${idUser} and a.idCapacitacion = c.idCapacitacion and b.idUsuario = c.idUsuario and d.idCapacitacion = a.idCapacitacion and c.inscrito = 1 and c.presente = 1`, (err, result) => {
             if(err) throw err;
             return res.send(result)
         })
@@ -169,6 +207,11 @@ exports.Diplomas = async(req, res) => {
 
 exports.Diplomados = async(req, res) => {
     var idUser = req.body.idUser
+    var idJornada = req.body.idJornada
+    if(idJornada === undefined){
+        console.log('no se recivio dato de jornada')
+        return res.status(400).send('No se recivio dato de jornada')
+    }
     try {
         bd.query(`select a.idCapacitacion, a.nomCapacitacion, a.descripcion, Min(d.fecha) as inicio, Max(d.fecha) as fin, e.nota, a.diploma, a.duracion, a.modalidad, 0 as dat, 'l' as link
           from capacitacion a
@@ -178,7 +221,8 @@ exports.Diplomados = async(req, res) => {
           join nota e on a.idCapacitacion = e.idCapacitacion
           join tipousuariodiploma g on g.idCapacitacion = a.idCapacitacion
           join tipousuario f on f.idTipo = g.idTipo
-          where a.idCategoria = 2 and b.idUsuario = ${idUser} and c.inscrito = 1 and c.presente = 1 and b.idTipo = f.idTipo
+          join jornada h on h.idJornada = a.idJornada
+          where a.idCategoria = 2 and b.idUsuario = ${idUser} and a.idJornada = ${idJornada} and c.inscrito = 1 and c.presente = 1 and b.idTipo = f.idTipo
           group by a.idCapacitacion, a.nomCapacitacion, a.descripcion;`, (err, result) => {
             if(err) throw err;
             return res.send(result)
@@ -325,7 +369,7 @@ exports.GenerarDiplomadoPDF = async(req, res) => {
         }
         const duracion = req.body.datos.duracion
         const pdfDoc = await PDFDocument.create(); 
-        const jpgUrl = 'https://bucket-jornadas.s3.amazonaws.com/Plantillas/Plantilla_Este%20es%20un%20modificado.jpg'
+        const jpgUrl = req.body.diploma
         const jpgImageBytes = await fetch(jpgUrl).then((res) => res.arrayBuffer())
         const pageWidth = 816; //hoja doble oficio
         const pageHeight = 1248; //hoja doble oficio
@@ -407,6 +451,20 @@ exports.GenerarDiplomadoPDF = async(req, res) => {
     } catch (error) {
       console.error('Error al generar el PDF: ', error)
       res.status(500).send('Error interno del server')
+    }
+}
+
+exports.EnviarAyuda = async(req, res) => {
+    try {
+        var idUsuario = req.body.idUsuario
+        var Asunto = req.body.Asunto
+        var Descripcion = req.body.Descripcion
+        bd.query(`insert into ayuda(idUsuario, Asunto, descripcion, estado) values (${idUsuario}, '${Asunto}', '${Descripcion}', 0)`, (err, result) => {
+            if(err) throw err;
+            return res.send({mensaje: 'Exito al modificar la asistencia'})
+        })
+    } catch (error) {
+        console.log("error en la peticion de envio de ayuda ", error)
     }
 }
 

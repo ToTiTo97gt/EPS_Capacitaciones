@@ -43,9 +43,21 @@ export class UserService{
         return this.httpClient.post(ruta, data).toPromise()
     }
 
+    GetNuevosDatos(idUser: any){
+        const ruta = this.url+"User/GetNuevosDatos"
+        const data = {idUser}
+        return this.httpClient.post(ruta, data).toPromise()
+    }
+
     ModificarUsuario(User: any){
         const ruta = this.url+"User/ModificarUsuario"
         const data = {User}
+        return this.httpClient.post(ruta, data).toPromise()
+    }
+
+    CambiarPass(newPass: any, idUser: any){
+        const ruta = this.url+"User/CambiarPass"
+        const data = {newPass, idUser}
         return this.httpClient.post(ruta, data).toPromise()
     }
 
@@ -67,15 +79,15 @@ export class UserService{
         return this.httpClient.post(ruta, data).toPromise()
     }
 
-    Diplomas(idUser: any){
+    Diplomas(idUser: any, idJornada: any){
         const ruta = this.url+"User/Diplomas"
-        const data = {idUser}
+        const data = {idUser, idJornada}
         return this.httpClient.post(ruta, data).toPromise()
     }
 
-    Diplomados(idUser: any){
+    Diplomados(idUser: any, idJornada: any){
          const ruta = this.url+"User/Diplomados"
-         const data = {idUser}
+         const data = {idUser, idJornada}
          return this.httpClient.post(ruta, data).toPromise()
     }
 
@@ -88,6 +100,12 @@ export class UserService{
     GenerarDiplomadoPDF(datos: any, capacitacion: any, fechas: any, diploma:any){
         const ruta = this.url+"User/GenerarDiplomadoPDF"
         const data = {datos, capacitacion, fechas, diploma}
+        return this.httpClient.post(ruta, data).toPromise()
+    }
+
+    EnviarAyuda(idUsuario: any, Asunto: any, Descripcion: any){
+        const ruta = this.url+"User/EnviarAyuda"
+        const data = { idUsuario, Asunto, Descripcion }
         return this.httpClient.post(ruta, data).toPromise()
     }
 

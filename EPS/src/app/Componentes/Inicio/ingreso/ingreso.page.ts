@@ -44,7 +44,7 @@ export class IngresoPage implements OnInit {
             console.log("Error al decodificar el Token JWT ", error)
           }
         } else {
-          alert('Acceso negado: Verificar credenciales de ingreso')
+          alert('Acceso negado: Credenciales erroneas\no es posible que fuera bloqueado por el administrador principal')
         }
       } else {
         console.log('error no se recibio respuesta')
@@ -68,7 +68,7 @@ export class IngresoPage implements OnInit {
             console.log("Error al decodificar el Token JWT ", error)
           }
         } else {
-          alert('Acceso negado: Verificar credenciales de ingreso')
+          alert('Credenciales incorrectas o es posible que su usuario fuera bloqueado por los administradores')
         }
       } else {
         console.log('error no se recibio respuesta')

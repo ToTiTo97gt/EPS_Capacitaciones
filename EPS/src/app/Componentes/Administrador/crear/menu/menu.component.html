@@ -210,25 +210,23 @@
         <ion-select class="municipio" aria-label="Fruit" [(ngModel)]="datosExtra.idmunicipio" placeholder="Municipio">
           <ion-select-option *ngFor="let municipio of municipios" [value]="municipio.idMunicipio" >{{municipio.municipio}}</ion-select-option>
         </ion-select>
-        <ion-select class="asistencia" aria-label="Fruit" [(ngModel)]="datosExtra.presente" placeholder="Se Presento?">
-          <ion-select-option value="1">SI</ion-select-option>
-          <ion-select-option value="0">NO</ion-select-option>
-        </ion-select>
         <ion-button (click)="Parametros()">Aplicar Filtro</ion-button>
       </div>
 
       <div class="gridd">
         <ion-grid>
           <ion-row class="GridHeadd">
-            <ion-col class="headd"><h3>CUI</h3></ion-col>
-            <ion-col class="headd"><h3>Carne</h3></ion-col>
-            <ion-col class="headd"><h3>Nombre</h3></ion-col>
+            <ion-col class="headd" ><h3>CUI</h3></ion-col>
+            <ion-col class="headd" ><h3>Carne</h3></ion-col>
+            <ion-col class="headd" ><h3>Nombre</h3></ion-col>
+            <ion-col class="headd" ><h3>Datos</h3></ion-col>
           </ion-row>
           <div class="tabb">
             <ion-row *ngFor="let usuario of Usuarios">
-              <ion-col>{{usuario.cui}}</ion-col>
-              <ion-col>{{usuario.carne}}</ion-col>
-              <ion-col>{{usuario.nombre}} {{usuario.apellido}}</ion-col>
+              <ion-col >{{usuario.cui}}</ion-col>
+              <ion-col >{{usuario.carne}}</ion-col>
+              <ion-col >{{usuario.nombre}} {{usuario.apellido}}</ion-col>
+              <ion-col ><ion-button (click)="mostrarUsuario(usuario)"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="1.5" stroke-linecap="square" stroke-linejoin="bevel"><path d="M20 14.66V20a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h5.34"></path><polygon points="18 2 22 6 12 16 8 16 8 12 18 2"></polygon></svg></ion-button></ion-col>
             </ion-row>
           </div>
           
@@ -247,7 +245,7 @@
         <label *ngIf="show == 1" for="file">
           <img [src]="imageUrl" alter="Image Review" style="width: 325px; height: 275px;">
         </label>
-        <p>El tamaño de esta plantilla debe ser 3300 x 2550 pixeles.
+        <p>El tamaño de esta plantilla debe ser 3300 x 2550 (ancho x alto) pixeles.
           <br> el nombre del archivo debe ser: PlantillaDiploma.jpg</p>
         <br>
         <ion-button *ngIf="show == 1" (click)="CargarPlantilla()">Cargar Plantilla</ion-button>
@@ -271,8 +269,7 @@
         <label *ngIf="show1 == 1" for="file">
           <img [src]="imageUrl1" alter="Image Review" style="width: 325px; height: 275px;">
         </label>
-        <p>El tamaño de esta plantilla debe ser 3300 x 2550 pixeles.
-          <br> el nombre del archivo debe ser: PlantillaDiploma.jpg</p>
+        <p>El tamaño de esta plantilla debe ser 1646 x 2550 (ancho x alto) pixeles.</p>
         <br>
         <ion-button *ngIf="show1 == 1" (click)="CargarPlantillaDiplo()">Cargar Plantilla Diplomado</ion-button>
       </div>
