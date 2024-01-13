@@ -23,8 +23,8 @@ exports.Empleados = async (req, res) => {
 
 exports.RegistrarAdmin = async (req, res) => {
     try {
-        bd.query(`insert into administrador(nombre, apellido, email, passw, telefono) 
-          values ('${req.body.nombre}', '${req.body.apellido}', '${req.body.email}', '${req.body.passw}', '${req.body.telefono}')`,function(err, result){
+        bd.query(`insert into administrador(nombre, apellido, email, passw, telefono, estado) 
+          values ('${req.body.nombre}', '${req.body.apellido}', '${req.body.email}', '${req.body.passw}', '${req.body.telefono}', 1)`,function(err, result){
             if(err) throw err
             let transporter = nodemailer.createTransport({
                 host: "smtp.gmail.com",

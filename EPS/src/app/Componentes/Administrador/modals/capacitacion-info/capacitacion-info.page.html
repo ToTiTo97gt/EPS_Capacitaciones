@@ -66,11 +66,9 @@
           <ion-select-option [value]="2" >Presencial</ion-select-option>
           <ion-select-option [value]="3" >Mixto</ion-select-option>
         </ion-select>
-        <ion-select aria-label="Fruit" placeholder="Estado" [(ngModel)]="estado">
-          <ion-select-option [value]="1" >Vigente</ion-select-option>
-          <ion-select-option [value]="0" >Cancelado</ion-select-option>
-          
-        </ion-select>
+        <ion-label *ngIf="estado == 1">VIGENTE</ion-label>
+        <ion-label *ngIf="estado == 0">CANCELADO</ion-label>
+
       </div>
       
       <ion-button *ngIf="idCategoria == 1" class="Modif" (click)="modificarCapacitacion()">Modificar</ion-button>
