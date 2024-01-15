@@ -10,7 +10,7 @@ export class UserService{
     public idG: any
     public idTipo: any
     public datosUser: any
-    url:string="http://localhost:3000/"
+    url:string="http://192.168.2.99:3000/"
     constructor(private httpClient: HttpClient) {}
 
     GetDepartamentos(){

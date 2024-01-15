@@ -11,10 +11,6 @@ const routes: Routes = [
         path: 'tab1',
         loadChildren: () => import('../crear/tab1.module').then(m => m.Tab1PageModule)
       },
-      /* {
-        path: 'tab2',
-        loadChildren: () => import('../informacion/tab2.module').then(m => m.Tab2PageModule)
-      }, */
       {
         path: 'tab3',
         loadChildren: () => import('../inscripciones/tab3.module').then(m => m.Tab3PageModule)
@@ -26,10 +22,6 @@ const routes: Routes = [
       {
         path: 'conferencias',
         loadChildren: () => import('../conferencias/conferencias.module').then(m => m.ConferenciasPageModule)
-      },
-      {
-        path: 'diplomados',
-        loadChildren: () => import('../../Administrador/diplomados/diplomados.module').then(m => m.DiplomadosPageModule)
       },
       {
         path: 'ayudas',

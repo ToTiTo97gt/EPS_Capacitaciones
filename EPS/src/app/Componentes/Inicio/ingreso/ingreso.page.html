@@ -27,7 +27,7 @@
       <br>
       <ion-item>
         <ion-label position="stacked">Contraseña</ion-label>
-        <ion-input type="{{mostrar1 ? 'text' : 'password'}}" [(ngModel)]="dato2"></ion-input>
+        <ion-input class="pas" type="{{mostrar1 ? 'text' : 'password'}}" [(ngModel)]="dato2"></ion-input>
         <ion-button slot="end" fill="clear" (click)="togglePassVisibility()">
           <ion-icon [name]="mostrar1 ? 'eye-off' : 'eye'"></ion-icon>
         </ion-button>

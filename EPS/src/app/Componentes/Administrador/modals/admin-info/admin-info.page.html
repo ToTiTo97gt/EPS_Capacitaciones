@@ -52,21 +52,21 @@
     <div id="col2">
       <ion-item>
         <ion-label position="stacked">Contraseña Actual</ion-label>
-        <ion-input type="{{mostrar1 ? 'text' : 'password'}}" [(ngModel)]="AdminPerfil.OldPass"></ion-input>
+        <ion-input class="pas" type="{{mostrar1 ? 'text' : 'password'}}" [(ngModel)]="AdminPerfil.OldPass"></ion-input>
         <ion-button slot="end" fill="clear" (click)="togglePassVisibility()">
           <ion-icon [name]="mostrar1 ? 'eye-off' : 'eye'"></ion-icon>
         </ion-button>
       </ion-item>
       <ion-item>
         <ion-label position="stacked">Contraseña Nueva</ion-label>
-        <ion-input type="{{mostrar1 ? 'text' : 'password'}}" [(ngModel)]="AdminPerfil.NewPass"></ion-input>
+        <ion-input class="pas" type="{{mostrar1 ? 'text' : 'password'}}" [(ngModel)]="AdminPerfil.NewPass"></ion-input>
         <ion-button slot="end" fill="clear" (click)="togglePassVisibility1()">
           <ion-icon [name]="mostrar1 ? 'eye-off' : 'eye'"></ion-icon>
         </ion-button>
       </ion-item>
       <ion-item>
         <ion-label position="stacked">Confirmar contraseña</ion-label>
-        <ion-input type="{{mostrar1 ? 'text' : 'password'}}" [(ngModel)]="AdminPerfil.ConfirmPass"></ion-input>
+        <ion-input class="pas" type="{{mostrar1 ? 'text' : 'password'}}" [(ngModel)]="AdminPerfil.ConfirmPass"></ion-input>
         <ion-button slot="end" fill="clear" (click)="togglePassVisibility1()">
           <ion-icon [name]="mostrar1 ? 'eye-off' : 'eye'"></ion-icon>
         </ion-button>

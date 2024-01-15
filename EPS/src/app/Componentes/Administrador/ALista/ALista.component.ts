@@ -22,6 +22,7 @@ export class AListaComponent implements OnInit {
     passw: "",
     telefono: ""
   }
+  public mostrar: boolean = false
   public id: any
   ngOnInit() {
     this.id = this.adminService.idG
@@ -76,6 +77,10 @@ export class AListaComponent implements OnInit {
     this.nuevoUser.email = ""
     this.nuevoUser.passw = ""
     this.nuevoUser.telefono = ""
+  }
+
+  togglePassVisibility(){
+    this.mostrar = !this.mostrar
   }
 
 }

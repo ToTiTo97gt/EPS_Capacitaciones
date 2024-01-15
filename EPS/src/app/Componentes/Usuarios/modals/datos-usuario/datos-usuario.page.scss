@@ -48,13 +48,19 @@ ion-content{
 
 ion-input{
     background-color: #fff;
+    color: green;
 }
 
 ion-select{
     background-color: #fff;
+    color: black;
 }
 
 ion-toolbar{
     color: #fff;
     --background: #ff0000;
+}
+
+.pas{
+    color: green;
 }

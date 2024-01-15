@@ -18,6 +18,19 @@
     background-color: #fff;
 }
 
+@media (max-width: 538px) {
+    #partes{
+        margin-top: 2rem;
+        height: 65rem;
+        width: 35rem;
+        gap: 10px;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        background-color: #fff;
+    }
+}
+
 .partes2{
     margin-top: 2rem;
     height: 34rem;
@@ -86,6 +99,15 @@ ion-img{
 
 ion-input{
     width: 100%;
+    color: black;
+}
+
+.pas{
+    color: green;
+}
+
+ion-select{
+    color: black;
 }
 
 ion-toolbar{
