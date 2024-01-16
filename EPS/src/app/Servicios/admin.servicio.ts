@@ -9,7 +9,7 @@ import { retry } from "rxjs";
 export class AdminService{
 
     public idG: any;
-    url:string="http://192.168.2.99:3000/"
+    url:string="http://34.235.137.29:3020/"
 
     jsonData: any[] = []
 
