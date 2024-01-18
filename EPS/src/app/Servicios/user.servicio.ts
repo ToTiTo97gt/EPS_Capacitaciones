@@ -10,30 +10,51 @@ export class UserService{
     public idG: any
     public idTipo: any
     public datosUser: any
-    url:string="http://34.235.137.29:3020/"
+    url:string="http://localhost:3000/"
     constructor(private httpClient: HttpClient) {}
 
     GetDepartamentos(){
         const ruta = this.url+"User/getDepartamentos"
         const data = {}
-        return this.httpClient.post(ruta, data).toPromise();
+        const options = {
+            headers: {
+             'Content-Type': 'application/x-www-form-urlencoded'
+           }
+        };
+        return this.httpClient.post(ruta, data, options).toPromise();
     }
 
     GetMunicipios(idDepartamento: any){
         const ruta = this.url+"User/getMunicipios"
         const data = {idDepartamento}
-        return this.httpClient.post(ruta, data).toPromise();
+        const options = {
+            headers: {
+             'Content-Type': 'application/x-www-form-urlencoded'
+           }
+        };
+        return this.httpClient.post(ruta, data, options).toPromise();
     }
 
     TiposUsuarios(){
         const ruta = this.url+"User/tiposUsuarios"
         const data = {}
-        return this.httpClient.post(ruta, data).toPromise();
+        const options = {
+            headers: {
+             'Content-Type': 'application/x-www-form-urlencoded'
+           }
+        };
+        return this.httpClient.post(ruta, data, options).toPromise();
     }
 
     Registrar(nuevoUser: any){
         const ruta = this.url+"User/RegistrarUsuario"
         const data = {nuevoUser}
+        return this.httpClient.post(ruta, data).toPromise();
+    }
+
+    RecuperarContra(datoContra: any){
+        const ruta = this.url+"User/RecuperarContra"
+        const data = {datoContra}
         return this.httpClient.post(ruta, data).toPromise();
     }
 
@@ -55,9 +76,9 @@ export class UserService{
         return this.httpClient.post(ruta, data).toPromise()
     }
 
-    CambiarPass(newPass: any, idUser: any){
+    CambiarPass(newPass: any, idUser: any, correo:any){
         const ruta = this.url+"User/CambiarPass"
-        const data = {newPass, idUser}
+        const data = {newPass, idUser, correo}
         return this.httpClient.post(ruta, data).toPromise()
     }
 

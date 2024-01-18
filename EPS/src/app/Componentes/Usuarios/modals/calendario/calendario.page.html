@@ -51,7 +51,7 @@
     </div>
 
     <div class="elementos" *ngIf="Diplomado.idCategoria == 2">
-      <ion-datetime presentation="date" [multiple]="true" [value]="fechasDiplomado"></ion-datetime>
+      <ion-datetime [min]="2023" presentation="date" [multiple]="true" [value]="fechasDiplomado"></ion-datetime>
       <div class="titulo">
         <h1>Horarios</h1>
       </div>

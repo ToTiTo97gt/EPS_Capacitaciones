@@ -9,7 +9,7 @@ import { retry } from "rxjs";
 export class AdminService{
 
     public idG: any;
-    url:string="http://34.235.137.29:3020/"
+    url:string="http://localhost:3000/"
 
     jsonData: any[] = []
 
@@ -39,9 +39,9 @@ export class AdminService{
         return this.httpClient.post(ruta, data).toPromise();
     }
 
-    CambiarPass(Contra: any, idAdmin: any){
+    CambiarPass(Contra: any, idAdmin: any, correo: any){
         const ruta = this.url+"Admin/CambiarPass"
-        const data = {Contra, idAdmin}
+        const data = {Contra, idAdmin, correo}
         return this.httpClient.post(ruta, data).toPromise();
     }
 

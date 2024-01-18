@@ -9,7 +9,7 @@
 
     <div class="filtro">
       <div class="filtro1">
-        <ion-datetime class="selectt" presentation="year" [preferWheel]="true" (ionChange)="dateChanged($event)"></ion-datetime>
+        <ion-datetime [min]="2023" class="selectt" presentation="year" [preferWheel]="true" (ionChange)="dateChanged($event)"></ion-datetime>
       </div>
       <div class="filtro2">
         <ion-select class="jornada" aria-label="Fruit" placeholder="Jornadas" (ionChange)="jornadaChange($event)">

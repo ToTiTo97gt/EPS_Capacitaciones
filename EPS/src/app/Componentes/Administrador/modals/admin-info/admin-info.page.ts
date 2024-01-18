@@ -119,7 +119,7 @@ export class AdminInfoPage implements OnInit {
   async CambiarContra(){
     if(this.AdminPerfil.NewPass == this.AdminPerfil.ConfirmPass){
       if (this.datosP.passw == this.AdminPerfil.OldPass){
-        await this.adminService.CambiarPass(this.AdminPerfil.NewPass, this.adminService.idG)
+        await this.adminService.CambiarPass(this.AdminPerfil.NewPass, this.adminService.idG, this.datosP.email)
       } else {
         alert('Por favor, verifique qué este bien su contraseña actual')
       }

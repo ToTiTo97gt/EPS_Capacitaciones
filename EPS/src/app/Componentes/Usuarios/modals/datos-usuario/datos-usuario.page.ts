@@ -85,7 +85,7 @@ export class DatosUsuarioPage implements OnInit {
   async CambiarContra(){
     if(this.nuevoUser.passwo == this.nuevoUser.confirmarPasswo){
       if (this.oldPass == this.Datos.passwo){
-        await this.UserService.CambiarPass(this.nuevoUser.passwo, this.nuevoUser.idUsuario)
+        await this.UserService.CambiarPass(this.nuevoUser.passwo, this.nuevoUser.idUsuario, this.Datos.correo)
       } else {
         alert('Por favor, verifique qué este bien su contraseña actual')
       }

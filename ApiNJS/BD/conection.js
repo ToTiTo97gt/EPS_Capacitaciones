@@ -1,9 +1,9 @@
 var mysql = require('mysql2');
 var connection = mysql.createConnection({
-    host: '34.235.137.29',
-    user: 'root',
-    password: 'Rubik-60',
-    database: 'jp_eps_conf',
+    host: 'localhost', //db
+    user: 'root', //root
+    password: '12345678', //Rubik60
+    database: 'eps', //jp_eps_conf
     port: 3306
 });
 connection.connect(function(error){

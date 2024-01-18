@@ -19,10 +19,17 @@ export class IngresoPage implements OnInit {
   decoded: any
   public mostrar1: boolean = false
   ngOnInit() {
+    this.contra = false
   }
 
+  public contra: boolean = false
+  public datoContra: string = ""
   public dato1: string = ""
   public dato2: string = ""
+
+  cambiarEstado(){
+    this.contra = !this.contra
+  }
 //agregar el modulo de usuarios
   async Ingresar(){
     if(this.isEmail(this.dato1)){
@@ -75,11 +82,12 @@ export class IngresoPage implements OnInit {
       }
       
     }
-   /*  if(this.dato1 == 'admin' && this.dato2 == 'admin'){
-      this.router.navigate(['/tabs']);
-    } else {
-      this.router.navigate(['/tabsu']);
-    } */
+  }
+
+  async Recuperar(){
+
+    let dato = await this.UserService.RecuperarContra(this.datoContra)
+    this.cambiarEstado()
   }
 
   isEmail(email:string): boolean {

@@ -27,13 +27,22 @@ exports.GetDepartamentos = async (req, res) => {
 exports.GetMunicipios = async (req, res) => {
     const idDepartamento = req.body.idDepartamento
     bd.query(`SELECT * FROM municipio WHERE idDepartamento=${idDepartamento}`, function(err, result){
-        if(err) throw err;
-        res.send(result)
+        if(err) {
+            if(err.code == 'ER_BAD_FIELD_ERROR'){
+                console.error('No se encontreo resultado')
+                res.status(409).json({ error: 'No se encontro resultado' });
+            } else {
+                console.error('Error en la consulta:', error);
+                res.status(500).json({ error: 'Error en la consulta' });
+            }
+        } else {
+            res.send(result)
+        }
     })
 }
 
 exports.tiposUsuarios = async (req, res) => {
-    bd.query(`SELECT * FROM tipoUsuario`, function(err, result){
+    bd.query(`SELECT * FROM tipousuario`, function(err, result){
         if(err) throw err;
         res.send(result)
     })
@@ -50,6 +59,41 @@ exports.RegistrarUsuario = async(req, res) => {
             const idUsuario = result.insertId;
             AsignacionAuto(idUsuario);
 
+            let transporter = nodemailer.createTransport({
+                host: "smtp.gmail.com",
+                port: 587,
+                secure: false, // true for 465, false for other ports
+                auth: {
+                  user: 'sender97gt@gmail.com',
+                  pass: 'ljme gkdf izog mkbi'
+                },
+                tls: {
+                    rejectUnauthorized: false
+                }
+              });
+            
+              let mailOptions = {
+                from: 'sender97gt@gmail.com', // sender address
+                to: req.body.email, // list of receivers
+                subject: `Bienvenido(a) ${nombre} ${apellido}`, // Subject line
+                html: `
+                <html>
+                <body>
+                    <h1>Bienvenido(a) ${nombre} ${apellido}</h1><br>
+                    <p>Para ingresar use su CUI o carnet de estudiante, si es su caso</p>
+                </body>
+                </html>`
+              };
+            
+              // send mail with defined transport object
+              let info = transporter.sendMail(mailOptions, function(error, info){
+                  if(error){
+                      console.log(error)
+                  } else {
+                      console.log('Email enviado')
+                  }
+              });
+
             return res.send(result)
         })
     } catch (error) {
@@ -58,9 +102,70 @@ exports.RegistrarUsuario = async(req, res) => {
     }
 }
 
+exports.RecuperarContra = async (req, res) => {
+    try {
+        var dato = req.body.datoContra
+        bd.query(`Select correo, passwo from usuario where carne = '${dato}' or cui = '${dato}'`, (err, result) =>{
+            if (err) {
+                console.error('Error en la consulta:', err);
+                return res.status(500).send('Error en el servidor');
+            }
+            if (result.length > 0) {
+                const correo = result[0].correo;
+                const contra = result[0].passwo;
+
+                // Puedes hacer lo que necesites con el correo aquí
+                console.log('Correo encontrado:', correo);
+                let transporter = nodemailer.createTransport({
+                    host: "smtp.gmail.com",
+                    port: 587,
+                    secure: false, // true for 465, false for other ports
+                    auth: {
+                      user: 'sender97gt@gmail.com',
+                      pass: 'ljme gkdf izog mkbi'
+                    },
+                    tls: {
+                        rejectUnauthorized: false
+                    }
+                  });
+                
+                  let mailOptions = {
+                    from: 'sender97gt@gmail.com', // sender address
+                    to: correo, // list of receivers
+                    subject: `Recuperar Contraseña`, // Subject line
+                    html: `
+                    <html>
+                    <body>
+                        <h1>Su contraseña es: ${contra}</h1><br>
+                    </body>
+                    </html>`
+                  };
+                
+                  // send mail with defined transport object
+                  let info = transporter.sendMail(mailOptions, function(error, info){
+                      if(error){
+                          console.log(error)
+                      } else {
+                          console.log('Email enviado')
+                      }
+                  });
+
+                // Envía la respuesta al cliente con los datos recuperados
+                return res.status(200).send({ correoEncontrado: correo });
+            } else {
+                // Si no se encontraron datos, envía un mensaje al cliente
+                return res.status(404).send('Correo no encontrado');
+            }
+        })
+    } catch (error) {
+        console.log('Error en el servidor')
+        return res.status(500).send('Error en el servidor');
+    }
+}
+
 exports.ModificarUsuario = async (req, res) => {
     var idUsuario = req.body.User.idUsuario
-    console.log(req.body.User)
+    //console.log(req.body.User)
     try {
         bd.query(`update usuario set carne='${req.body.User.carne}', cui='${req.body.User.cui}', nombre='${req.body.User.nombre}', apellido='${req.body.User.apellido}', correo='${req.body.User.correo}', genero=${req.body.User.genero}, direccion='${req.body.User.direccion}' , idmunicipio=${req.body.User.idmunicipio} where idUsuario = ${idUsuario}`, (err, result) => {
             if(err) throw err;
@@ -75,8 +180,45 @@ exports.CambiarPass = async (req, res) => {
     try {
         var idUser = req.body.idUser
         var newPass = req.body.newPass
+        var correo = req.body.correo
         bd.query(`update usuario set passwo = '${newPass}' where idUsuario = ${idUser}`, (err, result) => {
             if(err) throw err
+
+            let transporter = nodemailer.createTransport({
+                host: "smtp.gmail.com",
+                port: 587,
+                secure: false, // true for 465, false for other ports
+                auth: {
+                  user: 'sender97gt@gmail.com',
+                  pass: 'ljme gkdf izog mkbi'
+                },
+                tls: {
+                    rejectUnauthorized: false
+                }
+              });
+            
+              let mailOptions = {
+                from: 'sender97gt@gmail.com', // sender address
+                to: correo, // list of receivers
+                subject: "Cambio de Contraseña", // Subject line
+                html: `
+                <html>
+                  <body>
+                      <p>Ahora su nueva contraseña es: ${newPass}</p>
+                      <p>Anotela y borre este correo</p>
+                  </body>
+                </html>`
+              };
+            
+              // send mail with defined transport object
+              let info = transporter.sendMail(mailOptions, function(error, info){
+                  if(error){
+                      console.log(error)
+                  } else {
+                      console.log('Email enviado')
+                  }
+              });
+
             return res.send({msg: 'Contraseña modificada con exito'})
         })
     } catch (error) {
@@ -213,7 +355,7 @@ exports.Diplomados = async(req, res) => {
         return res.status(400).send('No se recivio dato de jornada')
     }
     try {
-        bd.query(`select a.idCapacitacion, a.nomCapacitacion, a.descripcion, Min(d.fecha) as inicio, Max(d.fecha) as fin, e.nota, a.diploma, a.duracion, a.modalidad, 0 as dat, 'l' as link
+        bd.query(`select a.idCapacitacion, a.nomCapacitacion, a.descripcion, Min(d.fecha) as inicio, Max(d.fecha) as fin, Min(e.nota) as nota, a.diploma, a.duracion, a.modalidad, 0 as dat, 'l' as link
           from capacitacion a
           join asistencia c on a.idCapacitacion = c.idCapacitacion
           join usuario b on b.idUsuario = c.idUsuario

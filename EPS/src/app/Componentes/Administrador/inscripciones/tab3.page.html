@@ -2,7 +2,7 @@
   <div id="pantalla">
     <br>
     <div class="parametros">
-      <ion-datetime class="filt" presentation="year" [preferWheel]="true" (ionChange)="dateChanged($event)"></ion-datetime>
+      <ion-datetime [min]="2023" class="filt" presentation="year" [preferWheel]="true" (ionChange)="dateChanged($event)"></ion-datetime>
     
       <ion-select aria-label="Fruit" placeholder="Jornadas" (ionChange)="jornadaChange($event)">
         <ion-select-option *ngFor="let jornada of jornadas" [value]="jornada.idJornada" >{{jornada.ciclo}}</ion-select-option>

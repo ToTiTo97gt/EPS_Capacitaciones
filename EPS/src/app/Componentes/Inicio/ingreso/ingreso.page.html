@@ -38,6 +38,11 @@
       <h5>No tienes Usuario? Registrate</h5>
       <ion-button [routerLink]="['/registro']" class="boton2">Registrarse</ion-button>
       <br>
+      <h5 *ngIf="contra == false"> <a (click)="cambiarEstado()">Olvide mi Contraseña</a> </h5>
+      <div class="contra" *ngIf="contra == true">
+        <ion-input label="CUI o Carnet" label-placement="floating" fill="outline" type="text" [(ngModel)]="datoContra"></ion-input>
+        <ion-button class="boton" (click)="Recuperar()">Recuperar contraseña</ion-button>
+      </div>
       <br>
     </div>
     

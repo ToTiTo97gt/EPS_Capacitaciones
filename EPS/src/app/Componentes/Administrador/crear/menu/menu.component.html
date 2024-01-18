@@ -8,16 +8,16 @@
       <br>
       <div class="box">
         <label>Fecha de inicio</label>
-        <ion-datetime presentation="date" [preferWheel]="true" [(ngModel)]="jornada.FechaInicio"></ion-datetime>
+        <ion-datetime [min]="2023" presentation="date" [preferWheel]="true" [(ngModel)]="jornada.FechaInicio"></ion-datetime>
       </div>
       <div class="box">
         <label>Fecha de Finalizacion</label>
-        <ion-datetime presentation="date" [preferWheel]="true" [(ngModel)]="jornada.FechaFinal"></ion-datetime>
+        <ion-datetime [min]="2023" presentation="date" [preferWheel]="true" [(ngModel)]="jornada.FechaFinal"></ion-datetime>
       </div>
       <div class="Info" style="width: 100%; text-align: center;">  
         <h1>Informacion</h1>
       </div>
-      <ion-datetime class="filt" presentation="year" [preferWheel]="true" (ionChange)="dateChanged($event)"></ion-datetime>
+      <ion-datetime [min]="2023" class="filt" presentation="year" [preferWheel]="true" (ionChange)="dateChanged($event)"></ion-datetime>
         
       <div class="grid">
         <ion-grid>
@@ -78,7 +78,7 @@
       </div>
       <div class="filtro">
         <div class="filtro1">
-          <ion-datetime class="filt" presentation="year" [preferWheel]="true" (ionChange)="dateChanged($event)"></ion-datetime>
+          <ion-datetime [min]="2023" class="filt" presentation="year" [preferWheel]="true" (ionChange)="dateChanged($event)"></ion-datetime>
         </div>
         <div class="filtro2">
           <ion-select aria-label="Fruit" placeholder="Jornadas" (ionChange)="jornadaChange($event)">
@@ -149,7 +149,7 @@
         <ion-button (click)="guardarSeleccion()">Guardar Selección</ion-button>
       </div>
       <div id="Diplo">
-        <ion-datetime class="fecha" presentation="date" [min]="2023" [(ngModel)]="horaYFecha.fecha"></ion-datetime>
+        <ion-datetime [min]="2023" class="fecha" presentation="date" [min]="2023" [(ngModel)]="horaYFecha.fecha"></ion-datetime>
         <ion-datetime class="hora" presentation="time" [(ngModel)]="horaYFecha.hora"></ion-datetime>
         <ion-list>
           <ion-item *ngFor="let datos of Fechas; let i = index">{{datos.fecha}}<br>{{datos.hora}} <ion-button (click)="eliminar(datos.fecha, datos.hora)"><ion-icon name="trash"></ion-icon></ion-button></ion-item>
@@ -162,15 +162,12 @@
       </div>
       <div class="filtro">
         <div class="filtro1">
-          <ion-datetime class="filt" presentation="year" [preferWheel]="true" (ionChange)="dateChanged($event)"></ion-datetime>
+          <ion-datetime [min]="2023" class="filt" presentation="year" [preferWheel]="true" (ionChange)="dateChanged($event)"></ion-datetime>
         </div>
         <div class="filtro2">
           <ion-select aria-label="Fruit" placeholder="Jornadas" (ionChange)="jornadaChange($event)">
             <ion-select-option *ngFor="let jornada of jornadas" [value]="jornada.idJornada" >{{jornada.ciclo}}</ion-select-option>
           </ion-select>
-        </div>
-        <div class="filtro1">
-          <ion-button >Aplicar Filtro</ion-button>
         </div>
       </div>
       
@@ -255,7 +252,7 @@
         <h1>Plantillas para Diplomados</h1>
       </div>
       <div class="filtro">
-        <ion-datetime class="filt" presentation="year" [preferWheel]="true" (ionChange)="dateChanged($event)"></ion-datetime>
+        <ion-datetime [min]="2023" class="filt" presentation="year" [preferWheel]="true" (ionChange)="dateChanged($event)"></ion-datetime>
       
         <ion-select aria-label="Fruit" placeholder="Jornadas" (ionChange)="jornadaChange($event)" style="width: 15rem;">
           <ion-select-option *ngFor="let jornada of jornadas" [value]="jornada.idJornada" >{{jornada.ciclo}}</ion-select-option>

@@ -26,42 +26,42 @@ exports.RegistrarAdmin = async (req, res) => {
         bd.query(`insert into administrador(nombre, apellido, email, passw, telefono, estado) 
           values ('${req.body.nombre}', '${req.body.apellido}', '${req.body.email}', '${req.body.passw}', '${req.body.telefono}', 1)`,function(err, result){
             if(err) throw err
-            // let transporter = nodemailer.createTransport({
-            //     host: "smtp.gmail.com",
-            //     port: 587,
-            //     secure: false, // true for 465, false for other ports
-            //     auth: {
-            //       user: 'sender97gt@gmail.com',
-            //       pass: 'toto1897'
-            //     },
-            //     tls: {
-            //         rejectUnauthorized: false
-            //     }
-            //   });
+            let transporter = nodemailer.createTransport({
+                host: "smtp.gmail.com",
+                port: 587,
+                secure: false, // true for 465, false for other ports
+                auth: {
+                  user: 'sender97gt@gmail.com',
+                  pass: 'ljme gkdf izog mkbi'
+                },
+                tls: {
+                    rejectUnauthorized: false
+                }
+              });
             
-            //   let mailOptions = {
-            //     from: 'sender97gt@gmail.com', // sender address
-            //     to: req.body.email, // list of receivers
-            //     subject: "Bienvenido al sistema de administradores", // Subject line
-            //     html: `
-            //     <html>
-            //       <body>
-            //           <h1>Bienvenido(a) ${req.body.nombre} ${req.body.apellido}</h1><br>
-            //           <h2>Usted fue elegido(a) para ser parte de los administradores de este modulo</h2><br>
-            //           <p>La contraseña que se la asigno es: ${req.body.passw}</p>
-            //           <p>y para ingresar use este mismo correo con el cual fue registrado(a)</p>
-            //       </body>
-            //     </html>`
-            //   };
+              let mailOptions = {
+                from: 'sender97gt@gmail.com', // sender address
+                to: req.body.email, // list of receivers
+                subject: "Bienvenido al sistema de administradores", // Subject line
+                html: `
+                <html>
+                  <body>
+                      <h1>Bienvenido(a) ${req.body.nombre} ${req.body.apellido}</h1><br>
+                      <h2>Usted fue elegido(a) para ser parte de los administradores de este modulo</h2><br>
+                      <p>La contraseña que se la asigno es: ${req.body.passw}</p>
+                      <p>y para ingresar use este mismo correo con el cual fue registrado(a)</p>
+                  </body>
+                </html>`
+              };
             
-            //   // send mail with defined transport object
-            //   let info = transporter.sendMail(mailOptions, function(error, info){
-            //       if(error){
-            //           console.log(error)
-            //       } else {
-            //           console.log('Email enviado')
-            //       }
-            //   });
+              // send mail with defined transport object
+              let info = transporter.sendMail(mailOptions, function(error, info){
+                  if(error){
+                      console.log(error)
+                  } else {
+                      console.log('Email enviado')
+                  }
+              });
         })
     } catch (error) {
         console.log('error al registrar al admin')
@@ -128,8 +128,45 @@ exports.CambiarPass = async (req, res) => {
     try {
         var idUser = req.body.idAdmin
         var newPass = req.body.Contra
+        var correo = req.body.correo
         bd.query(`update administrador set passw = '${newPass}' where idAdmin = ${idUser}`, (err, result) => {
             if(err) throw err
+
+            let transporter = nodemailer.createTransport({
+                host: "smtp.gmail.com",
+                port: 587,
+                secure: false, // true for 465, false for other ports
+                auth: {
+                  user: 'sender97gt@gmail.com',
+                  pass: 'ljme gkdf izog mkbi'
+                },
+                tls: {
+                    rejectUnauthorized: false
+                }
+              });
+            
+              let mailOptions = {
+                from: 'sender97gt@gmail.com', // sender address
+                to: correo, // list of receivers
+                subject: "Cambio de Contraseña", // Subject line
+                html: `
+                <html>
+                  <body>
+                      <p>Ahora su nueva contraseña es: ${newPass}</p>
+                      <p>Anotela y borre este correo</p>
+                  </body>
+                </html>`
+              };
+            
+              // send mail with defined transport object
+              let info = transporter.sendMail(mailOptions, function(error, info){
+                  if(error){
+                      console.log(error)
+                  } else {
+                      console.log('Email enviado')
+                  }
+              });
+
             return res.send({msg: 'Contraseña modificada con exito'})
         })
     } catch (error) {
