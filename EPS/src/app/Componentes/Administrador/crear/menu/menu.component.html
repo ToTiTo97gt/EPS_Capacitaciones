@@ -254,10 +254,10 @@
       <div class="filtro">
         <ion-datetime [min]="2023" class="filt" presentation="year" [preferWheel]="true" (ionChange)="dateChanged($event)"></ion-datetime>
       
-        <ion-select aria-label="Fruit" placeholder="Jornadas" (ionChange)="jornadaChange($event)" style="width: 15rem;">
+        <ion-select class="jorn" placeholder="Jornadas" (ionChange)="jornadaChange($event)" style="width: 15rem;">
           <ion-select-option *ngFor="let jornada of jornadas" [value]="jornada.idJornada" >{{jornada.ciclo}}</ion-select-option>
         </ion-select>
-        <ion-select aria-label="Fruit" placeholder="Diplomados" style="width: 10rem;" [(ngModel)]="idDiplo">
+        <ion-select class="dipl" placeholder="Diplomados" style="width: 10rem;" [(ngModel)]="idDiplo">
           <ion-select-option *ngFor="let capacitacion of capacitaciones" [value]="capacitacion">{{capacitacion.nomCapacitacion}}</ion-select-option>
         </ion-select>
       </div>

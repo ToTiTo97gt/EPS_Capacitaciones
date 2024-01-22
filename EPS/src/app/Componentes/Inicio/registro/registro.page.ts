@@ -47,10 +47,12 @@ export class RegistroPage implements OnInit {
 
   async getMunicipios(idDepartamento: any){
     this.municipios = await this.UserService.GetMunicipios(idDepartamento)
+    console.log(this.municipios)
   }
 
   async tiposUsuarios(){
     this.usuarios = await this.UserService.TiposUsuarios()
+    console.log(this.usuarios)
   }
 
   DepartamentoChange(event: any){

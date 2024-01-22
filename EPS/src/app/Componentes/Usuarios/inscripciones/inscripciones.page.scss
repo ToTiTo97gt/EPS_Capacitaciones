@@ -66,15 +66,14 @@ p{
 }
 
 .foot{
-    background-color: red;
     width: 100%;
-    height: 10rem;
+    height: 5rem;
 }
 
 ion-button{
     margin-top: -2px;
-    --background: red;
-    color: #221d45;
+    --background: #221d45;
+    color: white;
 }
 
 ion-img{
@@ -84,7 +83,7 @@ ion-img{
 
 ion-toolbar{
     --background: #221d45;
-    color: red;
+    color: white;
 }
 
 ion-header{

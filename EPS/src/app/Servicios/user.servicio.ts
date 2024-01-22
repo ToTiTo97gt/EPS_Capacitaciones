@@ -1,4 +1,5 @@
 import { Injectable } from "@angular/core";
+import axios from "axios";
 import { HttpClient } from "@angular/common/http";
 
 @Injectable({
@@ -10,40 +11,25 @@ export class UserService{
     public idG: any
     public idTipo: any
     public datosUser: any
-    url:string="http://localhost:3000/"
+    url:string="http://localhost:3000/"//ip:3020
     constructor(private httpClient: HttpClient) {}
 
     GetDepartamentos(){
         const ruta = this.url+"User/getDepartamentos"
         const data = {}
-        const options = {
-            headers: {
-             'Content-Type': 'application/x-www-form-urlencoded'
-           }
-        };
-        return this.httpClient.post(ruta, data, options).toPromise();
+        return this.httpClient.post(ruta, data).toPromise();
     }
 
     GetMunicipios(idDepartamento: any){
         const ruta = this.url+"User/getMunicipios"
         const data = {idDepartamento}
-        const options = {
-            headers: {
-             'Content-Type': 'application/x-www-form-urlencoded'
-           }
-        };
-        return this.httpClient.post(ruta, data, options).toPromise();
+        return this.httpClient.post(ruta, data).toPromise();
     }
 
     TiposUsuarios(){
         const ruta = this.url+"User/tiposUsuarios"
         const data = {}
-        const options = {
-            headers: {
-             'Content-Type': 'application/x-www-form-urlencoded'
-           }
-        };
-        return this.httpClient.post(ruta, data, options).toPromise();
+        return this.httpClient.post(ruta, data).toPromise();
     }
 
     Registrar(nuevoUser: any){

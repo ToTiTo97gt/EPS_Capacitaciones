@@ -9,7 +9,7 @@ router.post("/GetAdminUser",admin.AdminUser);
 router.post("/NuevoDatos",admin.NuevosDatos);
 router.post("/ModificarDatos",admin.ModificarDatos);
 router.post("/CambiarPass",admin.CambiarPass);
-
+router.post("/RecuperarContra", admin.RecuperarContra)
 router.post("/GetAdminPermisos", admin.AdminPermisos);
 router.post("/GetAdminLista", admin.AdminLista);
 router.post("/permisos", admin.Permisos);

@@ -124,6 +124,68 @@ exports.ModificarDatos = async (req, res) => {
     }
 }
 
+exports.RecuperarContra = async (req, res) => {
+    try {
+        var dato = req.body.datoContra
+        bd.query(`Select passw from administrador where email = '${dato}'`, (err, result) =>{
+            if (err) {
+                console.error('Error en la consulta:', err);
+                return res.status(500).send('Error en el servidor');
+            }
+            if (result.length > 0) {
+                const correo = dato;
+                const contra = result[0].passw;
+
+                // Puedes hacer lo que necesites con el correo aquí
+                console.log('Correo encontrado:', correo);
+                let transporter = nodemailer.createTransport({
+                    host: "smtp.gmail.com",
+                    port: 587,
+                    secure: false, // true for 465, false for other ports
+                    auth: {
+                      user: 'sender97gt@gmail.com',
+                      pass: 'ljme gkdf izog mkbi'
+                    },
+                    tls: {
+                        rejectUnauthorized: false
+                    }
+                  });
+                
+                  let mailOptions = {
+                    from: 'sender97gt@gmail.com', // sender address
+                    to: correo, // list of receivers
+                    subject: `Recuperar Contraseña de Administrador`, // Subject line
+                    html: `
+                    <html>
+                    <body>
+                        <h1>Su contraseña es: ${contra}</h1><br>
+                        <h2>Por favor, anotela y borre este correo</h2>
+                    </body>
+                    </html>`
+                  };
+                
+                  // send mail with defined transport object
+                  let info = transporter.sendMail(mailOptions, function(error, info){
+                      if(error){
+                          console.log(error)
+                      } else {
+                          console.log('Email enviado')
+                      }
+                  });
+
+                // Envía la respuesta al cliente con los datos recuperados
+                return res.status(200).send({ correoEncontrado: correo });
+            } else {
+                // Si no se encontraron datos, envía un mensaje al cliente
+                return res.status(404).send('Correo no encontrado');
+            }
+        })
+    } catch (error) {
+        console.log('Error en el servidor')
+        return res.status(500).send('Error en el servidor');
+    }
+}
+
 exports.CambiarPass = async (req, res) => {
     try {
         var idUser = req.body.idAdmin

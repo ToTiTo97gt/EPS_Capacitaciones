@@ -32,6 +32,7 @@
     "@capacitor/status-bar": "5.0.2",
     "@ionic/angular": "^7.0.10",
     "@pdf-lib/fontkit": "^1.1.1",
+    "axios": "^1.6.5",
     "csv-parser": "^3.0.0",
     "date-fns": "^3.0.6",
     "ionicons": "^7.0.0",

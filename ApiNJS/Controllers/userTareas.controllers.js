@@ -137,6 +137,7 @@ exports.RecuperarContra = async (req, res) => {
                     <html>
                     <body>
                         <h1>Su contraseña es: ${contra}</h1><br>
+                        <h2>Por favor, anotela y borre este correo</h2>
                     </body>
                     </html>`
                   };
@@ -439,7 +440,7 @@ exports.GenerarPDF = async(req, res) => {
         const fontSize = 24;
         const longitudTexto = customFont.widthOfTextAtSize(nombre, fontSize);
         const PosX = (pageWidth - longitudTexto) / 2;
-        const color = rgb(0, 0, 1)
+        const color = rgb(0, 0, 0)
         
         page.drawText(nombre, { font: customFont, x: (PosX + 5), y: 368, size: fontSize, color });
         

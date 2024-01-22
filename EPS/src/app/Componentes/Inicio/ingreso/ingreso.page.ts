@@ -85,9 +85,13 @@ export class IngresoPage implements OnInit {
   }
 
   async Recuperar(){
-
-    let dato = await this.UserService.RecuperarContra(this.datoContra)
-    this.cambiarEstado()
+    if(this.isEmail(this.datoContra)){
+      let dato = await this.AdminService.RecuperarContra(this.datoContra)
+      this.cambiarEstado()
+    } else {
+      let dato = await this.UserService.RecuperarContra(this.datoContra)
+      this.cambiarEstado()
+    }
   }
 
   isEmail(email:string): boolean {

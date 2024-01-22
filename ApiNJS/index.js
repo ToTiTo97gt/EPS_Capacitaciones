@@ -29,7 +29,7 @@ app.get('/', function(req,res){
 });
     
 //app.use("/",usuario);
-app.use('/Admin',tareas)
+app.use('/Admin', tareas)
 
 app.use('/User', user)
 

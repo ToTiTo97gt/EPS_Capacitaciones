@@ -185,8 +185,9 @@ ion-datetime-button{
   --wheel-highlight-background: rgb(229, 255, 0);
   --wheel-fade-background-rgb: 246, 255, 0;
   overflow: hidden;
-  margin-top: -50px;
-  height: 150px;
+  margin-top: -35px;
+  height: 135px;
+  border: 1px solid #221d45;
   width: 95px;
 }
 
@@ -262,8 +263,8 @@ ion-col {
 }
 
 ion-button{
-  --background: red;
-  color: #221d45;
+  --background: #221d45;
+  color: white;
 }
 
 #Usuarios{
@@ -288,43 +289,43 @@ ion-button{
 
 .tipo{
   width: 20rem;
-  border: 2px solid red;
+  border: 2px solid #221d45;
   background-color: white;
 }
 
 .genero{
   width: 8rem;
-  border: 2px solid red;
+  border: 2px solid #221d45;
   background-color: white;
 }
 
 .departamento{
   width: 10rem;
-  border: 2px solid red;
+  border: 2px solid #221d45;
   background-color: white;
 }
 
 .municipio{
   width: 10rem;
-  border: 2px solid red;
+  border: 2px solid #221d45;
   background-color: white;
 }
 
 .asistencia{
   width: 7rem;
-  border: 2px solid red;
+  border: 2px solid #221d45;
   background-color: white;
 }
 
 .GridHeadd{
-  background-color: #FF0000;
+  background-color: #221d45;
   border: solid 1px #fff;
   color: #fff;
   text-align: center;
 }
 
 .headd{
-  background-color: #FF0000;
+  background-color: #221d45;
   border: solid 1px #fff;
   color: #fff;
   text-align: center;
@@ -345,7 +346,6 @@ ion-button{
 }
 
 .foot{
-  background-color: red;
   width: 100%;
   height: 5rem;
 }
@@ -379,4 +379,15 @@ ion-input{
 
 ion-select{
   color: black;
+  border: 1px solid #221d45;
+}
+
+.jorn{
+  height: 1rem;
+  border: 1px solid #221d45;
+}
+
+.dipl{
+  height: 1rem;
+  border: 1px solid #221d45;
 }

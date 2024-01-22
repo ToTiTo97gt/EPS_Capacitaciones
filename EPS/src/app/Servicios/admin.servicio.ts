@@ -9,7 +9,7 @@ import { retry } from "rxjs";
 export class AdminService{
 
     public idG: any;
-    url:string="http://localhost:3000/"
+    url:string="http://localhost:3000/"//ip:3020
 
     jsonData: any[] = []
 
@@ -19,6 +19,12 @@ export class AdminService{
         const ruta = this.url+"Admin/RegistrarAdmin"
         const data = nuevoUser
         return this.httpClient.post(ruta, data).toPromise()
+    }
+
+    RecuperarContra(datoContra: any){
+        const ruta = this.url+"Admin/RecuperarContra"
+        const data = {datoContra}
+        return this.httpClient.post(ruta, data).toPromise();
     }
 
     GetAdminUser(email:string, passw:string){
