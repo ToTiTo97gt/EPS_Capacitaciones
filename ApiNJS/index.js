@@ -12,8 +12,37 @@ const morgan=require('morgan');
 var bodyParser = require('body-parser');
 var app = express();
 const cors = require('cors');
-var corsOptions = { origin: true, optionsSuccessStatus: 200 };
-app.use(cors(corsOptions));
+
+const allowedOrigins = [
+  'capacitor://localhost',
+  'ionic://localhost',
+  'http://localhost',
+  'http://localhost:8080',
+  'http://localhost:8100'
+];
+
+// Reflect the origin if it's in the allowed list or not defined (cURL, Postman, etc.)
+const corsOptions = {
+  origin: (origin, callback) => {
+    if (allowedOrigins.includes(origin) || !origin) {
+      callback(null, true);
+    } else {
+      callback(new Error('Origin not allowed by CORS'));
+    }
+  }
+}
+
+// Enable preflight requests for all r
+
+//var corsOptions = { origin: true, optionsSuccessStatus: 200 };
+app.options('*', cors(corsOptions));
+
+app.get('/', cors(corsOptions), (req, res, next) => {
+  res.json({ message: 'This route is CORS-enabled for an allowed origin.' });
+})
+
+
+
 var http = require('http').Server(app);
 app.use(bodyParser.json({ limit: '10mb', extended: false }));
 app.use(bodyParser.urlencoded({ limit: '10mb', extended: false }))
@@ -24,16 +53,16 @@ const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 
 //Rutas
-app.get('/', function(req,res){
+app.get('/', cors(corsOptions), function(req,res){
     res.send("Bienvenido!")
 });
     
 //app.use("/",usuario);
-app.use('/Admin', tareas)
+app.use('/Admin', cors(corsOptions), tareas)
 
-app.use('/User', user)
+app.use('/User', cors(corsOptions), user)
 
-app.post('/CSV', upload.single('file'), (req, res) => {
+app.post('/CSV', cors(corsOptions), upload.single('file'), (req, res) => {
     const file = req.file;
   
     // Procesar el archivo (puedes guardar en el sistema de archivos, base de datos, etc.)

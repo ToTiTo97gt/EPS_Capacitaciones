@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
+//import { HTTP } from '@ionic-native/http/ngx';
 import { AdminService } from './Servicios/admin.servicio';
 import { UserService } from './Servicios/user.servicio';
 
@@ -24,7 +25,7 @@ import axios from 'axios'
   ],
   imports: [BrowserModule, IonicModule.forRoot(), AppRoutingModule, MatDatepickerModule, BrowserAnimationsModule
   ,MatInputModule, MatNativeDateModule, MatFormFieldModule, IonicModule, CommonModule, HttpClientModule],
-  providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy }, AdminService, UserService],
+  providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy }, AdminService, UserService, /* HTTP */],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

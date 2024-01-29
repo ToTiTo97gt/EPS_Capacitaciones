@@ -23,9 +23,9 @@
         </ion-toolbar>
       </ion-header>
       <br>
-      <ion-input class="ion-text-center" label="CUI o Carnet" label-placement="floating" fill="outline" type="text" [(ngModel)]="dato1"></ion-input>
+      <ion-input class="user" label="CUI o Carnet" label-placement="floating" fill="outline" type="text" [(ngModel)]="dato1"></ion-input>
       <br>
-      <ion-item>
+      <ion-item class="pass">
         <ion-label position="stacked">Contraseña</ion-label>
         <ion-input class="pas" type="{{mostrar1 ? 'text' : 'password'}}" [(ngModel)]="dato2"></ion-input>
         <ion-button slot="end" fill="clear" (click)="togglePassVisibility()">
@@ -40,7 +40,7 @@
       <br>
       <h5 *ngIf="contra == false"> <a (click)="cambiarEstado()">Olvide mi Contraseña</a> </h5>
       <div class="contra" *ngIf="contra == true">
-        <ion-input label="CUI o Carnet" label-placement="floating" fill="outline" type="text" [(ngModel)]="datoContra"></ion-input>
+        <ion-input class="recuperar" label="CUI o Carnet" label-placement="floating" fill="outline" type="text" [(ngModel)]="datoContra"></ion-input>
         <ion-button class="boton" (click)="Recuperar()">Recuperar contraseña</ion-button>
       </div>
       <br>

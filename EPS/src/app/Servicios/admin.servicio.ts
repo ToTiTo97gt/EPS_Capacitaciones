@@ -1,6 +1,7 @@
 import { Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
-import { retry } from "rxjs";
+//import { retry } from "rxjs";
+import { HttpService } from "./http.service";
 
 @Injectable({
     providedIn: 'root'
@@ -13,7 +14,7 @@ export class AdminService{
 
     jsonData: any[] = []
 
-    constructor(private httpClient: HttpClient) {}
+    constructor( private httpClient:HttpService) {}
 
     Registrar(nuevoUser: any){
         const ruta = this.url+"Admin/RegistrarAdmin"

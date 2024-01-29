@@ -1,6 +1,7 @@
 import { Injectable } from "@angular/core";
 import axios from "axios";
 import { HttpClient } from "@angular/common/http";
+import { HttpService } from "./http.service";
 
 @Injectable({
     providedIn: 'root'
@@ -12,7 +13,7 @@ export class UserService{
     public idTipo: any
     public datosUser: any
     url:string="http://localhost:3000/"//ip:3020
-    constructor(private httpClient: HttpClient) {}
+    constructor(private httpClient: HttpService) {}
 
     GetDepartamentos(){
         const ruta = this.url+"User/getDepartamentos"

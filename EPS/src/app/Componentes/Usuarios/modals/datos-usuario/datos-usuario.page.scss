@@ -1,11 +1,14 @@
 ion-content{
+    gap: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
     --background: #221d45;
 }
 
 #partes{
     margin-top: 1rem;
     margin-left: 2rem;
-    height: 37rem;
     width: 33rem;
     gap: 10px;
     display: flex;
@@ -32,7 +35,7 @@ ion-content{
 
 #col12{
     width: 16rem;
-    height: 23rem;
+    height: 18rem;
     background-color: #221d45;
 }
 
@@ -44,6 +47,380 @@ ion-content{
     flex-wrap: wrap;
     justify-content: center;
     background-color: #221d45;
+}
+
+@media (max-width: 550px) {
+    #partes{
+        margin-left: -5px;
+        margin-top: 1rem;
+        gap: 10px;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        background-color: #221d45;
+    }
+    
+    #col1{
+        width: 21rem;
+        height: auto;
+        background-color: #221d45
+    }
+
+    #col2{
+        width: 16rem;
+        height: 18rem;
+        background-color: #221d45;
+    }
+
+    #col11{
+        width: 16rem;
+        background-color: #221d45;
+    }
+    
+    #col12{
+        width: 16rem;
+        background-color: #221d45;
+    }
+}
+
+@media (max-width: 520px) {
+    #partes{
+        margin-left: -15px;
+        margin-top: 1rem;
+        gap: 10px;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        background-color: #221d45;
+    }
+    
+    #col1{
+        width: 21rem;
+        height: auto;
+        background-color: #221d45
+    }
+
+    #col2{
+        width: 16rem;
+        height: 18rem;
+        background-color: #221d45;
+    }
+
+    #col11{
+        width: 16rem;
+        background-color: #221d45;
+    }
+    
+    #col12{
+        width: 16rem;
+        background-color: #221d45;
+    }
+}
+
+@media (max-width: 500px) {
+    #partes{
+        margin-left: -25px;
+        margin-top: 1rem;
+        gap: 10px;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        background-color: #221d45;
+    }
+    
+    #col1{
+        width: 21rem;
+        height: auto;
+        background-color: #221d45
+    }
+
+    #col2{
+        width: 16rem;
+        height: 18rem;
+        background-color: #221d45;
+    }
+
+    #col11{
+        width: 16rem;
+        background-color: #221d45;
+    }
+    
+    #col12{
+        width: 16rem;
+        background-color: #221d45;
+    }
+}
+
+@media (max-width: 480px) {
+    #partes{
+        margin-left: -35px;
+        margin-top: 1rem;
+        gap: 10px;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        background-color: #221d45;
+    }
+    
+    #col1{
+        width: 21rem;
+        height: auto;
+        background-color: #221d45
+    }
+
+    #col2{
+        width: 16rem;
+        height: 18rem;
+        background-color: #221d45;
+    }
+
+    #col11{
+        width: 16rem;
+        background-color: #221d45;
+    }
+    
+    #col12{
+        width: 16rem;
+        background-color: #221d45;
+    }
+}
+
+@media (max-width: 460px) {
+    #partes{
+        margin-left: -45px;
+        margin-top: 1rem;
+        gap: 10px;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        background-color: #221d45;
+    }
+    
+    #col1{
+        width: 21rem;
+        height: auto;
+        background-color: #221d45
+    }
+
+    #col2{
+        width: 16rem;
+        height: 18rem;
+        background-color: #221d45;
+    }
+
+    #col11{
+        width: 16rem;
+        background-color: #221d45;
+    }
+    
+    #col12{
+        width: 16rem;
+        background-color: #221d45;
+    }
+}
+
+@media (max-width: 440px) {
+    #partes{
+        margin-left: -55px;
+        margin-top: 1rem;
+        gap: 10px;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        background-color: #221d45;
+    }
+    
+    #col1{
+        width: 21rem;
+        height: auto;
+        background-color: #221d45
+    }
+
+    #col2{
+        width: 16rem;
+        height: 18rem;
+        background-color: #221d45;
+    }
+
+    #col11{
+        width: 16rem;
+        background-color: #221d45;
+    }
+    
+    #col12{
+        width: 16rem;
+        background-color: #221d45;
+    }
+}
+
+@media (max-width: 420px) {
+    #partes{
+        margin-left: -65px;
+        margin-top: 1rem;
+        gap: 10px;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        background-color: #221d45;
+    }
+    
+    #col1{
+        width: 21rem;
+        height: auto;
+        background-color: #221d45
+    }
+
+    #col2{
+        width: 16rem;
+        height: 18rem;
+        background-color: #221d45;
+    }
+
+    #col11{
+        width: 16rem;
+        background-color: #221d45;
+    }
+    
+    #col12{
+        width: 16rem;
+        background-color: #221d45;
+    }
+}
+
+@media (max-width: 400px) {
+    #partes{
+        margin-left: -75px;
+        margin-top: 1rem;
+        gap: 10px;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        background-color: #221d45;
+    }
+    
+    #col1{
+        width: 21rem;
+        height: auto;
+        background-color: #221d45
+    }
+
+    #col2{
+        width: 16rem;
+        height: 18rem;
+        background-color: #221d45;
+    }
+
+    #col11{
+        width: 16rem;
+        background-color: #221d45;
+    }
+    
+    #col12{
+        width: 16rem;
+        background-color: #221d45;
+    }
+}
+
+@media (max-width: 380px) {
+    #partes{
+        margin-left: -85px;
+        margin-top: 1rem;
+        gap: 10px;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        background-color: #221d45;
+    }
+    
+    #col1{
+        width: 21rem;
+        height: auto;
+        background-color: #221d45
+    }
+
+    #col2{
+        width: 16rem;
+        height: 18rem;
+        background-color: #221d45;
+    }
+
+    #col11{
+        width: 16rem;
+        background-color: #221d45;
+    }
+    
+    #col12{
+        width: 16rem;
+        background-color: #221d45;
+    }
+}
+
+@media (max-width: 360px) {
+    #partes{
+        margin-left: -95px;
+        margin-top: 1rem;
+        gap: 10px;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        background-color: #221d45;
+    }
+    
+    #col1{
+        width: 21rem;
+        height: auto;
+        background-color: #221d45
+    }
+
+    #col2{
+        width: 16rem;
+        height: 18rem;
+        background-color: #221d45;
+    }
+
+    #col11{
+        width: 16rem;
+        background-color: #221d45;
+    }
+    
+    #col12{
+        width: 16rem;
+        background-color: #221d45;
+    }
+}
+
+@media (max-width: 340px) {
+    #partes{
+        margin-left: -105px;
+        margin-top: 1rem;
+        gap: 10px;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        background-color: #221d45;
+    }
+    
+    #col1{
+        width: 21rem;
+        height: auto;
+        background-color: #221d45
+    }
+
+    #col2{
+        width: 16rem;
+        height: 18rem;
+        background-color: #221d45;
+    }
+
+    #col11{
+        width: 16rem;
+        background-color: #221d45;
+    }
+    
+    #col12{
+        width: 16rem;
+        background-color: #221d45;
+    }
 }
 
 ion-input{
