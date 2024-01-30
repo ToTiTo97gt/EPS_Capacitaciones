@@ -10,7 +10,7 @@ import { HttpService } from "./http.service";
 export class AdminService{
 
     public idG: any;
-    url:string="http://localhost:3000/"//ip:3020
+    url:string="http://54.221.141.130:3020/"//ip:3020
 
     jsonData: any[] = []
 

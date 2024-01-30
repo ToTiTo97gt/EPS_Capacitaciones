@@ -355,40 +355,6 @@ ion-content{
     }
 }
 
-@media (max-width: 360px) {
-    #partes{
-        margin-left: -95px;
-        margin-top: 1rem;
-        gap: 10px;
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: center;
-        background-color: #221d45;
-    }
-    
-    #col1{
-        width: 21rem;
-        height: auto;
-        background-color: #221d45
-    }
-
-    #col2{
-        width: 16rem;
-        height: 18rem;
-        background-color: #221d45;
-    }
-
-    #col11{
-        width: 16rem;
-        background-color: #221d45;
-    }
-    
-    #col12{
-        width: 16rem;
-        background-color: #221d45;
-    }
-}
-
 @media (max-width: 340px) {
     #partes{
         margin-left: -105px;
