@@ -22,6 +22,7 @@ export class DatosUsuarioPage implements OnInit {
 
   public nuevoUser: any = {
     carne: "",
+    numcolegiado: "",
     cui: "",
     nombre: "",
     apellido: "",
@@ -78,6 +79,7 @@ export class DatosUsuarioPage implements OnInit {
     this.nuevoUser.idmunicipio = this.Datos.idmunicipio
     this.nuevoUser.idTipo = this.Datos.idTipo
     this.nuevoUser.estado = this.Datos.estado
+    this.nuevoUser.numcolegiado = this.Datos.numcolegiado
   }
 
   async ModificarDatos(){

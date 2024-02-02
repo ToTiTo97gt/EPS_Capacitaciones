@@ -18,7 +18,12 @@
         <div id="col11">
           <ion-input class="ion-text-center" [(ngModel)]="nuevoUser.cui" label="CUI" label-placement="floating" fill="outline" type="text"></ion-input>
           <br>
-          <ion-input class="ion-text-center" [(ngModel)]="nuevoUser.carne" label="Carnet" label-placement="floating" fill="outline" type="text"></ion-input>
+          <div *ngIf="nuevoUser.idTipo == 4">
+            <ion-input class="ion-text-center" [(ngModel)]="nuevoUser.carne" label="Carnet" label-placement="floating" fill="outline" type="text"></ion-input>
+          </div>
+          <div *ngIf="nuevoUser.idTipo == 5">
+            <ion-input class="ion-text-center" [(ngModel)]="nuevoUser.numcolegiado" label="No. Colegiado" label-placement="floating" fill="outline" type="text"></ion-input>
+          </div>
           <br>
           <ion-input class="ion-text-center" [(ngModel)]="nuevoUser.nombre" label="Nombre" label-placement="floating" fill="outline" type="text"></ion-input>
           <br>

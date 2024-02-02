@@ -168,7 +168,7 @@ exports.ModificarUsuario = async (req, res) => {
     var idUsuario = req.body.User.idUsuario
     //console.log(req.body.User)
     try {
-        bd.query(`update usuario set carne='${req.body.User.carne}', cui='${req.body.User.cui}', nombre='${req.body.User.nombre}', apellido='${req.body.User.apellido}', correo='${req.body.User.correo}', genero=${req.body.User.genero}, direccion='${req.body.User.direccion}' , idmunicipio=${req.body.User.idmunicipio} where idUsuario = ${idUsuario}`, (err, result) => {
+        bd.query(`update usuario set carne='${req.body.User.carne}', cui='${req.body.User.cui}', nombre='${req.body.User.nombre}', apellido='${req.body.User.apellido}', correo='${req.body.User.correo}', genero=${req.body.User.genero}, direccion='${req.body.User.direccion}' , idmunicipio=${req.body.User.idmunicipio}, numcolegiado=${req.body.User.numcolegiado} where idUsuario = ${idUsuario}`, (err, result) => {
             if(err) throw err;
             return res.send({msg: 'Exito al modificar los datos del usuario'})
         })
