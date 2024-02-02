@@ -4,7 +4,7 @@
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    background-color: #221d45;
+    background-color: white;
 }
 
 #partes{
@@ -39,7 +39,7 @@
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    background-color: #221d45;
+    background-color: white;
 }
 
 .TituloMain{
@@ -75,8 +75,8 @@
 }
 
 .tool{
-    --background: #ff0000;
-    color: #fff;
+    --background: white;
+    color: #221d45;
     height: 5.5rem;
 }
 
@@ -111,10 +111,10 @@ ion-select{
 }
 
 ion-toolbar{
-    --background: #ff0000;
-    color: #fff;
+    --background: white;
+    color: #221d45;
 }
 
 ion-content{
-    --background: #221d45;
+    --background: white;
 }

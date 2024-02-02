@@ -1,5 +1,5 @@
 ion-content{
-    --background: #221d45;
+    --background: white;
 }
 
 #partes{
@@ -8,7 +8,7 @@ ion-content{
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    background-color: #221d45;
+    background-color: white;
 }
 
 .TituloMain{
@@ -21,8 +21,8 @@ ion-content{
 .parte1{
     width: 40rem;
     height: 37rem;
-    background-color: #221d45;
-    color: #fff;
+    background-color: white;
+    color: #221d45;
 }
 
 .parte2{
@@ -107,13 +107,14 @@ ion-item{
 }
 
 ion-toolbar{
-    --background: #ff0000;
-    color: #fff;
+    --background: white;
+    color: #221d45;
 }
 
 .tool{
-    --background: #ff0000;
-    color: #fff;
+    --background: white;
+    color: #221d45;
+    border-color: red;
     margin-top: -83px;
     height: 6rem;
 }
