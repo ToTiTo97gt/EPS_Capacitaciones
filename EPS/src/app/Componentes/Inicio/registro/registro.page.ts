@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { AdminService } from '../../../Servicios/admin.servicio';
 import { UserService } from 'src/app/Servicios/user.servicio';
 import { ActivatedRoute, Router } from '@angular/router'
+import { AlertController } from '@ionic/angular';
 
 @Component({
   selector: 'app-registro',
@@ -14,6 +15,7 @@ export class RegistroPage implements OnInit {
   public nuevoUser: any = {
     carne: "",
     cui: "",
+    colegiado: "",
     nombre: "",
     apellido: "",
     correo: "",
@@ -30,7 +32,7 @@ export class RegistroPage implements OnInit {
   public mostrar1: boolean = false
 
   constructor(private AdminService: AdminService, private UserService: UserService, private http:HttpClient,
-    public router: Router, public ActRou: ActivatedRoute) { }
+    public router: Router, public ActRou: ActivatedRoute, public alertController:AlertController) { }
 
   ngOnInit() {
     this.tiposUsuarios()
@@ -40,6 +42,7 @@ export class RegistroPage implements OnInit {
   public departamentos: any
   public municipios: any
   public usuarios: any
+  public alert: any
 
   async getDepartamentos(){
     this.departamentos = await this.UserService.GetDepartamentos();
@@ -67,19 +70,40 @@ export class RegistroPage implements OnInit {
     if(this.completo){
       if(this.nuevoUser.passwo == this.nuevoUser.confirmarPasswo){
         let resp = await this.UserService.Registrar(this.nuevoUser)
-        console.log(resp)
+        //console.log(resp)
         if(resp != 'error'){
-          alert('Usuario registrado con exito')
+          this.alert = await this.alertController.create({
+            header: 'Todo Listo',
+            message: 'Usuario Registrado con exito',
+            buttons: ['OK']
+          });
+          await this.alert.present()
           this.borrarRegistro()
           this.router.navigate(['/']);
         } else {
-          alert('error al registrar usuario')
+          this.alert = await this.alertController.create({
+            header: 'Aviso',
+            message: 'Error al registrar el usuario',
+            buttons: ['OK']
+          });
+          await this.alert.present()
         }
       } else {
-        alert('Asegurese que su contraseña conicida')
+        this.alert = await this.alertController.create({
+          header: 'Aviso',
+          message: 'Asegurese que su constraseña coincida',
+          buttons: ['OK']
+        });
+        await this.alert.present()
       }
     } else {
-      alert(this.mensaje)
+      this.alert = await this.alertController.create({
+        header: 'Aviso',
+        message: this.mensaje,
+        buttons: ['OK']
+      });
+      await this.alert.present()
+      this.mensaje = "Los siguientes parametros no fueron ingresados: "
       this.completo = true
     }
   }
@@ -90,27 +114,50 @@ export class RegistroPage implements OnInit {
         case 'genero':
           if (this.nuevoUser[key]==0){
             this.completo = false
-            this.mensaje += `\n${key}`
+            this.mensaje += ` '${key}'`
           }
           break;
         case 'idMunicipio':
           if (this.nuevoUser[key]==0){
             this.completo = false
-            this.mensaje += `\nMunicipio`
+            this.mensaje += ` 'Municipio'`
           }
           break;
         case 'idTipo':
           if (this.nuevoUser[key]==0){
             this.completo = false
-            this.mensaje += `\nTipo de usuario`
+            this.mensaje += ` 'Tipo de usuario'`
           }
           break;
         case 'carne':
+          if(this.nuevoUser[key]=="" && this.nuevoUser.idTipo == 4){
+            this.completo = false
+            this.mensaje += ` 'Carne'`
+          }
           break;
+        case 'colegiado':
+          if(this.nuevoUser[key]=="" && this.nuevoUser.idTipo == 5){
+            this.completo = false
+            this.mensaje += ` 'Colegiado'`
+          }
+          break;
+        case 'direccion':
+
+          break
         default:
           if (this.nuevoUser[key]==""){
             this.completo = false
-            this.mensaje += `\n${key}`
+            if(key == 'passwo'){
+              this.mensaje += ` 'Contraseña'`
+            } else if(key == 'confirmarPasswo'){
+              this.mensaje += ` 'Confirmar Contraseña'`
+            } else if(key == 'nombre'){
+              this.mensaje += ` 'Nombres'`
+            } else if(key == 'apellido'){
+              this.mensaje += ` 'Apellidos'`
+            } else {
+              this.mensaje += ` '${key}'`
+            }
           }
       }
     }

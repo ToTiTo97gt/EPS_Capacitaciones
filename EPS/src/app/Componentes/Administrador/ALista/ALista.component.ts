@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router'
 import { AdminService } from 'src/app/Servicios/admin.servicio';
 import { ModalController } from '@ionic/angular';
 import { AdminInfoPage } from '../modals/admin-info/admin-info.page';
+import { AlertController } from '@ionic/angular';
 
 @Component({
   selector: 'app-ALista',
@@ -12,7 +13,7 @@ import { AdminInfoPage } from '../modals/admin-info/admin-info.page';
 export class AListaComponent implements OnInit {
 
   constructor(public route: Router, public parametros:ActivatedRoute, private adminService:AdminService,
-    private modalCtrl:ModalController) { }
+    private modalCtrl:ModalController, public alertController:AlertController) { }
   public datos: any
   public permisos: any
   public nuevoUser: any = {
@@ -24,6 +25,7 @@ export class AListaComponent implements OnInit {
   }
   public mostrar: boolean = false
   public id: any
+  public alert: any
   ngOnInit() {
     this.id = this.adminService.idG
     this.ListaAdmins(this.id)
@@ -52,13 +54,32 @@ export class AListaComponent implements OnInit {
     if(this.validarUser(nuevoUser)){
       let resp = await this.adminService.Registrar(nuevoUser)
       if(resp != 'error'){
-        alert('Administrador registrado')
+        this.alert = await this.alertController.create({
+          header: 'Listo',
+          message: 'Administrador registrado',
+          buttons: ['OK']
+        });
+        this.alert.onDidDismiss().then(() => {
+          location.reload()
+        })
+        await this.alert.present()
         this.borrarRegistro()
       } else {
-        alert('error al registrar usuario')
+        this.alert = await this.alertController.create({
+          header: 'Aviso',
+          message: 'error al registrar usuario',
+          buttons: ['OK']
+        });
+        await this.alert.present()
       }
+    } else {
+      this.alert = await this.alertController.create({
+        header: 'Aviso',
+        message: 'Todos los parametros deben ser ingresados',
+        buttons: ['OK']
+      });
+      await this.alert.present()
     }
-    location.reload()
 
   }
 

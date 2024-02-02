@@ -4,6 +4,7 @@ import { ModalController } from '@ionic/angular';
 import { ActivatedRoute, Router } from '@angular/router'
 import { AdminService } from 'src/app/Servicios/admin.servicio';
 import { UserService } from 'src/app/Servicios/user.servicio';
+import { AlertController } from '@ionic/angular';
 
 @Component({
   selector: 'app-datos-usuario',
@@ -35,9 +36,10 @@ export class DatosUsuarioPage implements OnInit {
     departamento: 0
   }
   public oldPass = ""
+  public alert: any
 
   constructor(private modalCtrl:ModalController, private adminService:AdminService, private UserService:UserService,
-              private router:Router) { }
+              private router:Router, public alertController:AlertController) { }
 
   ngOnInit() {
     this.DatosUsuario()
@@ -87,10 +89,20 @@ export class DatosUsuarioPage implements OnInit {
       if (this.oldPass == this.Datos.passwo){
         await this.UserService.CambiarPass(this.nuevoUser.passwo, this.nuevoUser.idUsuario, this.Datos.correo)
       } else {
-        alert('Por favor, verifique qué este bien su contraseña actual')
+        this.alert = await this.alertController.create({
+          header: 'Aviso',
+          message: 'Por favor, verifique qué este bien su contraseña actual',
+          buttons: ['OK']
+        });
+        await this.alert.present()
       }
     } else {
-      alert('Asegurese que la contraseña y su confirmacion coincidan')
+      this.alert = await this.alertController.create({
+        header: 'Aviso',
+        message: 'Asegurese que la contraseña y su confirmacion coincidan',
+        buttons: ['OK']
+      });
+      await this.alert.present()
     }
   }
 

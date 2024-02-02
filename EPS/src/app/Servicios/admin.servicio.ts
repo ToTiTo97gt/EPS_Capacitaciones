@@ -10,11 +10,11 @@ import { HttpService } from "./http.service";
 export class AdminService{
 
     public idG: any;
-    url:string="http://54.242.23.158:3020/"//ip:3020
+    url:string="http://localhost:3020/"//ip:3020
 
     jsonData: any[] = []
 
-    constructor( private httpClient:HttpService) {}
+    constructor( private httpClient:HttpService, private httpCli: HttpClient) {}
 
     Registrar(nuevoUser: any){
         const ruta = this.url+"Admin/RegistrarAdmin"
@@ -230,7 +230,7 @@ export class AdminService{
 
     enviarCsv(datos: any){
         const ruta = this.url+"CSV"
-        return this.httpClient.post(ruta, datos).toPromise()
+        return this.httpCli.post(ruta, datos).toPromise()
     }
 
     CargarPlantilla(base64: String){

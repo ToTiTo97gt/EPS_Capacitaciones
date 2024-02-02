@@ -4,6 +4,7 @@ import { AdminService } from '../../../Servicios/admin.servicio';
 import { UserService } from 'src/app/Servicios/user.servicio';
 import jwt_decode from 'jwt-decode';
 import { ActivatedRoute, Router } from '@angular/router'
+import { AlertController } from '@ionic/angular';
 
 @Component({
   selector: 'app-ingreso',
@@ -14,7 +15,7 @@ import { ActivatedRoute, Router } from '@angular/router'
 export class IngresoPage implements OnInit {
 
   constructor(private UserService: UserService, private AdminService: AdminService, private http:HttpClient,
-    public router: Router, public ActRou: ActivatedRoute) { }
+    public router: Router, public ActRou: ActivatedRoute, public alertController:AlertController) { }
   token: string = ""
   decoded: any
   public mostrar1: boolean = false
@@ -26,6 +27,7 @@ export class IngresoPage implements OnInit {
   public datoContra: string = ""
   public dato1: string = ""
   public dato2: string = ""
+  public alert: any
 
   cambiarEstado(){
     this.contra = !this.contra
@@ -46,12 +48,22 @@ export class IngresoPage implements OnInit {
             }
             this.router.navigate(['/tabs', json])
           } catch (error) {
-            alert("Error en el ingreso\nVerifique los datos que ingreso")
+            this.alert = await this.alertController.create({
+              header: 'Error de ingreso',
+              message: 'Hubo un problema con su ingreso',
+              buttons: ['OK']
+            });
+            await this.alert.present()
             location.reload()
             console.log("Error al decodificar el Token JWT ", error)
           }
         } else {
-          alert('Acceso negado: Credenciales erroneas\no es posible que fuera bloqueado por el administrador principal')
+          this.alert = await this.alertController.create({
+            header: 'Acceso Negado',
+            message: 'Credenciales erroneas o es posible su usuaio haya sido bloqueado',
+            buttons: ['OK']
+          });
+          await this.alert.present()
         }
       } else {
         console.log('error no se recibio respuesta')
@@ -70,12 +82,22 @@ export class IngresoPage implements OnInit {
             }
             this.router.navigate(['/tabsu', json,'conferencias'])
           } catch (error) {
-            alert("Error en el ingreso\nVerifique los datos que ingreso")
+            this.alert = await this.alertController.create({
+              header: 'Error de ingreso',
+              message: 'Hubo un problema con su ingreso',
+              buttons: ['OK']
+            });
+            await this.alert.present()
             location.reload()
             console.log("Error al decodificar el Token JWT ", error)
           }
         } else {
-          alert('Credenciales incorrectas o es posible que su usuario fuera bloqueado por los administradores')
+          this.alert = await this.alertController.create({
+            header: 'Acceso Negado',
+            message: 'Credenciales erroneas o es posible su usuaio haya sido bloqueado',
+            buttons: ['OK']
+          });
+          await this.alert.present()
         }
       } else {
         console.log('error no se recibio respuesta')

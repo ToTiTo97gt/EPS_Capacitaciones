@@ -13,17 +13,8 @@ var bodyParser = require('body-parser');
 var app = express();
 const cors = require('cors');
 
-// Reflect the origin if it's in the allowed list or not defined (cURL, Postman, etc.)
-
-
-// Enable preflight requests for all r
-
-//var corsOptions = { origin: true, optionsSuccessStatus: 200 };
-app.options('*', cors());
-
-app.get('/', cors(), (req, res, next) => {
-  res.json({ message: 'This route is CORS-enabled for an allowed origin.' });
-})
+var corsOptions = { origin: true, optionsSuccessStatus: 200 };
+app.use(cors(corsOptions));
 
 var http = require('http').Server(app);
 app.use(bodyParser.json({ limit: '10mb', extended: false }));
@@ -54,18 +45,17 @@ app.post('/CSV', cors(), upload.single('file'), (req, res) => {
 
   // Procesar manualmente la primera línea (encabezados)
   const headers = lines[0].trim().split(',').map(header => header.replace(/"/g, ''));
-  //console.log("headers: "+headers)
+
   // Procesar el resto de las líneas
   for (let i = 1; i < lines.length; i++) {
     const line = lines[i].trim();
-    //console.log("line: "+line)
+
     if (line) {
       const values = line.split(',').map(header => header.replace(/"/g, ''));
-      //console.log("values: "+values)
+
       const entry = {};
       headers.forEach((header, index) => {
         entry[header] = values[index];
-        //console.log("entry: "+entry + " header"+entry[header])
       });
       jsonData.push(entry);
     }

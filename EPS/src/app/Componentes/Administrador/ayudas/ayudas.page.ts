@@ -18,7 +18,6 @@ export class AyudasPage implements OnInit {
   }
 
   async Filtrar(){
-    //alert(this.cui + " " + this.estado)
     this.solicitudes = await this.adminService.FiltrarSolicitudes(this.cui, this.estado)
   }
 

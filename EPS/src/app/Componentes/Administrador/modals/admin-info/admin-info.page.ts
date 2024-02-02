@@ -2,6 +2,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit, Input, ViewChild } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 import { AdminService } from 'src/app/Servicios/admin.servicio';
+import { AlertController } from '@ionic/angular';
 
 @Component({
   selector: 'app-admin-info',
@@ -17,7 +18,7 @@ export class AdminInfoPage implements OnInit {
   @Input() datosP: any
   @Input() dato: any
   @ViewChild('miSelect') miSelect: any
-  constructor(private modalCtrl:ModalController, private adminService:AdminService) { }
+  constructor(private modalCtrl:ModalController, private adminService:AdminService, public alertController:AlertController) { }
 
   public datos: any
   public permisos: any
@@ -34,6 +35,8 @@ export class AdminInfoPage implements OnInit {
     NewPass: "",
     ConfirmPass: ""
   }
+
+  public alert: any
 
   ngOnInit() {
     if(this.dato == 1){
@@ -65,18 +68,36 @@ export class AdminInfoPage implements OnInit {
         const resp = respuesta as {mensaje?: string}
         if(resp.mensaje !== undefined){
           const mensaje = resp.mensaje
-          alert(mensaje)
+          this.alert = await this.alertController.create({
+            header: 'Listo',
+            message: mensaje,
+            buttons: ['OK']
+          });
+          this.alert.onDidDismiss().then(() => {
+            location.reload()
+          })
+          await this.alert.present()
         }
       } catch (error) {
         if(error instanceof HttpErrorResponse && error.status === 409){
           const err = error.error.error
           console.log('Error 409: ' + err)
-          alert('esta asignacion ya existe')
+          this.alert = await this.alertController.create({
+            header: 'Aviso',
+            message: 'Esta asignacion ya existe',
+            buttons: ['OK']
+          });
+          await this.alert.present()
         }
       }
       
     } else {
-      alert('No has seleccionado un permiso')
+      this.alert = await this.alertController.create({
+        header: 'Listo',
+        message: 'No has seleccionado un permiso',
+        buttons: ['OK']
+      });
+      await this.alert.present()
     }
   }
 
@@ -91,11 +112,23 @@ export class AdminInfoPage implements OnInit {
       const resp = respuesta as {mensaje?:string}
       if(resp.mensaje !== undefined){
         const mensaje = resp.mensaje
-        alert(mensaje)
-        location.reload()
+        this.alert = await this.alertController.create({
+          header: 'Listo',
+          message: mensaje,
+          buttons: ['OK']
+        });
+        this.alert.onDidDismiss().then(() => {
+          location.reload()
+        })
+        await this.alert.present()
       }
     } catch (error) {
-      alert('error al ejecutar la peticion de EliminarAdmin. ' + error)
+      this.alert = await this.alertController.create({
+        header: 'Aviso',
+        message: 'Erro al ejecutar la peticion de eliminar administrador. ' + error,
+        buttons: ['OK']
+      });
+      await this.alert.present()
     }
   }
 
@@ -105,10 +138,20 @@ export class AdminInfoPage implements OnInit {
       const resp = respuesta as {mensaje?:string};
       if(resp.mensaje !== undefined){
         const mensaje = resp.mensaje;
-        alert(mensaje)
+        this.alert = await this.alertController.create({
+          header: 'Aviso',
+          message: mensaje,
+          buttons: ['OK']
+        });
+        await this.alert.present()
       }
     } catch (error) {
-      alert('error al ejecutar la peticion de RevocarPermiso. ' + error)
+      this.alert = await this.alertController.create({
+        header: 'Aviso',
+        message: 'error al ejecutar la peticion para revocar permiso. '+error,
+        buttons: ['OK']
+      });
+      await this.alert.present()
     }
   }
 
@@ -121,10 +164,20 @@ export class AdminInfoPage implements OnInit {
       if (this.datosP.passw == this.AdminPerfil.OldPass){
         await this.adminService.CambiarPass(this.AdminPerfil.NewPass, this.adminService.idG, this.datosP.email)
       } else {
-        alert('Por favor, verifique qué este bien su contraseña actual')
+        this.alert = await this.alertController.create({
+          header: 'Aviso',
+          message: 'Por favor, verifique qué este bien su contraseña actual',
+          buttons: ['OK']
+        });
+        await this.alert.present()
       }
     } else {
-      alert('Asegurese que la contraseña y su confirmacion coincidan')
+      this.alert = await this.alertController.create({
+        header: 'Aviso',
+        message: 'Asegurese que la contraseña y su confirmacion coincidan',
+        buttons: ['OK']
+      });
+      await this.alert.present()
     }
   }
 

@@ -1,6 +1,7 @@
 import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
 import { AdminService } from 'src/app/Servicios/admin.servicio';
 import { DomSanitizer } from '@angular/platform-browser';
+import { AlertController } from '@ionic/angular';
 
 @Component({
   selector: 'app-conferencias',
@@ -12,7 +13,7 @@ export class ConferenciasPage implements OnInit {
   @ViewChild('fileInput',{static:false}) fileInput!: ElementRef;  
   
   selectedFile:File | null = null;
-  constructor(private adminService:AdminService) { }
+  constructor(private adminService:AdminService, public alertController:AlertController) { }
 
   public anio: any
   public jornadas: any
@@ -20,6 +21,7 @@ export class ConferenciasPage implements OnInit {
   public categoria = 1
   public jornada: any
   public idCapacitacion: any
+  public alert: any
 
   ngOnInit() {
     var anioActual = new Date()
@@ -36,6 +38,7 @@ export class ConferenciasPage implements OnInit {
     if (this.selectedFile) {
       const formData = new FormData();
       formData.append('file', this.selectedFile);
+      console.log(formData)
 
       this.data = await this.adminService.enviarCsv(formData)
       console.log(this.data)
@@ -54,7 +57,12 @@ export class ConferenciasPage implements OnInit {
 
   async MarcarAsistencias(){
     if(this.idCapacitacion === undefined){
-      alert('Seleccione una Capacitacion para registrar asistencias')
+      this.alert = await this.alertController.create({
+        header: 'Aviso',
+        message: 'Seleccione una capacitacion para registrar a sistencias',
+        buttons: ['OK']
+      });
+      await this.alert.present()
     } else {
       await this.adminService.MarcarAsistencias(this.idCapacitacion, this.data, 1)
     }
@@ -62,7 +70,12 @@ export class ConferenciasPage implements OnInit {
 
   async SubirNotas(){
     if(this.idCapacitacion === undefined){
-      alert('Seleccione un Diplomado para cargar sus notas')
+      this.alert = await this.alertController.create({
+        header: 'Aviso',
+        message: 'Seleccionar un Diplomado para cargar notas',
+        buttons: ['OK']
+      });
+      await this.alert.present()
     } else {
       await this.adminService.MarcarAsistencias(this.idCapacitacion, this.data, 2)
     }
@@ -70,12 +83,22 @@ export class ConferenciasPage implements OnInit {
   }
 
   nota: number = 0
-  validar(nota: any){
+  async validar(nota: any){
     if (nota < 0) {
-      alert('valor no valido. solo se puede ingresar entre 0 y 100')
+      this.alert = await this.alertController.create({
+        header: 'Aviso',
+        message: 'Valor no valido solo se puede ingresar entre 0 y 100',
+        buttons: ['OK']
+      });
+      await this.alert.present()
       nota += 1
     } else if (nota > 100) {
-      alert('valor no valido. solo se puede ingresar entre 0 y 100')
+      this.alert = await this.alertController.create({
+        header: 'Listo',
+        message: 'Valor no valido solo se puede ingresar entre 0 y 100',
+        buttons: ['OK']
+      });
+      await this.alert.present()
       nota -= 1
     }
   }

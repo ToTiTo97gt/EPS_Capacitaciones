@@ -2,6 +2,7 @@ import { Component, OnInit, Input } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 import { AdminService } from 'src/app/Servicios/admin.servicio';
 import { UserService } from 'src/app/Servicios/user.servicio';
+import { AlertController } from '@ionic/angular';
 
 @Component({
   selector: 'app-calendario',
@@ -16,15 +17,16 @@ export class CalendarioPage implements OnInit {
   @Input() Mensaje: any
   public fechasDiplomado: string[] = []
 
-  constructor(private modalCtrl:ModalController, private adminService:AdminService, private userService:UserService) { }
+  constructor(private modalCtrl:ModalController, private adminService:AdminService,
+   private userService:UserService, public alertController:AlertController) { }
 
   ngOnInit() {
-    console.log(this.Diplomado + "----")
     if(this.Diplomado.idCategoria == 2){
       this.getCalendario()
     }
   }
 
+  public alert: any
   public fechas: any
   async getCalendario(){
     this.fechas = await this.userService.CalendarioDiplomado(this.Diplomado.idCapacitacion)
@@ -36,8 +38,16 @@ export class CalendarioPage implements OnInit {
 
   async Inscribir(idCapacitacion: any){
     let res = await this.userService.Inscripcion(this.userService.idG, idCapacitacion, this.Valor)
+    this.alert = await this.alertController.create({
+      header: 'Listo',
+      message: this.Mensaje,
+      buttons: ['OK']
+    });
+    this.alert.onDidDismiss().then(() => {
+      location.reload()
+    })
+    await this.alert.present()
     alert(this.Mensaje)
-    location.reload()
   }
 
   convertir(fecha: string){

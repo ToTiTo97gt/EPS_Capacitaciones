@@ -7,6 +7,7 @@ import { CrearInfoPage } from '../../modals/crear-info/crear-info.page';
 import { CapacitacionInfoPage } from '../../modals/capacitacion-info/capacitacion-info.page';
 import { UserInfoPage } from '../../modals/user-info/user-info.page';
 import { DomSanitizer } from '@angular/platform-browser';
+import { AlertController } from '@ionic/angular';
 
 @Component({
   selector: 'app-menu',
@@ -31,9 +32,11 @@ export class MenuComponent  implements OnInit {
 
   @ViewChild('fileInput',{static:false}) fileInput!: ElementRef;
   @ViewChild('fileInput1',{static:false}) fileInput1!: ElementRef;
-  constructor(private sant: DomSanitizer, private adminService:AdminService, private UserService:UserService,private modalCtrl:ModalController) {
+  constructor(private sant: DomSanitizer, private adminService:AdminService, private UserService:UserService,
+   private modalCtrl:ModalController, public alertController:AlertController) {
     this.menu = "Jornadas"
   }
+  public alert: any
 
   ngOnInit() {
     this.base64 = "Base64..."
@@ -69,6 +72,7 @@ export class MenuComponent  implements OnInit {
       this.capacitacion.poster = arr[arr.length-1]
       this.imageUrl=this.sant.bypassSecurityTrustUrl(window.URL.createObjectURL(this.fileSelected)) as string;
     }else{
+      
       alert('error al seleccionar el archivo')
     }
     
@@ -102,18 +106,38 @@ export class MenuComponent  implements OnInit {
         const resp = respuesta as {mensaje?: string}
         if(resp.mensaje !== undefined){
           const mensaje = resp.mensaje
-          alert(mensaje)
+          this.alert = await this.alertController.create({
+            header: 'Listo',
+            message: mensaje,
+            buttons: ['OK']
+          });
+          await this.alert.present()
           this.vaciar()
         } else {
           console.log(respuesta)
-          alert('error al recibir respuesta')
+          this.alert = await this.alertController.create({
+            header: 'Aviso',
+            message: 'Error al recibir la respuesta',
+            buttons: ['OK']
+          });
+          await this.alert.present()
         }
       } catch (error) {
         console.log(error)
-        alert('error al registrar la nueva jornada')
+        this.alert = await this.alertController.create({
+          header: 'Aviso',
+          message: 'Error al registrar la nueva jornada',
+          buttons: ['OK']
+        });
+        await this.alert.present()
       }
     } else {
-      alert("Informacion insuficiente")
+      this.alert = await this.alertController.create({
+        header: 'Listo',
+        message: 'Informacion Insuficiente',
+        buttons: ['OK']
+      });
+      await this.alert.present()
     }
 
   }
@@ -174,7 +198,12 @@ export class MenuComponent  implements OnInit {
     this.agenda.fecha = this.formatoFecha(fechaHora, 'yyyy-mm-dd')
     this.agenda.hora = fechaHora.toLocaleTimeString();
     if(this.capacitacion.duracion == "" || this.capacitacion.modalidad == 0){
-      alert('Indicar la duracion (en horas ej: cuarenta y cuatro)\ny la modalidad de la capacitacion')
+      this.alert = await this.alertController.create({
+        header: 'Aviso',
+        message: `Indicar la duracion (en horas ej: 'cuarenta y cuatro' y la modalidad de la capacitacion`,
+        buttons: ['OK']
+      });
+      await this.alert.present()
     } else {
       let respuesta1 = await this.adminService.GetJornadaEspecifica(this.agenda)
       if (Array.isArray(respuesta1) && respuesta1.length > 0) {
@@ -197,7 +226,12 @@ export class MenuComponent  implements OnInit {
           console.log('El primer elemento no tiene la propiedad "idJornada".');
         }
       } else {
-        alert('La fecha ingresada no conicide con ninguna jornada')
+        this.alert = await this.alertController.create({
+          header: 'Aviso',
+          message: 'La fecha ingresada no conincide con ninguna jornada',
+          buttons: ['OK']
+        });
+        await this.alert.present()
         console.log('El arreglo está vacío o no es un arreglo válido.');
       }
     }
@@ -219,24 +253,50 @@ export class MenuComponent  implements OnInit {
               const resp4 = respuesta4 as {mensaje?: string}
               if(resp.mensaje !== undefined){
                 const mensaje2 = resp4.mensaje
-                alert(mensaje +"||" + mensaje2)
+                this.alert = await this.alertController.create({
+                  header: 'Listo',
+                  message: mensaje + " || "+mensaje2,
+                  buttons: ['OK']
+                });
+                this.alert.onDidDismiss().then(() => {
+                  location.reload()
+                })
+                await this.alert.present()
               } else {
                 console.log('Error al registrar la fecha y hora \n'+ resp4)
               }
             } catch (error) {
               console.log(error)
-              alert('error al registrar la hora y fecha')
+              this.alert = await this.alertController.create({
+                header: 'Aviso',
+                message: 'error al registrar la hora y fecha',
+                buttons: ['OK']
+              });
+              await this.alert.present()
             }
           } 
         }
         this.vaciar()
       } else {
         console.log(respuesta2)
-        alert('error al crear la capacitacion')
+        this.alert = await this.alertController.create({
+          header: 'Aviso',
+          message: 'Error al crear la capacitacion',
+          buttons: ['OK']
+        });
+        await this.alert.present()
       }
     } catch (error) {
       console.log(error)
-      alert('error al registrar la nueva jornada')
+      this.alert = await this.alertController.create({
+        header: 'Aviso',
+        message: 'Error al registrar en la nueva jornada',
+        buttons: ['OK']
+      });
+      this.alert.onDidDismiss().then(() => {
+        location.reload()
+      })
+      await this.alert.present()
     }
   }
 
@@ -323,13 +383,23 @@ export class MenuComponent  implements OnInit {
 
   async CrearDiplomado(){
     if(this.capacitacion.duracion == "" || this.capacitacion.modalidad == 0){
-      alert('Indicar la duracion (en horas ej: cuarenta y cuatro)\ny la modalidad del diplomado')
+      this.alert = await this.alertController.create({
+        header: 'Aviso',
+        message: `Indicar la duracion (en horas ej: 'cuarenta y cuatro' y la modalidad del diplomado`,
+        buttons: ['OK']
+      });
+      await this.alert.present()
     } else {
       this.datos = Object.keys(this.tiposSeleccionados)
       .filter(key => this.tiposSeleccionados[key])
       .map(key => ({ idTipo: key, tipo: this.tiposSeleccionados[key]}));
       if(this.datos.length === 0 ){
-        alert('Seleccione usuarios para asignar diploma')
+        this.alert = await this.alertController.create({
+          header: 'Aviso',
+          message: 'Seleccionar ususarios para asignar diploma',
+          buttons: ['OK']
+        });
+        await this.alert.present()
       } else {
         this.capacitacion.idCategoria = 2
         let respuesta1 = await this.adminService.GetJornadaEspecifica(this.Fechas[0])
@@ -353,7 +423,12 @@ export class MenuComponent  implements OnInit {
             console.log('El primer elemento no tiene la propiedad "idJornada".');
           }
         } else {
-          alert('La fecha ingresada no conicide con ninguna jornada')
+          this.alert = await this.alertController.create({
+            header: 'Aviso',
+            message: 'una de las fecha ingresada no coincide con ninguna jornada',
+            buttons: ['OK']
+          });
+          await this.alert.present()
           console.log('El arreglo está vacío o no es un arreglo válido.');
         }
       }
@@ -387,11 +462,16 @@ export class MenuComponent  implements OnInit {
                 }
               } catch (error) {
                 console.log(error)
-                alert('error al registrar la hora y fecha')
-                
+                this.alert = await this.alertController.create({
+                  header: 'Aviso',
+                  message: 'Error al registra la fecha y hora',
+                  buttons: ['OK']
+                });
+                await this.alert.present()
                 break
               }
             }
+            
             alert(mensaje +"||" + mensaje2)
             let res = await this.adminService.AsingarDiploma(Elemento.idCapacitacion, this.datos)
             location.reload()

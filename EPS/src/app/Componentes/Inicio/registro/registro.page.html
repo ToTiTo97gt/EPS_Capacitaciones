@@ -21,19 +21,23 @@
         </ion-toolbar>
       </ion-header>
       <div id="col1">
-        <ion-input class="ion-text-center" [(ngModel)]="nuevoUser.cui" label="CUI" label-placement="floating" fill="outline" type="text"></ion-input>
-        <br>
-        <ion-input class="ion-text-center" [(ngModel)]="nuevoUser.carne" label="Carnet" label-placement="floating" fill="outline" type="text"></ion-input>
-        <br>
-        <ion-input class="ion-text-center" [(ngModel)]="nuevoUser.nombre" label="Nombre" label-placement="floating" fill="outline" type="text"></ion-input>
-        <br>
-        <ion-input class="ion-text-center" [(ngModel)]="nuevoUser.apellido" label="Apellido" label-placement="floating" fill="outline" type="text"></ion-input>
-        <br>
-        <ion-input class="ion-text-center" [(ngModel)]="nuevoUser.correo" label="E-mail" label-placement="floating" fill="outline" type="email"></ion-input>
-        <br>
         <ion-select aria-label="Fruit" [(ngModel)]="nuevoUser.idTipo" placeholder="Tipo de usuario">
           <ion-select-option *ngFor="let usuario of usuarios" [value]="usuario.idTipo" >{{usuario.tipo}}</ion-select-option>
         </ion-select>
+        <div *ngIf="nuevoUser.idTipo == 4">
+          <ion-input class="ion-text-center" [(ngModel)]="nuevoUser.carne" label="Carne" label-placement="floating" fill="outline" type="text"></ion-input>
+        </div>
+        <div *ngIf="nuevoUser.idTipo == 5">
+          <ion-input class="ion-text-center" [(ngModel)]="nuevoUser.colegiado" label="No. Colegiado" label-placement="floating" fill="outline" type="text"></ion-input>
+        </div>
+        <br>
+        <ion-input class="ion-text-center" [(ngModel)]="nuevoUser.cui" label="CUI" label-placement="floating" fill="outline" type="text"></ion-input>
+        <br>
+        <ion-input class="ion-text-center" [(ngModel)]="nuevoUser.nombre" label="Nombres" label-placement="floating" fill="outline" type="text"></ion-input>
+        <br>
+        <ion-input class="ion-text-center" [(ngModel)]="nuevoUser.apellido" label="Apellidos" label-placement="floating" fill="outline" type="text"></ion-input>
+        <br>
+        <ion-input class="ion-text-center" [(ngModel)]="nuevoUser.correo" label="E-mail" label-placement="floating" fill="outline" type="email"></ion-input>
       </div>
       <div id="col2">
         <ion-item>
@@ -51,8 +55,6 @@
             <ion-icon [name]="mostrar1 ? 'eye-off' : 'eye'"></ion-icon>
           </ion-button>
         </ion-item>
-        <br>
-        <ion-input class="ion-text-center" [(ngModel)]="nuevoUser.direccion" label="Direccion" label-placement="floating" fill="outline" type="text"></ion-input>
         <br>
         <ion-select aria-label="Fruit" placeholder="Departamento" (ionChange)="DepartamentoChange($event)">
           <ion-select-option *ngFor="let departamento of departamentos" [value]="departamento.idDepartamento" >{{departamento.departamento}}</ion-select-option>

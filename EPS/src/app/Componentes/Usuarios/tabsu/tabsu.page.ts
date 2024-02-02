@@ -7,6 +7,7 @@ import { UserService } from 'src/app/Servicios/user.servicio';
 import { ModalController } from '@ionic/angular';
 import { DatosUsuarioPage } from '../modals/datos-usuario/datos-usuario.page';
 import jwt_decode from 'jwt-decode';
+import { AlertController } from '@ionic/angular';
 
 @Component({
   selector: 'app-tabsu',
@@ -16,10 +17,11 @@ import jwt_decode from 'jwt-decode';
 export class TabsuPage implements OnInit {
 
   constructor(private userService:UserService, private adminService:AdminService,private modalCtrl:ModalController,
-  private menuController: MenuController, public route: Router, public parametros:ActivatedRoute) {}
+  private menuController: MenuController, public route: Router, public parametros:ActivatedRoute, public alertController:AlertController) {}
 
   public decoded: any
   public decoded2: any  
+  public alert: any
   
   ngOnInit() {
       var datos = this.parametros.snapshot.paramMap.get('token')
@@ -59,9 +61,16 @@ export class TabsuPage implements OnInit {
           this.route.navigate(['/tabsu', json,'conferencias'])
         }
       } catch (error) {
-        alert("Error en el ingreso\nVerifique los datos que ingreso")
-        location.reload()
-        console.log("Error al decodificar el Token JWT ", error)
+        this.alert = await this.alertController.create({
+          header: 'Aviso',
+          message: 'Error en el ingreso\nVerifique los datos que ingreso',
+          buttons: ['OK']
+        });
+        this.alert.onDidDismiss().then(() => {
+          console.log("Error al decodificar el Token JWT ", error)
+          location.reload()
+        })
+        await this.alert.present()
       }
     })
 

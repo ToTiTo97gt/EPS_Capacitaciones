@@ -1,11 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 import { AdminService } from '../../../Servicios/admin.servicio';
 import { UserService } from 'src/app/Servicios/user.servicio';
 import { ActivatedRoute, Router } from '@angular/router'
 import { ModalController } from '@ionic/angular';
 import { CalendarioPage } from '../modals/calendario/calendario.page';
-import { Platform } from '@ionic/angular';
+import { AlertController } from '@ionic/angular';
 
 @Component({
   selector: 'app-inscripciones',
@@ -14,10 +13,12 @@ import { Platform } from '@ionic/angular';
 })
 export class InscripcionesPage implements OnInit {
 
-  constructor(private adminService: AdminService, private userService:UserService, private modalCtrl:ModalController) { }
+  constructor(private adminService: AdminService, private userService:UserService,
+   private modalCtrl:ModalController, public alertController:AlertController) { }
 
   public conferencias: any
   public idTipo: any
+  public alert: any
 
   ngOnInit() {
     this.idTipo = this.userService.idTipo
@@ -49,8 +50,12 @@ export class InscripcionesPage implements OnInit {
 
   async Inscribir(idCapacitacion: any){
     let res = await this.userService.Inscripcion(this.userService.idG, idCapacitacion, 0)
-    alert('Inscripcion anulada')
-    console.log(res)
+    this.alert = await this.alertController.create({
+      header: 'Listo',
+      message: 'Inscripcion anulada',
+      buttons: ['OK']
+    });
+    await this.alert.present()
     location.reload()
   }
 
