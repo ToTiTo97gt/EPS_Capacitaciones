@@ -3,12 +3,15 @@ const router = express.Router();
 const admin= require("../Controllers/tareas.controllers");
 
 router.get("/Prueba",admin.Prueba);
+router.post("/pruebaCripto", admin.cripto)
+router.post("/pruebaDecripto", admin.Decripto)
 router.post("/RegistrarAdmin", admin.RegistrarAdmin);
 router.post("/GetEmpleados", admin.Empleados);
 router.post("/GetAdminUser",admin.AdminUser);
 router.post("/NuevoDatos",admin.NuevosDatos);
 router.post("/ModificarDatos",admin.ModificarDatos);
 router.post("/CambiarPass",admin.CambiarPass);
+router.post("/VerificarMail", admin.VerificarMail)
 router.post("/RecuperarContra", admin.RecuperarContra)
 router.post("/GetAdminPermisos", admin.AdminPermisos);
 router.post("/GetAdminLista", admin.AdminLista);

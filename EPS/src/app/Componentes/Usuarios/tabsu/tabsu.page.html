@@ -1,14 +1,14 @@
 <ion-header>
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-button style="--background: #221d45;" [routerLink]="['/']">
+      <ion-button style="--background: #221d45;" (click)="cerrar()">
         <ion-icon slot="icon-only" name="exit"></ion-icon>
       </ion-button>
       <ion-button (click)="mostrarUsuario()" style="--background: #221d45;">
         <ion-icon slot="icon-only" name="person"></ion-icon>
       </ion-button>
     </ion-buttons>
-    <ion-title>{{this.decoded.datos[0].nombre}} {{this.decoded.datos[0].apellido}}</ion-title>
+    <ion-title>{{this.nombre}} {{this.apellido}}</ion-title>
   </ion-toolbar>
 </ion-header>
 

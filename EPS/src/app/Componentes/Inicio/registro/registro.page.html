@@ -57,7 +57,9 @@
         </ion-item>
         <br>
         <ion-select aria-label="Fruit" placeholder="Departamento" (ionChange)="DepartamentoChange($event)">
-          <ion-select-option *ngFor="let departamento of departamentos" [value]="departamento.idDepartamento" >{{departamento.departamento}}</ion-select-option>
+          <ion-select-option *ngFor="let departamento of departamentos" [value]="departamento.idDepartamento" >
+            {{departamento.departamento}}
+          </ion-select-option>
         </ion-select>
         <br>
         <ion-select aria-label="Fruit" [(ngModel)]="nuevoUser.idMunicipio" placeholder="Municipio">

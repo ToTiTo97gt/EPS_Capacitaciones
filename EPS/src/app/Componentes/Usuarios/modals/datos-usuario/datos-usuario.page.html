@@ -32,8 +32,6 @@
           <ion-input class="ion-text-center" [(ngModel)]="nuevoUser.correo" label="E-mail" label-placement="floating" fill="outline" type="email"></ion-input>
         </div>
         <div id="col12">
-          <ion-input class="ion-text-center" [(ngModel)]="nuevoUser.direccion" label="Direccion" label-placement="floating" fill="outline" type="text"></ion-input>
-          <br>
           <ion-select aria-label="Fruit" label="Departamento" placeholder="Departamento" [(ngModel)]="nuevoUser.idDepartamento" (ionChange)="DepartamentoChange($event)">
             <ion-select-option *ngFor="let departamento of departamentos" [value]="departamento.idDepartamento" >{{departamento.departamento}}</ion-select-option>
           </ion-select>

@@ -40,6 +40,7 @@ ion-content{
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    border: 2px solid red;
     background-color: white;
 }
 
@@ -114,9 +115,9 @@ ion-toolbar{
 .tool{
     --background: white;
     color: #221d45;
-    border-color: red;
     margin-top: -83px;
     height: 6rem;
+    border: 2px solid red;
 }
 
 .titulo{
@@ -131,4 +132,3 @@ ion-toolbar{
     flex-wrap: wrap;
     justify-content: center;
 }
-

@@ -4,6 +4,7 @@ const aws_keys = require('../Keys/creds')
 var AWS = require('aws-sdk')
 const s3 = new AWS.S3(aws_keys.s3)
 const nodemailer = require('nodemailer')
+var CryptoJS = require("crypto-js")
 
 exports.Prueba = async (req, res) => {
     bd.query(`SELECT * FROM tipoTarea`, function (err, result) {
@@ -11,6 +12,34 @@ exports.Prueba = async (req, res) => {
         console.log('Funciona')
         res.send(result);
     });
+}
+
+exports.cripto = async (req, res) => {
+    // Mensaje que deseas cifrar
+    var mensaje = req.body.mensaje;
+
+    // Clave secreta para cifrar y descifrar
+    var clave = 'clave-secreta-123';
+
+    // Cifrar el mensaje usando AES
+    var mensajeCifrado = CryptoJS.AES.encrypt(mensaje, clave).toString();
+    console.log('Mensaje cifrado:', mensajeCifrado);
+
+    res.send("Cifrado: " + mensajeCifrado)
+}
+
+exports.Decripto = async (req, res) => {
+    // Mensaje que deseas cifrar
+    var mensaje = req.body.mensaje;
+
+    // Clave secreta para cifrar y descifrar
+    var clave = 'clave-secreta-123';
+
+    // Descifrar el mensaje usando AES
+    var bytes = CryptoJS.AES.decrypt(mensaje, clave);
+    var mensajeOriginal = bytes.toString(CryptoJS.enc.Utf8);
+    console.log('Mensaje descifrado:', mensajeOriginal);
+    res.send("Mensaje: " + mensajeOriginal)
 }
 
 exports.Empleados = async (req, res) => {
@@ -70,10 +99,17 @@ exports.RegistrarAdmin = async (req, res) => {
 }
 
 exports.AdminUser = async (req, res) => {
-    var email = req.body.email;
-    var passw = req.body.passw;
+    var clave = 'clave-secreta-123';
+
+    // Descifrar el mensaje usando AES
+    var bytes = CryptoJS.AES.decrypt(req.body.email, clave);
+    var email = bytes.toString(CryptoJS.enc.Utf8);
+
+    var bytes2 = CryptoJS.AES.decrypt(req.body.passw, clave);
+    var passw = bytes2.toString(CryptoJS.enc.Utf8);
+
     var payload, clave="token1"
-    bd.query(`select * from administrador where email='${email}' and passw='${passw}' and estado = 1;`, function(err, result){
+    bd.query(`select idAdmin from administrador where email=? and passw=? and estado = 1;`, [email, passw], function(err, result){
         if(err) throw err;
         payload = { 
             "datos": result
@@ -93,29 +129,26 @@ exports.AdminUser = async (req, res) => {
 
 exports.NuevosDatos = async (req, res) => {
     var idAdmin = req.body.idAdmin;
-    var payload, clave="token1"
-    bd.query(`select * from administrador where idAdmin = ${idAdmin};`, function(err, result){
-        if(err) throw err;
-        payload = { 
-            "datos": result
+    bd.query(`select * from administrador where idAdmin = ?;`, [idAdmin], function(err, result){
+        if (err) {
+            console.error('Error al ejecutar la consulta:', err);
+            return res.status(500).json({ message: 'Error al ejecutar la consulta' });
         }
-        jwt.sign(payload, clave, (err, token) => {
-            if(err){
-                return res.status(400).send({msg : 'Error'})
-            } else if(Object.keys(result).length === 0) {
-                return res.send({msg:'Registro no encontrado', token: token})
-            } else {
-                return res.send({msg:'success', token: token})
-            }
-        })
+
+        // Verificar si se encontraron resultados
+        if (result.length === 0) {
+            return res.status(404).json({ message: 'No se encontraron datos para el usuario proporcionado' });
+        }
+
+        // Devolver resultados
+        return res.send(result);
     }) 
 }
 
 exports.ModificarDatos = async (req, res) => {
     var idUsuario = req.body.Datos.idAdmin
-    console.log(req.body.User)
     try {
-        bd.query(`update administrador set nombre='${req.body.Datos.nombre}', apellido='${req.body.Datos.apellido}', email='${req.body.Datos.correo}', telefono = '${req.body.Datos.telefono}' where idAdmin = ${idUsuario}`, (err, result) => {
+        bd.query(`update administrador set nombre=?, apellido=?, email=?, telefono = ? where idAdmin = ?`, [req.body.Datos.nombre, req.body.Datos.apellido, req.body.Datos.correo, req.body.Datos.telefono, idUsuario], (err, result) => {
             if(err) throw err;
             return res.send({msg: 'Exito al modificar los datos del Admin'})
         })
@@ -124,20 +157,48 @@ exports.ModificarDatos = async (req, res) => {
     }
 }
 
+exports.VerificarMail = async (req, res) => {
+    try {
+        var clave = 'clave-secreta-123';
+
+        // Descifrar el mensaje usando AES
+        var bytes = CryptoJS.AES.decrypt(req.body.Mail, clave);
+        var email = bytes.toString(CryptoJS.enc.Utf8);
+        bd.query(`Select email from administrador where email = ?`, [email], (err, result) =>{
+            if(err){
+                return res.status(400).send({msg : 'Error'})
+            } else if(Object.keys(result).length === 0) {
+                return res.send({msg:'Registro no encontrado'})
+            } else {
+                return res.send({msg:'success'})
+            }
+
+        })
+    } catch (error) {
+        console.log('Error en el servidor')
+        return res.status(500).send('Error en el servidor');
+    }
+}
+
 exports.RecuperarContra = async (req, res) => {
     try {
-        var dato = req.body.datoContra
-        bd.query(`Select passw from administrador where email = '${dato}'`, (err, result) =>{
+        var clave = 'clave-secreta-123';
+
+        // Descifrar el mensaje usando AES
+        var bytes = CryptoJS.AES.decrypt(req.body.datoContra, clave);
+        var email = bytes.toString(CryptoJS.enc.Utf8);
+        var tel = req.body.datoTel
+        bd.query(`SELECT passw FROM administrador where SUBSTRING(telefono, LENGTH(telefono) - 3) = ? and email = ?`, [tel, email], (err, result) =>{
             if (err) {
-                console.error('Error en la consulta:', err);
-                return res.status(500).send('Error en el servidor');
+                return res.status(400).send({msg : 'Error'})
             }
-            if (result.length > 0) {
-                const correo = dato;
+            if(Object.keys(result).length === 0){
+                return res.send({msg: 'Dato erroneo'});
+            } else {
                 const contra = result[0].passw;
 
                 // Puedes hacer lo que necesites con el correo aquí
-                console.log('Correo encontrado:', correo);
+                
                 let transporter = nodemailer.createTransport({
                     host: "smtp.gmail.com",
                     port: 587,
@@ -153,7 +214,7 @@ exports.RecuperarContra = async (req, res) => {
                 
                   let mailOptions = {
                     from: 'sender97gt@gmail.com', // sender address
-                    to: correo, // list of receivers
+                    to: email, // list of receivers
                     subject: `Recuperar Contraseña de Administrador`, // Subject line
                     html: `
                     <html>
@@ -174,10 +235,7 @@ exports.RecuperarContra = async (req, res) => {
                   });
 
                 // Envía la respuesta al cliente con los datos recuperados
-                return res.status(200).send({ correoEncontrado: correo });
-            } else {
-                // Si no se encontraron datos, envía un mensaje al cliente
-                return res.status(404).send('Correo no encontrado');
+                return res.send({ msg: 'success', mensaje:'Se envio un mensaje a su correo' });
             }
         })
     } catch (error) {
@@ -189,9 +247,14 @@ exports.RecuperarContra = async (req, res) => {
 exports.CambiarPass = async (req, res) => {
     try {
         var idUser = req.body.idAdmin
-        var newPass = req.body.Contra
-        var correo = req.body.correo
-        bd.query(`update administrador set passw = '${newPass}' where idAdmin = ${idUser}`, (err, result) => {
+        var clave = 'clave-secreta-123';
+
+        // Descifrar el mensaje usando AES
+        var bytes = CryptoJS.AES.decrypt(req.body.newPass, clave);
+        var ContraNueva = bytes.toString(CryptoJS.enc.Utf8);
+        var bytes2 = CryptoJS.AES.decrypt(req.body.correo, clave);
+        var mail = bytes2.toString(CryptoJS.enc.Utf8)
+        bd.query(`update administrador set passw = ? where idAdmin = ?`, [ContraNueva, idUser], (err, result) => {
             if(err) throw err
 
             let transporter = nodemailer.createTransport({
@@ -209,7 +272,7 @@ exports.CambiarPass = async (req, res) => {
             
               let mailOptions = {
                 from: 'sender97gt@gmail.com', // sender address
-                to: correo, // list of receivers
+                to: mail, // list of receivers
                 subject: "Cambio de Contraseña", // Subject line
                 html: `
                 <html>

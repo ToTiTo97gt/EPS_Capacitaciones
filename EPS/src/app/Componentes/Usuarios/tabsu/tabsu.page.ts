@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { MenuController } from '@ionic/angular';
 import { ActivatedRoute, Router } from '@angular/router'
 import { HttpClient } from '@angular/common/http';
-import { AdminService } from '../../../Servicios/admin.servicio';
 import { UserService } from 'src/app/Servicios/user.servicio';
 import { ModalController } from '@ionic/angular';
 import { DatosUsuarioPage } from '../modals/datos-usuario/datos-usuario.page';
@@ -16,24 +15,32 @@ import { AlertController } from '@ionic/angular';
 })
 export class TabsuPage implements OnInit {
 
-  constructor(private userService:UserService, private adminService:AdminService,private modalCtrl:ModalController,
+  constructor(private userService:UserService, private modalCtrl:ModalController,
   private menuController: MenuController, public route: Router, public parametros:ActivatedRoute, public alertController:AlertController) {}
 
   public decoded: any
   public decoded2: any  
+  public nombre: any
+  public apellido: any
   public alert: any
   
+  
   ngOnInit() {
-      var datos = this.parametros.snapshot.paramMap.get('token')
-      if(datos !== null){
-        this.decoded = jwt_decode(datos)
-        this.userService.idG = this.decoded.datos[0].idUsuario
-        this.userService.datosUser = this.decoded.datos[0]
-        //this.userService.AsignacionAuto(this.userService.idG)
-      } else {
-        alert('error en el token, esta vacio')
-      }
+    const token = localStorage.getItem('token')
+    if(token !== null){
+      this.decoded = jwt_decode(token)
+      this.userService.idG = this.decoded.datos[0].idUsuario
+      this.getDatosUser()
+    } else {
+      alert('error en el token, esta vacio')
+    }
     
+  }
+
+  async getDatosUser(){
+    this.userService.datosUser = await this.userService.GetDatosUsuario(this.userService.idG)
+    this.nombre = this.userService.datosUser[0].nombre
+    this.apellido = this.userService.datosUser[0].apellido
   }
 
   async mostrarUsuario(){
@@ -41,37 +48,13 @@ export class TabsuPage implements OnInit {
       component: DatosUsuarioPage,
       cssClass: 'custom-modal',
       componentProps: {
-        Datos: this.decoded.datos[0]
+        Datos: this.userService.datosUser[0]
       }
     });
 
     modal.onDidDismiss().then(async data => {
-      let datos = await this.userService.GetNuevosDatos(this.userService.idG)
-
-      let json = JSON.stringify(datos)
-      let obj = JSON.parse(json)
-      try {
-        let json : any = {
-          token: obj.token
-        }
-        this.decoded2 = jwt_decode(obj.token)
-        this.comparar(this.decoded.datos[0], this.decoded2.datos[0])
-        if(this.verif == true){
-          //console.log('cambio')
-          this.route.navigate(['/tabsu', json,'conferencias'])
-        }
-      } catch (error) {
-        this.alert = await this.alertController.create({
-          header: 'Aviso',
-          message: 'Error en el ingreso\nVerifique los datos que ingreso',
-          buttons: ['OK']
-        });
-        this.alert.onDidDismiss().then(() => {
-          console.log("Error al decodificar el Token JWT ", error)
-          location.reload()
-        })
-        await this.alert.present()
-      }
+      //let datos = await this.userService.GetNuevosDatos(this.userService.idG)
+      this.getDatosUser()
     })
 
     await modal.present();
@@ -95,6 +78,11 @@ export class TabsuPage implements OnInit {
 
   recarga(){
     window.location.reload()
+  }
+
+  cerrar(){
+    localStorage.removeItem('token')
+    this.route.navigate(['/'])
   }
 
 }

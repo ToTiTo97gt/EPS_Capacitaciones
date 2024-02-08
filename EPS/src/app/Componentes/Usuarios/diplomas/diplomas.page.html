@@ -8,14 +8,11 @@
     </div>
 
     <div class="filtro">
-      <div class="filtro1">
         <ion-datetime [min]="2023" class="selectt" presentation="year" [preferWheel]="true" (ionChange)="dateChanged($event)"></ion-datetime>
-      </div>
-      <div class="filtro2">
+      
         <ion-select class="jornada" aria-label="Fruit" placeholder="Jornadas" (ionChange)="jornadaChange($event)">
           <ion-select-option *ngFor="let jornada of jornadas" [value]="jornada.idJornada" >{{jornada.ciclo}}</ion-select-option>
         </ion-select>
-      </div>
     </div>
     
     <div class="titulo">
@@ -79,7 +76,7 @@
                   <path d="M3 15v4c0 1.1.9 2 2 2h14a2 2 0 0 0 2-2v-4M17 9l-5 5-5-5M12 12.8V2.5"/>
                 </svg>
               </ion-button>
-              <label *ngIf="data.nota < 70">Reprobado con: {{data.nota}}</label>
+              <label *ngIf="data.nota < 70">{{data.nota}}</label>
             </ion-col>
           </ion-row>
         </div>

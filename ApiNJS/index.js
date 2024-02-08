@@ -13,8 +13,8 @@ var bodyParser = require('body-parser');
 var app = express();
 const cors = require('cors');
 
-var corsOptions = { origin: true, optionsSuccessStatus: 200 };
-app.use(cors(corsOptions));
+//var corsOptions = { origin: true, optionsSuccessStatus: 200 };
+app.use(cors());
 
 var http = require('http').Server(app);
 app.use(bodyParser.json({ limit: '10mb', extended: false }));

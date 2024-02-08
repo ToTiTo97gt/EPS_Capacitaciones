@@ -12,7 +12,7 @@ export class UserService{
     public idG: any
     public idTipo: any
     public datosUser: any
-    url:string="http://54.242.23.158:3020/"//ip:3020
+    url:string="http://localhost:3020/"//ip:3020
     constructor(private httpClient: HttpService) {}
 
     GetDepartamentos(){
@@ -51,9 +51,9 @@ export class UserService{
         return this.httpClient.post(ruta, data).toPromise()
     }
 
-    GetNuevosDatos(idUser: any){
-        const ruta = this.url+"User/GetNuevosDatos"
-        const data = {idUser}
+    GetDatosUsuario(idUsuario: any){
+        const ruta = this.url+"User/GetDatosUsuario"
+        const data = {idUsuario}
         return this.httpClient.post(ruta, data).toPromise()
     }
 

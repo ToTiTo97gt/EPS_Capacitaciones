@@ -157,12 +157,34 @@ export class AdminInfoPage implements OnInit {
 
   async modificarDatos(){
     await this.adminService.ModificarDatos(this.AdminPerfil)
+    this.alert = await this.alertController.create({
+      header: 'Listo',
+      message: 'Datos Modificados',
+      buttons: ['OK']
+    });
+    this.alert.onDidDismiss().then(() => {
+      location.reload()
+    })
+    await this.alert.present()
   }
 
   async CambiarContra(){
     if(this.AdminPerfil.NewPass == this.AdminPerfil.ConfirmPass){
       if (this.datosP.passw == this.AdminPerfil.OldPass){
-        await this.adminService.CambiarPass(this.AdminPerfil.NewPass, this.adminService.idG, this.datosP.email)
+        let clave = 'clave-secreta-123';
+        // Cifrar el mensaje usando AES
+        let ContraCifrada = CryptoJS.AES.encrypt(this.AdminPerfil.NewPass, clave).toString();
+        let CorreoCifrado = CryptoJS.AES.encrypt(this.datosP.email, clave).toString();
+        await this.adminService.CambiarPass(ContraCifrada, this.adminService.idG, CorreoCifrado)
+        this.alert = await this.alertController.create({
+          header: 'Listo',
+          message: 'Contraseña Modificada',
+          buttons: ['OK']
+        });
+        this.alert.onDidDismiss().then(() => {
+          location.reload()
+        })
+        await this.alert.present()
       } else {
         this.alert = await this.alertController.create({
           header: 'Aviso',

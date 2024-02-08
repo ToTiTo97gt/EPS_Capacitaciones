@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { AdminService } from '../../../Servicios/admin.servicio';
 import { UserService } from 'src/app/Servicios/user.servicio';
 import { ActivatedRoute, Router } from '@angular/router'
 import { ModalController } from '@ionic/angular';
@@ -13,7 +12,7 @@ import { AlertController } from '@ionic/angular';
 })
 export class InscripcionesPage implements OnInit {
 
-  constructor(private adminService: AdminService, private userService:UserService,
+  constructor(private userService:UserService,
    private modalCtrl:ModalController, public alertController:AlertController) { }
 
   public conferencias: any

@@ -8,19 +8,19 @@ const routes: Routes = [
     component: TabsPage,
     children: [
       {
-        path: 'tab1',
+        path: 'Crear',
         loadChildren: () => import('../crear/tab1.module').then(m => m.Tab1PageModule)
       },
       {
-        path: 'tab3',
+        path: 'Inscripciones',
         loadChildren: () => import('../inscripciones/tab3.module').then(m => m.Tab3PageModule)
       },
       {
-        path: 'ALista',
+        path: 'Administracion',
         loadChildren: () => import('../ALista/ALista.module').then(m => m.AListaPageModule)
       },
       {
-        path: 'conferencias',
+        path: 'Asistencias',
         loadChildren: () => import('../conferencias/conferencias.module').then(m => m.ConferenciasPageModule)
       },
       {

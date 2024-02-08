@@ -10,7 +10,7 @@ import { HttpService } from "./http.service";
 export class AdminService{
 
     public idG: any;
-    url:string="http://54.242.23.158:3020/"//ip:3020
+    url:string="http://localhost:3020/"//ip:3020
 
     jsonData: any[] = []
 
@@ -22,9 +22,15 @@ export class AdminService{
         return this.httpClient.post(ruta, data).toPromise()
     }
 
-    RecuperarContra(datoContra: any){
+    VerificarMail(Mail: any){
+        const ruta = this.url+"Admin/VerificarMail"
+        const data = {Mail}
+        return this.httpClient.post(ruta, data).toPromise();
+    }
+
+    RecuperarContra(datoContra: any, datoTel: any){
         const ruta = this.url+"Admin/RecuperarContra"
-        const data = {datoContra}
+        const data = {datoContra, datoTel}
         return this.httpClient.post(ruta, data).toPromise();
     }
 

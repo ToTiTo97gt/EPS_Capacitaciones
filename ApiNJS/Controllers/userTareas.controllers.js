@@ -4,6 +4,7 @@ const aws_keys = require('../Keys/creds')
 var AWS = require('aws-sdk')
 const s3 = new AWS.S3(aws_keys.s3)
 const nodemailer = require('nodemailer')
+var CryptoJS = require("crypto-js")
 
 const fetch = require('node-fetch') //npm install node-fetch@2.6.1
 const {PDFDocument, StandardFonts, rgb} = require('pdf-lib')
@@ -48,12 +49,40 @@ exports.tiposUsuarios = async (req, res) => {
     })
 }
 
+exports.cripto = async (req, res) => {
+    // Mensaje que deseas cifrar
+    var mensaje = req.body.mensaje;
+
+    // Clave secreta para cifrar y descifrar
+    var clave = 'clave-secreta-123';
+
+    // Cifrar el mensaje usando AES
+    var mensajeCifrado = CryptoJS.AES.encrypt(mensaje, clave).toString();
+    console.log('Mensaje cifrado:', mensajeCifrado);
+
+    res.send("Cifrado: " + mensajeCifrado)
+}
+
+exports.Decripto = async (req, res) => {
+    // Mensaje que deseas cifrar
+    var mensaje = req.body.mensaje;
+
+    // Clave secreta para cifrar y descifrar
+    var clave = 'clave-secreta-123';
+
+    // Descifrar el mensaje usando AES
+    var bytes = CryptoJS.AES.decrypt(mensaje, clave);
+    var mensajeOriginal = bytes.toString(CryptoJS.enc.Utf8);
+    console.log('Mensaje descifrado:', mensajeOriginal);
+    res.send("Mensaje: " + mensajeOriginal)
+}
+
 exports.RegistrarUsuario = async(req, res) => {
     try {
         const {carne, cui, nombre, apellido, correo, passwo, confirmPasswo, genero, direccion, idMunicipio, idTipo, estado, numcolegiado}= req.body.nuevoUser
-        console.log(carne, cui, nombre, apellido)
+        //console.log(carne, cui, nombre, apellido)
         bd.query(`Insert into usuario(carne, cui, nombre, apellido, correo, passwo, genero, direccion, idmunicipio, idTipo, estado, numcolegiado)
-          values('${carne}', '${cui}', '${nombre}', '${apellido}', '${correo}', '${passwo}', ${genero}, '${direccion}', ${idMunicipio}, ${idTipo}, ${estado}, ${numcolegiado})`, function(err, result){
+        values('${carne}', '${cui}', '${nombre}', '${apellido}', '${correo}', '${passwo}', ${genero}, '${direccion}', ${idMunicipio}, ${idTipo}, ${estado}, ${numcolegiado})`, function(err, result){
             if(err) throw err
 
             const idUsuario = result.insertId;
@@ -104,13 +133,19 @@ exports.RegistrarUsuario = async(req, res) => {
 
 exports.RecuperarContra = async (req, res) => {
     try {
-        var dato = req.body.datoContra
-        bd.query(`Select correo, passwo from usuario where carne = '${dato}' or cui = '${dato}'`, (err, result) =>{
+        // Clave secreta para cifrar y descifrar
+        var clave = 'clave-secreta-123';
+
+        // Descifrar el mensaje usando AES
+        var bytes = CryptoJS.AES.decrypt(req.body.datoContra, clave);
+        var mensajeOriginal = bytes.toString(CryptoJS.enc.Utf8);
+        bd.query(`Select correo, passwo from usuario where carne = ? or cui = ?`, [mensajeOriginal, mensajeOriginal], (err, result) =>{
             if (err) {
-                console.error('Error en la consulta:', err);
-                return res.status(500).send('Error en el servidor');
+                return res.status(400).send({msg : 'Error'})
             }
-            if (result.length > 0) {
+            if(Object.keys(result).length === 0){
+                return res.send({msg: 'El dato que envio no coincide'});
+            } else {
                 const correo = result[0].correo;
                 const contra = result[0].passwo;
 
@@ -152,10 +187,7 @@ exports.RecuperarContra = async (req, res) => {
                   });
 
                 // Envía la respuesta al cliente con los datos recuperados
-                return res.status(200).send({ correoEncontrado: correo });
-            } else {
-                // Si no se encontraron datos, envía un mensaje al cliente
-                return res.status(404).send('Correo no encontrado');
+                return res.send({ msg: 'success', mensaje:'Se envio un mensaje a su correo' });
             }
         })
     } catch (error) {
@@ -168,7 +200,8 @@ exports.ModificarUsuario = async (req, res) => {
     var idUsuario = req.body.User.idUsuario
     //console.log(req.body.User)
     try {
-        bd.query(`update usuario set carne='${req.body.User.carne}', cui='${req.body.User.cui}', nombre='${req.body.User.nombre}', apellido='${req.body.User.apellido}', correo='${req.body.User.correo}', genero=${req.body.User.genero}, direccion='${req.body.User.direccion}' , idmunicipio=${req.body.User.idmunicipio}, numcolegiado=${req.body.User.numcolegiado} where idUsuario = ${idUsuario}`, (err, result) => {
+        bd.query(`update usuario set carne=?, cui=?, nombre=?, apellido=?, correo=?, genero=?, direccion=? , idmunicipio=?, numcolegiado=? where idUsuario = ?`,
+          [req.body.User.carne, req.body.User.cui, req.body.User.nombre, req.body.User.apellido, req.body.User.correo, req.body.User.genero, req.body.User.direccion, req.body.User.idmunicipio, req.body.User.numcolegiado, idUsuario], (err, result) => {
             if(err) throw err;
             return res.send({msg: 'Exito al modificar los datos del usuario'})
         })
@@ -180,9 +213,16 @@ exports.ModificarUsuario = async (req, res) => {
 exports.CambiarPass = async (req, res) => {
     try {
         var idUser = req.body.idUser
-        var newPass = req.body.newPass
-        var correo = req.body.correo
-        bd.query(`update usuario set passwo = '${newPass}' where idUsuario = ${idUser}`, (err, result) => {
+
+        var clave = 'clave-secreta-123';
+
+        // Descifrar el mensaje usando AES
+        var bytes = CryptoJS.AES.decrypt(req.body.newPass, clave);
+        var ContraNueva = bytes.toString(CryptoJS.enc.Utf8);
+        var bytes2 = CryptoJS.AES.decrypt(req.body.correo, clave);
+        var mail = bytes2.toString(CryptoJS.enc.Utf8)
+
+        bd.query(`update usuario set passwo = ? where idUsuario = ?`, [ContraNueva, idUser], (err, result) => {
             if(err) throw err
 
             let transporter = nodemailer.createTransport({
@@ -200,12 +240,12 @@ exports.CambiarPass = async (req, res) => {
             
               let mailOptions = {
                 from: 'sender97gt@gmail.com', // sender address
-                to: correo, // list of receivers
+                to: mail, // list of receivers
                 subject: "Cambio de Contraseña", // Subject line
                 html: `
                 <html>
                   <body>
-                      <p>Ahora su nueva contraseña es: ${newPass}</p>
+                      <p>Ahora su nueva contraseña es: ${ContraNueva}</p>
                       <p>Anotela y borre este correo</p>
                   </body>
                 </html>`
@@ -228,10 +268,19 @@ exports.CambiarPass = async (req, res) => {
 }
 
 exports.GetUser = async (req, res) => {//modificar esta peticion para que acepta usuarios activos
+    //select a.*, b.idDepartamento from usuario a, municipio b where a.estado = 1 and a.passwo='${passw}' and (a.carne='${dato1}' or a.cui='${dato1}') and a.idmunicipio = b.idMunicipio;
     var dato1 = req.body.dato1;
     var passw = req.body.passw;
+
+    // Clave secreta para cifrar y descifrar
+    var clave = 'clave-secreta-123';
+
+    // Descifrar el mensaje usando AES
+    var bytes = CryptoJS.AES.decrypt(passw, clave);
+    var mensajeOriginal = bytes.toString(CryptoJS.enc.Utf8);
+
     var payload, clave="token1"
-    bd.query(`select a.*, b.idDepartamento from usuario a, municipio b where a.estado = 1 and a.passwo='${passw}' and (a.carne='${dato1}' or a.cui='${dato1}') and a.idmunicipio = b.idMunicipio;`, function(err, result){
+    bd.query(`select idUsuario from usuario where estado = 1 and passwo=? and (carne=? or cui=?);`, [mensajeOriginal, dato1, dato1], function(err, result){
         if(err) throw err;
         payload = {
             "datos": result
@@ -248,24 +297,32 @@ exports.GetUser = async (req, res) => {//modificar esta peticion para que acepta
     }) 
 }
 
-exports.GetNuevosDatos = async (req, res) => {//modificar esta peticion para que acepta usuarios activos
-    var idUsuario = req.body.idUser;
-    var payload, clave="token1"
-    bd.query(`select a.*, b.idDepartamento from usuario as a, municipio as b where idUsuario = ${idUsuario} and a.idmunicipio = b.idMunicipio;`, function(err, result){
-        if(err) throw err;
-        payload = {
-            "datos": result
-        }
-        jwt.sign(payload, clave, (err, token) => {
-            if(err){
-                return res.status(400).send({msg : 'Error'})
-            } else if(Object.keys(result).length === 0) {
-                return res.send({msg:'Registro no encontrado', token: token})
-            } else {
-                return res.send({msg:'success', token: token})
+exports.GetDatosUser = async (req, res) => {//modificar esta peticion para que acepta usuarios activos
+    //select a.*, b.idDepartamento from usuario a, municipio b where a.estado = 1 and a.passwo='${passw}' and (a.carne='${dato1}' or a.cui='${dato1}') and a.idmunicipio = b.idMunicipio;
+    try {
+        var idUsuario = req.body.idUsuario;
+        const consultaSQL = `SELECT a.*, b.idDepartamento FROM usuario a, municipio b 
+                                WHERE a.estado = 1 AND a.idUsuario = ? AND a.idmunicipio = b.idMunicipio`;
+            
+        bd.query(consultaSQL, [idUsuario], function(err, result){
+            if (err) {
+                console.error('Error al ejecutar la consulta:', err);
+                return res.status(500).json({ message: 'Error al ejecutar la consulta' });
             }
+
+            // Verificar si se encontraron resultados
+            if (result.length === 0) {
+                return res.status(404).json({ message: 'No se encontraron datos para el usuario proporcionado' });
+            }
+
+            // Devolver resultados
+            return res.send(result);
         })
-    }) 
+    } catch (error) {
+        console.error('Error en la función GetDatosUser:', error);
+        return res.status(500).json({ message: 'Error interno del servidor' });
+    }
+     
 }
 
 exports.GetCapacitaciones = async (req, res) => {

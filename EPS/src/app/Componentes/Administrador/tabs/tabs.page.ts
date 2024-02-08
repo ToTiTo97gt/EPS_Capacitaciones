@@ -21,20 +21,26 @@ export class TabsPage implements OnInit {
   public boolArray: boolean[] = [false, false, false, false, false, false, false] 
   public decoded: any
   public decoded2: any
+  public datos: any
 
   ngOnInit(){
+    const token = localStorage.getItem('Atoken')
     this.Actualizar0()
     this.Actualizar1()
-    var datos = this.parametros.snapshot.paramMap.get('token')
-    if(datos !== null){
-      this.decoded = jwt_decode(datos)
+    if(token !== null){
+      this.decoded = jwt_decode(token)
       this.adminService.idG = this.decoded.datos[0].idAdmin
-      this.nombre = this.decoded.datos[0].nombre + " " + this.decoded.datos[0].apellido
+      this.getDatos()
     } else {
       alert('error en el token, esta vacio')
     }
     this.permisos();
   } 
+
+  async getDatos(){
+    this.datos = await this.adminService.NuevosDatos(this.adminService.idG)
+    this.nombre = this.datos[0].nombre + " " + this.datos[0].apellido
+  }
 
   async permisos(){
     this.permiso = await this.adminService.GetAdminPermiso(this.adminService.idG)
@@ -47,7 +53,7 @@ export class TabsPage implements OnInit {
       }
       this.boolArray[element.idPermiso-1] = true
     }
-    console.log(this.boolArray)
+    //console.log(this.boolArray)
   }
 
   public verif = false
@@ -56,34 +62,15 @@ export class TabsPage implements OnInit {
       component: AdminInfoPage,
       cssClass: 'custom-modal',
       componentProps: {
-        idAdmin: this.decoded.datos[0].idAdmin,
-        nombre: this.decoded.datos[0].nombre,
-        apellido: this.decoded.datos[0].apellido,
-        datosP: this.decoded.datos[0],
+        idAdmin: this.adminService.idG,
+        nombre: this.datos[0].nombre,
+        apellido: this.datos[0].apellido,
+        datosP: this.datos[0],
         dato: 0
       }
     });
-
     modal.onDidDismiss().then(async data => {
-      let datos = await this.adminService.NuevosDatos(this.adminService.idG)
-
-      let json = JSON.stringify(datos)
-      let obj = JSON.parse(json)
-      try {
-        let json : any = {
-          token: obj.token
-        }
-        this.decoded2 = jwt_decode(obj.token)
-        this.comparar(this.decoded.datos[0], this.decoded2.datos[0])
-        if(this.verif == true){
-          //console.log('cambio')
-          this.route.navigate(['/tabs', json])
-        }
-      } catch (error) {
-        alert("Error en el ingreso\nVerifique los datos que ingreso")
-        location.reload()
-        console.log("Error al decodificar el Token JWT ", error)
-      }
+      this.getDatos()
       //alert('cerrado')
     })
     await modal.present();

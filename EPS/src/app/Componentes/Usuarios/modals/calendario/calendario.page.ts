@@ -1,6 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { ModalController } from '@ionic/angular';
-import { AdminService } from 'src/app/Servicios/admin.servicio';
 import { UserService } from 'src/app/Servicios/user.servicio';
 import { AlertController } from '@ionic/angular';
 
@@ -17,7 +16,7 @@ export class CalendarioPage implements OnInit {
   @Input() Mensaje: any
   public fechasDiplomado: string[] = []
 
-  constructor(private modalCtrl:ModalController, private adminService:AdminService,
+  constructor(private modalCtrl:ModalController,
    private userService:UserService, public alertController:AlertController) { }
 
   ngOnInit() {

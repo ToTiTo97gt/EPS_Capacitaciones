@@ -5,6 +5,7 @@ import { UserService } from 'src/app/Servicios/user.servicio';
 import jwt_decode from 'jwt-decode';
 import { ActivatedRoute, Router } from '@angular/router'
 import { AlertController } from '@ionic/angular';
+import * as CryptoJS from 'crypto-js';
 
 @Component({
   selector: 'app-ingreso',
@@ -35,7 +36,14 @@ export class IngresoPage implements OnInit {
 //agregar el modulo de usuarios
   async Ingresar(){
     if(this.isEmail(this.dato1)){
-      let datos = await this.AdminService.GetAdminUser(this.dato1, this.dato2);
+
+      let clave = 'clave-secreta-123';
+      // Cifrar el mensaje usando AES
+      let email = CryptoJS.AES.encrypt(this.dato1, clave).toString();
+      // Cifrar el mensaje usando AES
+      let contra = CryptoJS.AES.encrypt(this.dato2, clave).toString();
+
+      let datos = await this.AdminService.GetAdminUser(email, contra);
 
       if(datos !== undefined && datos !== null){
         let msg = (datos as any).msg
@@ -43,10 +51,8 @@ export class IngresoPage implements OnInit {
           let json = JSON.stringify(datos)
           let obj = JSON.parse(json)
           try {
-            let json : any = {
-              token: obj.token
-            }
-            this.router.navigate(['/tabs', json])
+            localStorage.setItem('Atoken', obj.token)
+            this.router.navigate(['/tabs'])
           } catch (error) {
             this.alert = await this.alertController.create({
               header: 'Error de ingreso',
@@ -69,7 +75,11 @@ export class IngresoPage implements OnInit {
         console.log('error no se recibio respuesta')
       }
     } else {
-      let datos = await this.UserService.GetUsuario(this.dato1, this.dato2)
+      let clave = 'clave-secreta-123';
+      // Cifrar el mensaje usando AES
+      let mensajeCifrado = CryptoJS.AES.encrypt(this.dato2, clave).toString();
+
+      let datos = await this.UserService.GetUsuario(this.dato1, mensajeCifrado)
       
       if(datos !== undefined && datos !== null){
         let msg = (datos as any).msg
@@ -77,10 +87,8 @@ export class IngresoPage implements OnInit {
           let json = JSON.stringify(datos)
           let obj = JSON.parse(json)
           try {
-            let json : any = {
-              token: obj.token
-            }
-            this.router.navigate(['/tabsu', json,'conferencias'])
+            localStorage.setItem('token', obj.token)
+            this.router.navigate(['/tabsu','conferencias'])
           } catch (error) {
             this.alert = await this.alertController.create({
               header: 'Error de ingreso',
@@ -108,10 +116,104 @@ export class IngresoPage implements OnInit {
 
   async Recuperar(){
     if(this.isEmail(this.datoContra)){
-      let dato = await this.AdminService.RecuperarContra(this.datoContra)
+      let clave = 'clave-secreta-123';
+
+      // Cifrar el mensaje usando AES
+      let mensajeCifrado = CryptoJS.AES.encrypt(this.datoContra, clave).toString();
+      let dato = await this.AdminService.VerificarMail(mensajeCifrado)
+      
+      if(dato !== undefined && dato !== null){
+        let msg = (dato as any).msg
+        if(msg == 'success') {
+          this.alert = await this.alertController.create({
+            header: 'Ingrese los ultimos 4 digitos del numero guardado en su usuario',
+            inputs: [
+              {
+                name: 'valor',
+                type: 'text',
+                placeholder: 'Ingrese el valor'
+              }
+            ],
+            buttons: [
+              {
+                text: 'Cancelar',
+                role: 'cancel',
+                handler: () => {
+                  console.log('Cancelado');
+                }
+              }, {
+                text: 'Aceptar',
+                handler: async (data) => {
+                  let resp = await this.AdminService.RecuperarContra(mensajeCifrado, data.valor)
+                  if(resp !== undefined && resp !== null){
+                    let mens = (resp as any).msg
+                    if(mens == 'success'){
+                      mens = (resp as any).mensaje
+                      this.alert = await this.alertController.create({
+                        header: 'Listo',
+                        message: mens,
+                        buttons: ['OK']
+                      });
+                      await this.alert.present()
+                    }else{
+                      this.alert = await this.alertController.create({
+                        header: 'Aviso',
+                        message: mens,
+                        buttons: ['OK']
+                      });
+                      await this.alert.present()
+                    }
+                  }
+                }
+              }
+            ]
+          })
+          await this.alert.present()
+        } else {
+          this.alert = await this.alertController.create({
+            header: 'AVISO',
+            message: 'Correo no encontrado',
+            buttons: ['OK']
+          });
+          await this.alert.present()
+        }
+          
+      } else {
+        this.alert = await this.alertController.create({
+          header: 'AVISO',
+          message: 'No se recivio respuesta del servidor',
+          buttons: ['OK']
+        });
+        await this.alert.present()
+      }
+
       this.cambiarEstado()
     } else {
-      let dato = await this.UserService.RecuperarContra(this.datoContra)
+      let clave = 'clave-secreta-123';
+
+      // Cifrar el mensaje usando AES
+      let mensajeCifrado = CryptoJS.AES.encrypt(this.datoContra, clave).toString();
+      let resp = await this.UserService.RecuperarContra(mensajeCifrado)
+
+      if(resp !== undefined && resp !== null){
+        let msg = (resp as any).msg
+        if(msg == 'success') {
+          this.alert = await this.alertController.create({
+            header: 'LISTO',
+            message: 'Se envio un mensaje a su correo',
+            buttons: ['OK']
+          });
+          await this.alert.present()
+        } else {
+          this.alert = await this.alertController.create({
+            header: 'Aviso',
+            message: 'El CUI/Carne que coloco, no fue encontrado, asegurese de escribir bien su CUI/Carne',
+            buttons: ['OK']
+          });
+          await this.alert.present()
+        }
+      }
+
       this.cambiarEstado()
     }
   }

@@ -2,9 +2,9 @@ import { Component, OnInit, Input } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ModalController } from '@ionic/angular';
 import { ActivatedRoute, Router } from '@angular/router'
-import { AdminService } from 'src/app/Servicios/admin.servicio';
 import { UserService } from 'src/app/Servicios/user.servicio';
 import { AlertController } from '@ionic/angular';
+import * as CryptoJS from 'crypto-js';
 
 @Component({
   selector: 'app-datos-usuario',
@@ -39,7 +39,7 @@ export class DatosUsuarioPage implements OnInit {
   public oldPass = ""
   public alert: any
 
-  constructor(private modalCtrl:ModalController, private adminService:AdminService, private UserService:UserService,
+  constructor(private modalCtrl:ModalController, private UserService:UserService,
               private router:Router, public alertController:AlertController) { }
 
   ngOnInit() {
@@ -84,12 +84,17 @@ export class DatosUsuarioPage implements OnInit {
 
   async ModificarDatos(){
     await this.UserService.ModificarUsuario(this.nuevoUser)
+    location.reload()
   }
 
   async CambiarContra(){
     if(this.nuevoUser.passwo == this.nuevoUser.confirmarPasswo){
       if (this.oldPass == this.Datos.passwo){
-        await this.UserService.CambiarPass(this.nuevoUser.passwo, this.nuevoUser.idUsuario, this.Datos.correo)
+        let clave = 'clave-secreta-123';
+        // Cifrar el mensaje usando AES
+        let ContraCifrada = CryptoJS.AES.encrypt(this.nuevoUser.passwo, clave).toString();
+        let CorreoCifrado = CryptoJS.AES.encrypt(this.Datos.correo, clave).toString();
+        await this.UserService.CambiarPass(ContraCifrada, this.nuevoUser.idUsuario, CorreoCifrado)
       } else {
         this.alert = await this.alertController.create({
           header: 'Aviso',
