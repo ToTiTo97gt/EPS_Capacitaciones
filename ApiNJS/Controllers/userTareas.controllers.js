@@ -43,10 +43,11 @@ exports.tiposUsuarios = async (req, res) => {
 
 exports.RegistrarUsuario = async(req, res) => {
     try {
-        const {carne, cui, nombre, apellido, correo, passwo, confirmPasswo, genero, direccion, idMunicipio, idTipo, estado, numcolegiado}= req.body.nuevoUser
+        const {carne, cui, nombre, apellido, correo, passwo, confirmPasswo, genero, direccion, idMunicipio, idTipo, estado, colegiado}= req.body.nuevoUser
         //console.log(carne, cui, nombre, apellido)
         bd.query(`Insert into usuario(carne, cui, nombre, apellido, correo, passwo, genero, direccion, idmunicipio, idTipo, estado, numcolegiado)
-        values('${carne}', '${cui}', '${nombre}', '${apellido}', '${correo}', '${passwo}', ${genero}, '${direccion}', ${idMunicipio}, ${idTipo}, ${estado}, ${numcolegiado})`, function(err, result){
+        values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+         [carne, cui, nombre, apellido, correo, passwo, genero, direccion, idMunicipio, idTipo, estado, colegiado], function(err, result){
             if(err) throw err
 
             const idUsuario = result.insertId;

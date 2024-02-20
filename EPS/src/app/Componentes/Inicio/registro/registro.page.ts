@@ -162,6 +162,7 @@ export class RegistroPage implements OnInit {
 
   borrarRegistro(){
     this.nuevoUser.carne = ""
+    this.nuevoUser.colegiado = ""
     this.nuevoUser.cui = ""
     this.nuevoUser.nombre = ""
     this.nuevoUser.apellido = ""
