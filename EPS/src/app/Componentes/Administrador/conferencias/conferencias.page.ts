@@ -38,12 +38,12 @@ export class ConferenciasPage implements OnInit {
     if (this.selectedFile) {
       const formData = new FormData();
       formData.append('file', this.selectedFile);
-      console.log(formData)
+      //console.log(formData)
 
       this.data = await this.adminService.enviarCsv(formData)
-      console.log(this.data)
+      //console.log(this.data)
       
-      console.log("Fuera del servicio: "+this.data)
+      //console.log("Fuera del servicio: "+this.data)
     }
   }
 

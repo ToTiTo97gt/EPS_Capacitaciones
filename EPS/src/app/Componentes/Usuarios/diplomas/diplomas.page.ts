@@ -132,7 +132,7 @@ export class DiplomasPage implements OnInit {
 
   convertir(fecha: string){
     var objc = new Date(fecha)
-    console.log(objc.getDate() + "/" + objc.getMonth()+"/"+objc.getFullYear())
+    //console.log(objc.getDate() + "/" + objc.getMonth()+"/"+objc.getFullYear())
     return this.convertirFechaATexto(objc)
   }
 
