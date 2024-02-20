@@ -69,7 +69,7 @@ export class DiplomasPage implements OnInit {
   }
   public generar2 = 0;
   async generarDiplomado(data: any){
-    if(data.diploma == 'null' || data.diploma === null || data.diploma === undefined || data.diploma == ''){
+    if(data.diploma == 'null'){
       this.alert = await this.alertController.create({
         header: 'Aviso',
         message: 'Aun no hay plantilla para generar este diploma, disculpe los inconvenientes',
