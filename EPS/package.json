@@ -34,7 +34,7 @@
     "@ionic/angular": "^7.0.10",
     "@pdf-lib/fontkit": "^1.1.1",
     "angular-jwt": "^0.1.11",
-    "axios": "^1.6.5",
+    "axios": "^1.6.7",
     "crypto-js": "^4.2.0",
     "csv-parser": "^3.0.0",
     "date-fns": "^3.0.6",
@@ -78,7 +78,8 @@
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "~2.0.0",
     "ts-node": "^8.3.0",
-    "typescript": "~5.0.2"
+    "typescript": "~5.0.2",
+    "webpack-dev-server": "^4.13.2"
   },
   "description": "An Ionic project"
 }

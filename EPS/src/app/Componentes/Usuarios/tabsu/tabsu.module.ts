@@ -13,14 +13,7 @@ import { TabsuPage } from './tabsu.page';
     CommonModule,
     FormsModule,
     IonicModule,
-    TabsuPageRoutingModule,
-    JwtModule.forRoot({
-      config: {
-        tokenGetter: () => {
-          return localStorage.getItem('token')
-        }
-      }
-    })
+    TabsuPageRoutingModule
   ],
   declarations: [TabsuPage]
 })

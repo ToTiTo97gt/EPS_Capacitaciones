@@ -50,12 +50,10 @@ export class RegistroPage implements OnInit {
 
   async getMunicipios(idDepartamento: any){
     this.municipios = await this.UserService.GetMunicipios(idDepartamento)
-    console.log(this.municipios)
   }
 
   async tiposUsuarios(){
     this.usuarios = await this.UserService.TiposUsuarios()
-    console.log(this.usuarios)
   }
 
   DepartamentoChange(event: any){
@@ -70,7 +68,6 @@ export class RegistroPage implements OnInit {
     if(this.completo){
       if(this.nuevoUser.passwo == this.nuevoUser.confirmarPasswo){
         let resp = await this.UserService.Registrar(this.nuevoUser)
-        //console.log(resp)
         if(resp != 'error'){
           this.alert = await this.alertController.create({
             header: 'Todo Listo',

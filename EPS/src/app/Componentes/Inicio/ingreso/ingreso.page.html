@@ -26,8 +26,7 @@
       <ion-input class="user" label="CUI o Carnet" label-placement="floating" fill="outline" type="text" [(ngModel)]="dato1"></ion-input>
       <br>
       <ion-item class="pass">
-        <ion-label position="stacked">Contraseña</ion-label>
-        <ion-input class="pas" type="{{mostrar1 ? 'text' : 'password'}}" [(ngModel)]="dato2"></ion-input>
+        <ion-input class="pas" label="Contraseña" label-placement="floating" type="{{mostrar1 ? 'text' : 'password'}}" [(ngModel)]="dato2"></ion-input>
         <ion-button slot="end" fill="clear" (click)="togglePassVisibility()">
           <ion-icon [name]="mostrar1 ? 'eye-off' : 'eye'"></ion-icon>
         </ion-button>

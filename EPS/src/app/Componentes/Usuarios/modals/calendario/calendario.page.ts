@@ -15,11 +15,14 @@ export class CalendarioPage implements OnInit {
   @Input() Valor: any
   @Input() Mensaje: any
   public fechasDiplomado: string[] = []
-
+  minDate: string;
   constructor(private modalCtrl:ModalController,
-   private userService:UserService, public alertController:AlertController) { }
+   private userService:UserService, public alertController:AlertController) {
+    this.minDate = '2023-01-01T00:00:00Z'
+   }
 
   ngOnInit() {
+    this.minDate = '2023-01-01T00:00:00Z'
     if(this.Diplomado.idCategoria == 2){
       this.getCalendario()
     }
@@ -46,7 +49,6 @@ export class CalendarioPage implements OnInit {
       location.reload()
     })
     await this.alert.present()
-    alert(this.Mensaje)
   }
 
   convertir(fecha: string){

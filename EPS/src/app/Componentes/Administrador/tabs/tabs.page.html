@@ -2,7 +2,7 @@
   <ion-toolbar>
 
     <ion-buttons slot="start">
-      <ion-button style="--background: #221d45;" [routerLink]="['/']">
+      <ion-button style="--background: #221d45;" (click)="cerrar()">
         <ion-icon slot="icon-only" name="exit"></ion-icon>
       </ion-button>
       <ion-button (click)="mostrarUsuario()" style="--background: #221d45;">

@@ -8,11 +8,11 @@
       <br>
       <div class="box">
         <label>Fecha de inicio</label>
-        <ion-datetime [min]="2023" presentation="date" [preferWheel]="true" [(ngModel)]="jornada.FechaInicio"></ion-datetime>
+        <ion-datetime [min]="2023" presentation="date" [preferWheel]="true" (ionChange)="FechaInicio($event)"></ion-datetime>
       </div>
       <div class="box">
         <label>Fecha de Finalizacion</label>
-        <ion-datetime [min]="2023" presentation="date" [preferWheel]="true" [(ngModel)]="jornada.FechaFinal"></ion-datetime>
+        <ion-datetime [min]="2023" presentation="date" [preferWheel]="true" (ionChange)="FechaFinalizacion($event)"></ion-datetime>
       </div>
       <div class="Info" style="width: 100%; text-align: center;">  
         <h1>Informacion</h1>
@@ -58,8 +58,7 @@
       </div>
       <div id="Conf2">
       
-      <input class="PConfe" type="file" id="file" accept="image/jpeg,image/png" #fileInput
-        [(ngModel)]="capacitacion.poster" (change)="onSelectNewFile()">
+      <input class="PConfe" type="file" id="file" accept="image/jpeg,image/png" #fileInput (change)="onSelectNewFile()">
       <label *ngIf="show == 1" for="file">
         <img [src]="imageUrl" alter="Image Review" style="width: 325px; height: 275px;">
       </label>
@@ -71,14 +70,14 @@
       <ion-button (click)="CrearCapacitacion()">Crear Capacitacion</ion-button>
       </div>
       <div id="Conf3">
-        <ion-datetime [min]="2023" [(ngModel)]="fechaYhora"></ion-datetime>
+        <ion-datetime [min]="minDate" (ionChange)="FechaYHoraAsignacion($event)"></ion-datetime>
       </div>
       <div class="Info" style="width: 100%; text-align: center; margin-top: 2rem;">  
         <h1>Informacion</h1>
       </div>
       <div class="filtro">
         <div class="filtro1">
-          <ion-datetime [min]="2023" class="filt" presentation="year" [preferWheel]="true" (ionChange)="dateChanged($event)"></ion-datetime>
+          <ion-datetime [min]="minDate" class="filt" presentation="year" [preferWheel]="true" (ionChange)="dateChanged($event)"></ion-datetime>
         </div>
         <div class="filtro2">
           <ion-select aria-label="Fruit" placeholder="Jornadas" (ionChange)="jornadaChange($event)">
@@ -123,8 +122,7 @@
       </div>
       <div id="Conf2">
       
-      <input class="PConfe" type="file" id="file" accept="image/jpeg,image/png" #fileInput
-        [(ngModel)]="capacitacion.poster" (change)="onSelectNewFile()">
+      <input class="PConfe" type="file" id="file" accept="image/jpeg,image/png" #fileInput (change)="onSelectNewFile()">
       <label *ngIf="show == 1" for="file">
         <img [src]="imageUrl" alter="Image Review" style="width: 325px; height: 275px;">
       </label>
@@ -141,7 +139,6 @@
         <h3>Usuarios que tendran derecho a diploma</h3>
         <ion-list class="lista2">
           <ion-item *ngFor="let tipo of tipos">
-            <ion-label>{{ tipo.tipo }}</ion-label>
             <ion-checkbox [(ngModel)]="tiposSeleccionados[tipo.idTipo]">{{ tipo.tipo }}</ion-checkbox>
           </ion-item>
         </ion-list>
@@ -149,8 +146,8 @@
         <ion-button (click)="guardarSeleccion()">Guardar Selección</ion-button>
       </div>
       <div id="Diplo">
-        <ion-datetime [min]="2023" class="fecha" presentation="date" [min]="2023" [(ngModel)]="horaYFecha.fecha"></ion-datetime>
-        <ion-datetime class="hora" presentation="time" [(ngModel)]="horaYFecha.hora"></ion-datetime>
+        <ion-datetime [min]="minDate" class="fecha" presentation="date" (ionChange)="fechaAsignacion($event)"></ion-datetime>
+        <ion-datetime class="hora" presentation="time" (ionChange)="horaAsignacion($event)"></ion-datetime>
         <ion-list>
           <ion-item *ngFor="let datos of Fechas; let i = index">{{datos.fecha}}<br>{{datos.hora}} <ion-button (click)="eliminar(datos.fecha, datos.hora)"><ion-icon name="trash"></ion-icon></ion-button></ion-item>
         </ion-list>
@@ -176,13 +173,22 @@
           <ion-row class="GridHead">
             <ion-col class="head"><h3>Diplomado</h3></ion-col>
             <ion-col size="5" class="head"><h3>Descripcion</h3></ion-col>
-            <ion-col class="head"><h3>Datos del diplomado</h3></ion-col>
+            <ion-col size="1" class="head"><h3>Plantilla</h3> </ion-col>
+            <ion-col size="1.2" class="head"><h3>Datos</h3></ion-col>
           </ion-row>
           <div class="tab3">
             <ion-row *ngFor="let capacitacion of capacitaciones">
               <ion-col>{{capacitacion.nomCapacitacion}}</ion-col>
               <ion-col size="5">{{capacitacion.descripcion}}</ion-col>
-              <ion-col><ion-button (click)="mostrarCapacitacion(capacitacion)"><ion-icon name="create"></ion-icon></ion-button></ion-col>
+              <ion-col size="1">
+                <div *ngIf="capacitacion.diploma == 'null'">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                </div>
+                <div *ngIf="capacitacion.diploma != 'null'">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                </div>
+              </ion-col>
+              <ion-col size="1.2"><ion-button (click)="mostrarCapacitacion(capacitacion)"><ion-icon name="create"></ion-icon></ion-button></ion-col>
             </ion-row>
           </div>
         </ion-grid>

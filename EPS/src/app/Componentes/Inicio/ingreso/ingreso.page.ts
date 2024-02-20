@@ -51,7 +51,7 @@ export class IngresoPage implements OnInit {
           let json = JSON.stringify(datos)
           let obj = JSON.parse(json)
           try {
-            localStorage.setItem('Atoken', obj.token)
+            localStorage.setItem('SGConf', obj.token)
             this.router.navigate(['/tabs'])
           } catch (error) {
             this.alert = await this.alertController.create({
@@ -59,8 +59,10 @@ export class IngresoPage implements OnInit {
               message: 'Hubo un problema con su ingreso',
               buttons: ['OK']
             });
+            this.alert.onDidDismiss().then(() => {
+              location.reload()
+            })
             await this.alert.present()
-            location.reload()
             console.log("Error al decodificar el Token JWT ", error)
           }
         } else {
@@ -87,7 +89,7 @@ export class IngresoPage implements OnInit {
           let json = JSON.stringify(datos)
           let obj = JSON.parse(json)
           try {
-            localStorage.setItem('token', obj.token)
+            localStorage.setItem('SGConf', obj.token)
             this.router.navigate(['/tabsu','conferencias'])
           } catch (error) {
             this.alert = await this.alertController.create({
@@ -95,8 +97,10 @@ export class IngresoPage implements OnInit {
               message: 'Hubo un problema con su ingreso',
               buttons: ['OK']
             });
+            this.alert.onDidDismiss().then(() => {
+              location.reload()
+            })
             await this.alert.present()
-            location.reload()
             console.log("Error al decodificar el Token JWT ", error)
           }
         } else {

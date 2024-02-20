@@ -2,6 +2,7 @@ import { Component, OnInit, Input } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ModalController } from '@ionic/angular';
 import { AdminService } from 'src/app/Servicios/admin.servicio';
+import { AlertController } from '@ionic/angular';
 
 @Component({
   selector: 'app-crear-info',
@@ -26,8 +27,9 @@ export class CrearInfoPage implements OnInit {
   fechaActual: any
   Inicio: any
   Final : any
+  public alert: any
 
-  constructor(private modalCtrl:ModalController, private adminService:AdminService) { }
+  constructor(private modalCtrl:ModalController, private adminService:AdminService, public alertController:AlertController) { }
 
   ngOnInit() {
     this.fechaActual = new Date()
@@ -37,25 +39,36 @@ export class CrearInfoPage implements OnInit {
     this.jornada.ciclo = this.ciclo
     this.jornada.fechaInicio = this.fechaInicio
     this.jornada.fechaFinal = this.fechaFinal
+    
   }
 
   async modificar(){
     console.log(this.jornada)
-    let respuesta = await this.adminService.modificarJornada(this.jornada)
-    try {
-      const resp = respuesta as {mensaje?: string}
-      if(resp.mensaje !== undefined){
-        const mensaje = resp.mensaje
-        alert(mensaje)
-        location.reload()
-      } else {
-        console.log(respuesta)
-        alert('error al recibir respuesta de la modificacion')
+    if(this.jornada.fechaInicio < this.jornada.fechaFinal){
+      let respuesta = await this.adminService.modificarJornada(this.jornada)
+      try {
+        const resp = respuesta as {mensaje?: string}
+        if(resp.mensaje !== undefined){
+          const mensaje = resp.mensaje
+          alert(mensaje)
+          location.reload()
+        } else {
+          console.log(respuesta)
+          alert('error al recibir respuesta de la modificacion')
+        }
+      } catch (error) {
+        console.log(error)
+        alert('error al registrar la modificar la jornada')
       }
-    } catch (error) {
-      console.log(error)
-      alert('error al registrar la modificar la jornada')
+    } else {
+      this.alert = await this.alertController.create({
+        header: 'Aviso',
+        message: 'La fecha de Inicio no puede ser mayor a la fecha de Finalizacion',
+        buttons: ['OK']
+      });
+      await this.alert.present()
     }
+    
   }
 
   async eliminarJornada(){

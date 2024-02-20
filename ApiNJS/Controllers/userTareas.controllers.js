@@ -10,14 +10,6 @@ const fetch = require('node-fetch') //npm install node-fetch@2.6.1
 const {PDFDocument, StandardFonts, rgb} = require('pdf-lib')
 const fs = require('fs').promises
 
-exports.Prueba = async (req, res) => {
-    bd.query(`SELECT * FROM tipoTarea`, function (err, result) {
-        if (err) throw err;
-        console.log('Funciona')
-        res.send(result);
-    });
-}
-
 exports.GetDepartamentos = async (req, res) => {
     bd.query(`SELECT * FROM departamento`, function(err, result){
         if(err) throw err;
@@ -47,34 +39,6 @@ exports.tiposUsuarios = async (req, res) => {
         if(err) throw err;
         res.send(result)
     })
-}
-
-exports.cripto = async (req, res) => {
-    // Mensaje que deseas cifrar
-    var mensaje = req.body.mensaje;
-
-    // Clave secreta para cifrar y descifrar
-    var clave = 'clave-secreta-123';
-
-    // Cifrar el mensaje usando AES
-    var mensajeCifrado = CryptoJS.AES.encrypt(mensaje, clave).toString();
-    console.log('Mensaje cifrado:', mensajeCifrado);
-
-    res.send("Cifrado: " + mensajeCifrado)
-}
-
-exports.Decripto = async (req, res) => {
-    // Mensaje que deseas cifrar
-    var mensaje = req.body.mensaje;
-
-    // Clave secreta para cifrar y descifrar
-    var clave = 'clave-secreta-123';
-
-    // Descifrar el mensaje usando AES
-    var bytes = CryptoJS.AES.decrypt(mensaje, clave);
-    var mensajeOriginal = bytes.toString(CryptoJS.enc.Utf8);
-    console.log('Mensaje descifrado:', mensajeOriginal);
-    res.send("Mensaje: " + mensajeOriginal)
 }
 
 exports.RegistrarUsuario = async(req, res) => {
@@ -269,32 +233,37 @@ exports.CambiarPass = async (req, res) => {
 
 exports.GetUser = async (req, res) => {//modificar esta peticion para que acepta usuarios activos
     //select a.*, b.idDepartamento from usuario a, municipio b where a.estado = 1 and a.passwo='${passw}' and (a.carne='${dato1}' or a.cui='${dato1}') and a.idmunicipio = b.idMunicipio;
-    var dato1 = req.body.dato1;
-    var passw = req.body.passw;
+    try{
+        var dato1 = req.body.dato1;
+        var passw = req.body.passw;
 
-    // Clave secreta para cifrar y descifrar
-    var clave = 'clave-secreta-123';
+        // Clave secreta para cifrar y descifrar
+        var clave = 'clave-secreta-123';
 
-    // Descifrar el mensaje usando AES
-    var bytes = CryptoJS.AES.decrypt(passw, clave);
-    var mensajeOriginal = bytes.toString(CryptoJS.enc.Utf8);
+        // Descifrar el mensaje usando AES
+        var bytes = CryptoJS.AES.decrypt(passw, clave);
+        var mensajeOriginal = bytes.toString(CryptoJS.enc.Utf8);
 
-    var payload, clave="token1"
-    bd.query(`select idUsuario from usuario where estado = 1 and passwo=? and (carne=? or cui=?);`, [mensajeOriginal, dato1, dato1], function(err, result){
-        if(err) throw err;
-        payload = {
-            "datos": result
-        }
-        jwt.sign(payload, clave, (err, token) => {
-            if(err){
-                return res.status(400).send({msg : 'Error'})
-            } else if(Object.keys(result).length === 0) {
-                return res.send({msg:'Registro no encontrado', token: token})
-            } else {
-                return res.send({msg:'success', token: token})
+        var payload, clave="token1"
+        bd.query(`select idUsuario from usuario where estado = 1 and passwo=? and (carne=? or cui=?);`, [mensajeOriginal, dato1, dato1], function(err, result){
+            if(err) throw err;
+            payload = {
+                "datos": result
             }
-        })
-    }) 
+            jwt.sign(payload, clave, (err, token) => {
+                if(err){
+                    return res.status(400).send({msg : 'Error'})
+                } else if(Object.keys(result).length === 0) {
+                    return res.send({msg:'Registro no encontrado', token: token})
+                } else {
+                    return res.send({msg:'success', token: token})
+                }
+            })
+        }) 
+    } catch(error){
+        console.log('Error en el servidor')
+        return res.status(500).send('Error en el servidor');
+    }
 }
 
 exports.GetDatosUser = async (req, res) => {//modificar esta peticion para que acepta usuarios activos

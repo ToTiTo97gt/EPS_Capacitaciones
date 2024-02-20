@@ -17,11 +17,9 @@ export class ConferenciasPage implements OnInit {
    private modalCtrl:ModalController, public alertController:AlertController) { }
 
   public conferencias: any
-  public idTipo: any
   public alert: any
 
   ngOnInit() {
-    this.idTipo = this.userService.idTipo
     this.GetConferencias()
   }
 

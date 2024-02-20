@@ -2,9 +2,6 @@ const express = require("express");
 const router = express.Router();
 const usuario= require("../Controllers/userTareas.controllers");
 
-router.get("/Prueba",usuario.Prueba);
-router.post("/cripto", usuario.cripto)
-router.post("/Decripto", usuario.Decripto)
 router.post("/getDepartamentos", usuario.GetDepartamentos)
 router.post("/getMunicipios", usuario.GetMunicipios)
 router.post("/tiposUsuarios", usuario.tiposUsuarios)

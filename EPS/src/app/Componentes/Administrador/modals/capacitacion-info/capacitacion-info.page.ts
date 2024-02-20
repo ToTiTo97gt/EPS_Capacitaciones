@@ -32,8 +32,11 @@ export class CapacitacionInfoPage implements OnInit {
   fileSelected?:Blob;
   imageUrl?:string;
   @ViewChild('fileInput',{static:false}) fileInput!: ElementRef;
+  minDate: string;
 
-  constructor(private sant:DomSanitizer, private modalCtrl:ModalController, private adminService:AdminService, private userService:UserService) { }
+  constructor(private sant:DomSanitizer, private modalCtrl:ModalController, private adminService:AdminService, private userService:UserService) {
+    this.minDate = '2023-01-01T00:00:00Z'
+  }
 
   public agenda: any
   datosAgenda = {
@@ -104,6 +107,19 @@ export class CapacitacionInfoPage implements OnInit {
     }
     
   }
+
+  FechaYHoraAsignacion(event: any){
+    this.fechaYhora = event.detail.value
+  }
+
+  fechaAsignacion(event: any){
+    this.horaYFecha.fecha = event.detail.value
+  }
+
+  horaAsignacion(event: any){
+    this.horaYFecha.hora = event.detail.value.split('T')[1]
+  }
+
 //Probar la modificacion de datos de una capacitacion
   async modificarCapacitacion(){
     const fechaHora = new Date(this.fechaYhora);

@@ -11,8 +11,7 @@
         <ion-input class="Correo" label="E-mail" labelPlacement="floating" fill="outline" [(ngModel)]="nuevoUser.email" type="email"></ion-input>
 
         <ion-item>
-          <ion-label position="stacked">Contraseña</ion-label>
-          <ion-input class="pas" type="{{mostrar ? 'text' : 'password'}}" [(ngModel)]="nuevoUser.passw"></ion-input>
+          <ion-input class="pas" label="Contraseña" labelPlacement="floating" type="{{mostrar ? 'text' : 'password'}}" [(ngModel)]="nuevoUser.passw"></ion-input>
           <ion-button slot="end" fill="clear" (click)="togglePassVisibility()">
             <ion-icon [name]="mostrar ? 'eye-off' : 'eye'"></ion-icon>
           </ion-button>

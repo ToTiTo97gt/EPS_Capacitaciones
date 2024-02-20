@@ -24,7 +24,7 @@ export class TabsPage implements OnInit {
   public datos: any
 
   ngOnInit(){
-    const token = localStorage.getItem('Atoken')
+    const token = localStorage.getItem('SGConf')
     this.Actualizar0()
     this.Actualizar1()
     if(token !== null){
@@ -96,6 +96,11 @@ export class TabsPage implements OnInit {
 
   async Actualizar1(){
     let resp1 = await this.adminService.Actualizar1()
+  }
+
+  cerrar(){
+    localStorage.removeItem('SGConf')
+    this.route.navigate(['/'])
   }
 
 }

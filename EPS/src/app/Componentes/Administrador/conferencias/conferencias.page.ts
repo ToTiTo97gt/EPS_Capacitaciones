@@ -65,6 +65,13 @@ export class ConferenciasPage implements OnInit {
       await this.alert.present()
     } else {
       await this.adminService.MarcarAsistencias(this.idCapacitacion, this.data, 1)
+      await this.adminService.MarcarAsistencias(this.idCapacitacion, this.data, 2)
+      this.alert = await this.alertController.create({
+        header: 'Listo',
+        message: 'Asistencias Registradas',
+        buttons: ['OK']
+      });
+      await this.alert.present()
     }
   }
 
@@ -75,9 +82,21 @@ export class ConferenciasPage implements OnInit {
         message: 'Seleccionar un Diplomado para cargar notas',
         buttons: ['OK']
       });
+      this.alert.onDidDismiss().then(() => {
+        location.reload()
+      })
       await this.alert.present()
     } else {
       await this.adminService.MarcarAsistencias(this.idCapacitacion, this.data, 2)
+      this.alert = await this.alertController.create({
+        header: 'Listo',
+        message: 'Notas Cargadas',
+        buttons: ['OK']
+      });
+      this.alert.onDidDismiss().then(() => {
+        location.reload()
+      })
+      await this.alert.present()
     }
     //console.log(this.data)
   }

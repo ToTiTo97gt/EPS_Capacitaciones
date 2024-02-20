@@ -6,50 +6,6 @@ const s3 = new AWS.S3(aws_keys.s3)
 const nodemailer = require('nodemailer')
 var CryptoJS = require("crypto-js")
 
-exports.Prueba = async (req, res) => {
-    bd.query(`SELECT * FROM tipoTarea`, function (err, result) {
-        if (err) throw err;
-        console.log('Funciona')
-        res.send(result);
-    });
-}
-
-exports.cripto = async (req, res) => {
-    // Mensaje que deseas cifrar
-    var mensaje = req.body.mensaje;
-
-    // Clave secreta para cifrar y descifrar
-    var clave = 'clave-secreta-123';
-
-    // Cifrar el mensaje usando AES
-    var mensajeCifrado = CryptoJS.AES.encrypt(mensaje, clave).toString();
-    console.log('Mensaje cifrado:', mensajeCifrado);
-
-    res.send("Cifrado: " + mensajeCifrado)
-}
-
-exports.Decripto = async (req, res) => {
-    // Mensaje que deseas cifrar
-    var mensaje = req.body.mensaje;
-
-    // Clave secreta para cifrar y descifrar
-    var clave = 'clave-secreta-123';
-
-    // Descifrar el mensaje usando AES
-    var bytes = CryptoJS.AES.decrypt(mensaje, clave);
-    var mensajeOriginal = bytes.toString(CryptoJS.enc.Utf8);
-    console.log('Mensaje descifrado:', mensajeOriginal);
-    res.send("Mensaje: " + mensajeOriginal)
-}
-
-exports.Empleados = async (req, res) => {
-    bd.query(`select NoEmpleado, Nombre, Apellido from empleado`, function(err, result) {
-        if(err) throw err;
-        return res.json(result)
-    });
-    
-}
-
 exports.RegistrarAdmin = async (req, res) => {
     try {
         bd.query(`insert into administrador(nombre, apellido, email, passw, telefono, estado) 
@@ -99,50 +55,57 @@ exports.RegistrarAdmin = async (req, res) => {
 }
 
 exports.AdminUser = async (req, res) => {
-    var clave = 'clave-secreta-123';
+    try {
+        var clave = 'clave-secreta-123';
 
-    // Descifrar el mensaje usando AES
-    var bytes = CryptoJS.AES.decrypt(req.body.email, clave);
-    var email = bytes.toString(CryptoJS.enc.Utf8);
+        // Descifrar el mensaje usando AES
+        var bytes = CryptoJS.AES.decrypt(req.body.email, clave);
+        var email = bytes.toString(CryptoJS.enc.Utf8);
 
-    var bytes2 = CryptoJS.AES.decrypt(req.body.passw, clave);
-    var passw = bytes2.toString(CryptoJS.enc.Utf8);
+        var bytes2 = CryptoJS.AES.decrypt(req.body.passw, clave);
+        var passw = bytes2.toString(CryptoJS.enc.Utf8);
 
-    var payload, clave="token1"
-    bd.query(`select idAdmin from administrador where email=? and passw=? and estado = 1;`, [email, passw], function(err, result){
-        if(err) throw err;
-        payload = { 
-            "datos": result
-        }
-        jwt.sign(payload, clave, (err, token) => {
-            if(err){
-                return res.status(400).send({msg : 'Error'})
-            } else if(Object.keys(result).length === 0) {
-                return res.send({msg:'Registro no encontrado', token: token})
-            } else {
-                return res.send({msg:'success', token: token})
+        var payload, clave="token1"
+        bd.query(`select idAdmin from administrador where email=? and passw=? and estado = 1;`, [email, passw], function(err, result){
+            if(err) throw err;
+            payload = { 
+                "datos": result
             }
-        })
-
-    }) 
+            jwt.sign(payload, clave, (err, token) => {
+                if(err){
+                    return res.status(400).send({msg : 'Error'})
+                } else if(Object.keys(result).length === 0) {
+                    return res.send({msg:'Registro no encontrado', token: token})
+                } else {
+                    return res.send({msg:'success', token: token})
+                }
+            })
+        }) 
+    } catch (error) {
+        console.log(error + '\nError en la peticion: AdminUser')
+    }
+    
 }
 
 exports.NuevosDatos = async (req, res) => {
-    var idAdmin = req.body.idAdmin;
-    bd.query(`select * from administrador where idAdmin = ?;`, [idAdmin], function(err, result){
+    try {
+        var idAdmin = req.body.idAdmin;
+        bd.query(`select * from administrador where idAdmin = ?;`, [idAdmin], function(err, result){
         if (err) {
             console.error('Error al ejecutar la consulta:', err);
             return res.status(500).json({ message: 'Error al ejecutar la consulta' });
         }
-
-        // Verificar si se encontraron resultados
-        if (result.length === 0) {
-            return res.status(404).json({ message: 'No se encontraron datos para el usuario proporcionado' });
-        }
-
-        // Devolver resultados
-        return res.send(result);
-    }) 
+            // Verificar si se encontraron resultados
+            if (result.length === 0) {
+                return res.status(404).json({ message: 'No se encontraron datos para el usuario proporcionado' });
+            }
+            // Devolver resultados
+            return res.send(result);
+        })
+    } catch (error) {
+        console.log(error + '\nError en la peticion: NuevosDatos')
+    }
+     
 }
 
 exports.ModificarDatos = async (req, res) => {
@@ -300,35 +263,55 @@ exports.CambiarPass = async (req, res) => {
 }
 
 exports.AdminPermisos = async (req, res) => {
-    var idAdmin = req.body.idAdmin
-    bd.query(`select a.idAdmin, a.idPermiso from adminpermiso a, administrador b, permiso c
-	    where b.idAdmin = a.idAdmin and c.idPermiso = a.idPermiso and a.idAdmin = ${idAdmin}`, function(err, result){
+    try {
+        var idAdmin = req.body.idAdmin
+        bd.query(`select a.idAdmin, a.idPermiso from adminpermiso a, administrador b, permiso c
+	      where b.idAdmin = a.idAdmin and c.idPermiso = a.idPermiso and a.idAdmin = ${idAdmin}`, function(err, result){
             if(err) throw err;
             return res.send(result)
-    })
+        })
+    } catch (error) {
+        console.log(error + '\nError en la peticion: AdminPermisos')
+    }
+    
 }
 
 exports.AdminLista = async (req, res) => {
-    bd.query(`Select * from administrador where IdAdmin <> ${req.body.id}` , function(err, result){
-        if(err) throw err;
-        return res.send(result)
-    })
+    try {
+        bd.query(`Select * from administrador where IdAdmin <> ${req.body.id}` , function(err, result){
+            if(err) throw err;
+            return res.send(result)
+        })
+    } catch (error) {
+        console.log(error + '\nError en la peticion: AdminLista')
+    }
+    
 }
 
 exports.Permisos = async (req, res) => {
-    bd.query(`select * from permiso where permiso <> 'Principal' and permiso <> 'Informacion' and permiso <> 'Diplomados'`, function(err, result){
-        if(err) throw err;
-        return res.send(result)
-    })
+    try {
+        bd.query(`select * from permiso where permiso <> 'Principal' and permiso <> 'Informacion' and permiso <> 'Diplomados'`, function(err, result){
+            if(err) throw err;
+            return res.send(result)
+        })
+    } catch (error) {
+        console.log(error + '\nError en la peticion: Permisos')
+    }
+    
 }
 
 exports.PermisosAdmin = async (req, res) => {
-    var idAdmin = req.body.idAdmin
-    bd.query(`select c.idPermiso, c.permiso from adminpermiso a, administrador b, permiso c
-	  where b.idAdmin = a.idAdmin and c.idPermiso = a.idPermiso and a.idAdmin = ${idAdmin}`, function(err, result){
-        if(err) throw err
-        return res.send(result)
-    })
+    try {
+        var idAdmin = req.body.idAdmin
+        bd.query(`select c.idPermiso, c.permiso from adminpermiso a, administrador b, permiso c
+	      where b.idAdmin = a.idAdmin and c.idPermiso = a.idPermiso and a.idAdmin = ${idAdmin}`, function(err, result){
+            if(err) throw err
+            return res.send(result)
+        })
+    } catch (error) {
+        console.log(error + '\nError en la peticion: PermisosAdmin')
+    }
+    
 }
 
 exports.AsignarPermiso = async (req, res) => {
@@ -405,10 +388,14 @@ exports.JornadaNueva = async (req, res) => {
 }
 
 exports.GetJornadas = async (req, res) => {
-    bd.query(`Select * from jornada ORDER BY estado DESC` , function(err, result){
-        if(err) throw err;
-        return res.send(result)
-    })
+    try {
+        bd.query(`Select * from jornada ORDER BY estado DESC` , function(err, result){
+            if(err) throw err;
+            return res.send(result)
+        })
+    } catch (error) {
+        console.log(error + "error en la peticion GetJornadas")
+    }
 }
 
 exports.GetJornadaEspecifica = async (req, res) => {
@@ -459,11 +446,15 @@ exports.modificarJornada = async (req, res) => {
 }
 
 exports.eliminarJornada = async (req, res) => {
-    var idJornada = req.body.idJornada
-    bd.query(`delete from jornada idJornada = ${idJornada}` , function(err, result){
-        if(err) throw err;
-        return res.send(result)
-    })
+    try {
+        var idJornada = req.body.idJornada
+        bd.query(`delete from jornada idJornada = ${idJornada}` , function(err, result){
+            if(err) throw err;
+            return res.send(result)
+        })
+    } catch (error) {
+        console.log(error + "error en la peticion eliminarJornada")
+    }
 }
 
 async function AsignacionAuto (idCapa) {
@@ -689,31 +680,38 @@ exports.CapacitacionReciente = async (req, res) => {
 }
 
 exports.Capacitaciones = async (req, res) => {
-    var idCategoria = req.body.idCategoria
-    var estado = req.body.estado
-    bd.query(`Select a.* from capacitacion a, jornada b where a.idJornada = b.idJornada and CURDATE() >= b.fechaInicio
-	  and CURDATE() <= b.fechaFinal and a.idCategoria = ${idCategoria};` , function(err, result){
-        if(err) throw err;
-        return res.send(result)
-    })
+    try {
+        var idCategoria = req.body.idCategoria
+        var estado = req.body.estado
+        bd.query(`Select a.* from capacitacion a, jornada b where a.idJornada = b.idJornada and CURDATE() >= b.fechaInicio
+          and CURDATE() <= b.fechaFinal and a.idCategoria = ${idCategoria};` , function(err, result){
+            if(err) throw err;
+            return res.send(result)
+        })
+    } catch (error) {
+        console.log(error + "error en la peticion Capacitaciones")
+    }
 }
 
 exports.CapacitacionesPorJornada = async (req, res) => {
-    var idJornada = req.body.idJornada
-    var idCategoria = req.body.idCategoria
-    bd.query(`Select * from capacitacion where idJornada = ${idJornada} and idCategoria = ${idCategoria} and estado = 1;` , function(err, result){
-        if(err){
-            if(err.code === 'ER_BAD_FIELD_ERROR'){
-                console.error('Columna no encontrada en la tabla.');
+    try {
+        var idJornada = req.body.idJornada
+        var idCategoria = req.body.idCategoria
+        bd.query(`Select * from capacitacion where idJornada = ${idJornada} and idCategoria = ${idCategoria} and estado = 1;` , function(err, result){
+            if(err){
+                if(err.code === 'ER_BAD_FIELD_ERROR'){
+                    console.error('Columna no encontrada en la tabla.');
+                } else {
+                    // Otro tipo de error, manejar según sea necesario
+                    console.error('Error en la consulta:', err);
+                }
             } else {
-                // Otro tipo de error, manejar según sea necesario
-                console.error('Error en la consulta:', err);
+                return res.send(result)
             }
-        } else {
-            return res.send(result)
-        }
-    })
-    
+        })
+    } catch (error) {
+        console.log(error + "error en la peticion CapacitacionesPorJornada")
+    }
 }
 
 exports.Participaciones = async (req, res) => {
@@ -783,11 +781,15 @@ exports.DiplomaDiplomados = async(req, res) => {
 }
 
 exports.getAgenda = async (req, res) => {
-    var idCapacitacion = req.body.idCapacitacion
-    bd.query(`Select * from agenda where idCapacitacion = '${idCapacitacion}'` , function(err, result){
-        if(err) throw err;
-        return res.send(result)
-    })
+    try {
+        var idCapacitacion = req.body.idCapacitacion
+        bd.query(`Select * from agenda where idCapacitacion = '${idCapacitacion}'` , function(err, result){
+            if(err) throw err;
+            return res.send(result)
+        })
+    } catch (error) {
+        console.log(error + '\nError al solicitar las reuniones con derecho a diploma')
+    }
 }
 
 exports.Asistencias = async (req, res) => {
@@ -909,27 +911,36 @@ exports.EstadoAyuda = async(req, res) => {
 // fuciones extras
 
 exports.Actualizar0 = async (req, res) => {
-    bd.query(`UPDATE jornada
-    SET estado = CASE
-        WHEN CURDATE() > fechaFinal OR CURDATE() < fechaInicio THEN 0
-        ELSE estado -- Mantener el valor actual si no se cumple la condición
-    END
-    WHERE CURDATE() > fechaFinal OR CURDATE() < fechaInicio`, function(err, result){
-        if(err) throw err
-        console.log("Actualizar 0")
-    })
+    try {
+        bd.query(`UPDATE jornada
+        SET estado = CASE
+            WHEN CURDATE() > fechaFinal OR CURDATE() < fechaInicio THEN 0
+            ELSE estado -- Mantener el valor actual si no se cumple la condición
+        END
+        WHERE CURDATE() > fechaFinal OR CURDATE() < fechaInicio`, function(err, result){
+            if(err) throw err
+            console.log("Actualizar 0")
+        })
+    } catch (error) {
+        console.log(error + "\n Error en la peticion de Actualizacion0")
+    }
 }
 
 exports.Actualizar1 = async (req, res) => {
-    bd.query(`UPDATE jornada
-    SET estado = CASE
-        WHEN CURDATE() >= fechaInicio AND CURDATE() <= fechaFinal THEN 1
-        ELSE estado -- Mantener el valor actual si no se cumple la condición
-    END
-    WHERE CURDATE() >= fechaInicio AND CURDATE() <= fechaFinal`, function(err, result){
-        if(err) throw err
-        console.log("Actualizar 1")  
-    })
+    try {
+        bd.query(`UPDATE jornada
+        SET estado = CASE
+            WHEN CURDATE() >= fechaInicio AND CURDATE() <= fechaFinal THEN 1
+            ELSE estado -- Mantener el valor actual si no se cumple la condición
+        END
+        WHERE CURDATE() >= fechaInicio AND CURDATE() <= fechaFinal`, function(err, result){
+            if(err) throw err
+            console.log("Actualizar 1")  
+        })
+    } catch (error) {
+        console.log(error + "\n Error en la peticion de Actualizacion1")
+    }
+    
 }
 
 exports.getInscripciones = async (req, res) => {
@@ -1125,43 +1136,4 @@ function SubirArchivo(Archivo, idArchivo){
     } catch (error) {
         return "error";
     }
-}
-
-function sendMail1(user) {
-    // create reusable transporter object using the default SMTP transport
-    let transporter = nodemailer.createTransport({
-      host: "smtp.gmail.com",
-      port: 587,
-      secure: false, // true for 465, false for other ports
-      auth: {
-        user: 'sender97gt@gmail.com',
-        pass: 'toto1897'
-      }
-    });
-  
-    let mailOptions = {
-      from: 'sender97gt@gmail.com', // sender address
-      to: user.email, // list of receivers
-      subject: "Bienvenido al sistema de administradores", // Subject line
-      html: `
-      <html>
-        <body>
-            <h1>Bienvenido(a) ${user.nombre} ${user.apellido}</h1><br>
-            <h2>Usted fue elegido(a) para ser parte de los administradores de este modulo</h2><br>
-            <p>La contraseña que se la asigno es: ${user.passw}</p>
-            <p>y para ingresar use este mismo correo con el cual fue registrado(a)</p>
-        </body>
-      </html>`
-    };
-  
-    // send mail with defined transport object
-    let info = transporter.sendMail(mailOptions, function(error, info){
-        if(error){
-            console.log(error)
-        } else {
-            console.log('Email enviado')
-        }
-    });
-  
-    //callback(info);
 }

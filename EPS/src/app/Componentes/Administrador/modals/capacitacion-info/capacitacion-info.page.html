@@ -20,20 +20,20 @@
       <label for="file1">Seleccionar poster
         <img [src]="imageUrl" alter="Image Review" style="width: 288px; height: 285px;">
       </label><br>
-      <input class="Conferencia" type="file" id="file1" accept="image/jpeg,image/png" hidden #fileInput
-        [(ngModel)]="poster" (change)="onSelectNewFile()">
+      <input class="Conferencia" type="file" id="file1" accept="image/jpeg,image/png" hidden #fileInput (change)="onSelectNewFile()">
       <ion-input class="Conferencia" label="Link de Zoom" [(ngModel)]="zoomLink" labelPlacement="floating" fill="outline" type="text"></ion-input>
       <ion-input class="Conferencia" label="Link de FaceBook" [(ngModel)]="fbLink" labelPlacement="floating" fill="outline" type="text"></ion-input>
     
     </div>
     <div id="Conf3">
       <div *ngIf="idCategoria == 1">
-        <ion-datetime *ngIf="idCategoria == 1" [min]="2023" [(ngModel)]="fechaYhora"></ion-datetime>
+        <ion-datetime [min]="minDate" *ngIf="idCategoria == 1" (ionChange)="FechaYHoraAsignacion($event)" ></ion-datetime>
       </div>
       <div id="Diplo" *ngIf="idCategoria == 2">
-        <ion-datetime class="fecha" presentation="date" [min]="2023" [(ngModel)]="horaYFecha.fecha"></ion-datetime>
+        
+        <ion-datetime class="fecha" presentation="date" [min]="minDate" (ionChange)="fechaAsignacion($event)"></ion-datetime>
         <div class="subDiplo">
-          <ion-datetime class="hora" presentation="time" [(ngModel)]="horaYFecha.hora"></ion-datetime>
+          <ion-datetime class="hora" presentation="time" (ionChange)="horaAsignacion($event)"></ion-datetime>
           <ion-list>
             <ion-item *ngFor="let datos of Fechas; let i = index">{{convertir(datos.fecha)}}<br>{{datos.hora}}<ion-button (click)="eliminar(datos.fecha, datos.hora)"><ion-icon name="trash"></ion-icon></ion-button></ion-item>
           </ion-list>
@@ -53,7 +53,6 @@
         <h3 style="color: white">Usuarios que tendran derecho a diploma</h3>
         <ion-list class="lista2">
           <ion-item *ngFor="let tipo of tipos">
-            <ion-label>{{ tipo.tipo }}</ion-label>
             <ion-checkbox [(ngModel)]="tiposSeleccionados[tipo.idTipo]">{{ tipo.tipo }}</ion-checkbox>
           </ion-item>
         </ion-list>

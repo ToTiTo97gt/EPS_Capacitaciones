@@ -26,7 +26,7 @@ export class TabsuPage implements OnInit {
   
   
   ngOnInit() {
-    const token = localStorage.getItem('token')
+    const token = localStorage.getItem('SGConf')
     if(token !== null){
       this.decoded = jwt_decode(token)
       this.userService.idG = this.decoded.datos[0].idUsuario
@@ -81,7 +81,7 @@ export class TabsuPage implements OnInit {
   }
 
   cerrar(){
-    localStorage.removeItem('token')
+    localStorage.removeItem('SGConf')
     this.route.navigate(['/'])
   }
 

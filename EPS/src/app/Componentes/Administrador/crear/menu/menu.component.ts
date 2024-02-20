@@ -29,12 +29,14 @@ export class MenuComponent  implements OnInit {
   base64: string="Base64...";
   fileSelected?:Blob;
   imageUrl?:string;
+  minDate: string;
 
   @ViewChild('fileInput',{static:false}) fileInput!: ElementRef;
   @ViewChild('fileInput1',{static:false}) fileInput1!: ElementRef;
   constructor(private sant: DomSanitizer, private adminService:AdminService, private UserService:UserService,
    private modalCtrl:ModalController, public alertController:AlertController) {
     this.menu = "Jornadas"
+    this.minDate = '2023-01-01T00:00:00Z'
   }
   public alert: any
 
@@ -52,6 +54,14 @@ export class MenuComponent  implements OnInit {
     this.getPorAnio(anioActual.getFullYear())
   }
 
+  FechaInicio(event: any){
+    this.jornada.FechaInicio = event.detail.value;
+  }
+
+  FechaFinalizacion(event: any){
+    this.jornada.FechaFinal = event.detail.value;
+  }
+
   convertFileToBase64(){
     let reader = new FileReader();
     reader.readAsDataURL(this.fileSelected as Blob);
@@ -65,16 +75,29 @@ export class MenuComponent  implements OnInit {
   poster = ""
 
   onSelectNewFile():void{
-      this.show = 1
-    this.fileSelected=this.fileInput.nativeElement.files[0];
+    this.show = 1
+      
+    const files = this.fileInput.nativeElement.files;
+    if (files.length > 0) {
+      this.fileSelected = files[0];
+      if (this.fileSelected) {
+        this.capacitacion.poster = (this.fileSelected as File).name; // Obtener el nombre del archivo
+        alert(this.capacitacion.poster + " ***")
+        this.imageUrl = window.URL.createObjectURL(this.fileSelected); // Crear la URL segura para mostrar la imagen
+      } else {
+        alert('Error al seleccionar el archivo');
+      }
+    }
+    /* this.fileSelected=this.fileInput.nativeElement.files[0];
     if(this.fileSelected){
       var arr = this.capacitacion.poster.split("\\")
       this.capacitacion.poster = arr[arr.length-1]
+      alert(this.fileSelected + " ***")
       this.imageUrl=this.sant.bypassSecurityTrustUrl(window.URL.createObjectURL(this.fileSelected)) as string;
     }else{
       
       alert('error al seleccionar el archivo')
-    }
+    } */
     
   }
 
@@ -99,34 +122,43 @@ export class MenuComponent  implements OnInit {
       var fecha2 = this.jornada.FechaFinal
       var obj1 = new Date(fecha1)
       var obj2 = new Date(fecha2)
-      this.jornada.FechaInicio = obj1.toISOString().split('T')[0]
-      this.jornada.FechaFinal = obj2.toISOString().split('T')[0]
-      let respuesta = await this.adminService.CrearJornada(this.jornada)
-      try {
-        const resp = respuesta as {mensaje?: string}
-        if(resp.mensaje !== undefined){
-          const mensaje = resp.mensaje
-          this.alert = await this.alertController.create({
-            header: 'Listo',
-            message: mensaje,
-            buttons: ['OK']
-          });
-          await this.alert.present()
-          this.vaciar()
-        } else {
-          console.log(respuesta)
+      if(obj1 < obj2){
+        this.jornada.FechaInicio = obj1.toISOString().split('T')[0]
+        this.jornada.FechaFinal = obj2.toISOString().split('T')[0]
+        let respuesta = await this.adminService.CrearJornada(this.jornada)
+        try {
+          const resp = respuesta as {mensaje?: string}
+          if(resp.mensaje !== undefined){
+            const mensaje = resp.mensaje
+            this.alert = await this.alertController.create({
+              header: 'Listo',
+              message: mensaje,
+              buttons: ['OK']
+            });
+            await this.alert.present()
+            this.vaciar()
+          } else {
+            //console.log(respuesta)
+            this.alert = await this.alertController.create({
+              header: 'Aviso',
+              message: 'Error al recibir la respuesta',
+              buttons: ['OK']
+            });
+            await this.alert.present()
+          }
+        } catch (error) {
+          //console.log(error)
           this.alert = await this.alertController.create({
             header: 'Aviso',
-            message: 'Error al recibir la respuesta',
+            message: 'Error al registrar la nueva jornada',
             buttons: ['OK']
           });
           await this.alert.present()
         }
-      } catch (error) {
-        console.log(error)
+      } else if (obj1 > obj2) {
         this.alert = await this.alertController.create({
           header: 'Aviso',
-          message: 'Error al registrar la nueva jornada',
+          message: 'La fecha de Inicio no puede ser mayor a la fecha de Finalizacion',
           buttons: ['OK']
         });
         await this.alert.present()
@@ -139,7 +171,6 @@ export class MenuComponent  implements OnInit {
       });
       await this.alert.present()
     }
-
   }
 
   async GetJornadas(){
@@ -190,6 +221,10 @@ export class MenuComponent  implements OnInit {
       this.capacitaciones = await this.adminService.Capacitaciones(2)
     }
     
+  }
+
+  FechaYHoraAsignacion(event: any){
+    this.fechaYhora = event.detail.value
   }
 
   async CrearCapacitacion(){
@@ -366,6 +401,15 @@ export class MenuComponent  implements OnInit {
     fecha: "",
     hora: ""
   }
+
+  fechaAsignacion(event: any){
+    this.horaYFecha.fecha = event.detail.value
+  }
+
+  horaAsignacion(event: any){
+    this.horaYFecha.hora = event.detail.value
+  }
+
   a = 0
 
   tiposSeleccionados: any = {};
@@ -490,9 +534,8 @@ export class MenuComponent  implements OnInit {
 
   AgregarFecha(fecha: any, hora: any){
     this.horaYFecha.fecha = fecha.split('T')[0]
-    if(this.a == 0){
+    if(hora.split('T').length > 1){
       this.horaYFecha.hora = hora.split('T')[1]
-      this.a++
     } else {
       this.horaYFecha.hora = hora
     }

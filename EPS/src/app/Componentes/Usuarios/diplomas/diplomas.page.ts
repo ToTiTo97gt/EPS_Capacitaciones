@@ -3,6 +3,7 @@ import { PDFDocument, rgb } from 'pdf-lib';
 import { Font } from '@pdf-lib/fontkit';
 import { AdminService } from '../../../Servicios/admin.servicio';
 import { UserService } from 'src/app/Servicios/user.servicio';
+import { AlertController } from '@ionic/angular';
 
 import { HttpClient } from '@angular/common/http';
 
@@ -13,28 +14,23 @@ import { HttpClient } from '@angular/common/http';
 })
 export class DiplomasPage implements OnInit {
 
-  constructor(private adminService:AdminService, private userService: UserService, private http: HttpClient) { }
+  constructor(private adminService:AdminService, private userService: UserService, private http: HttpClient, public alertController:AlertController) { }
 
   ngOnInit() {
     //console.log(this.userService.datosUser)
-    this.datos.nombre = this.userService.datosUser.nombre
-    this.datos.apellido = this.userService.datosUser.apellido
+    this.datos.nombre = this.userService.datosUser[0].nombre
+    this.datos.apellido = this.userService.datosUser[0].apellido
     var anioActual = new Date()
     this.getPorAnio(anioActual.getFullYear())
     //this.getDiplomas()
   }
-
+  public alert: any
   public datas: any
   public datas1: any
 
-  // async getDiplomas(){
-  //   this.datas = await this.userService.Diplomas(this.userService.idG)
-  //   this.datas1 = await this.userService.Diplomados(this.userService.idG)
-  // }
-
   datos = {
-    nombre: this.userService.datosUser.nombre,
-    apellido: this.userService.datosUser.apellido,
+    nombre: this.userService.datosUser[0].nombre,
+    apellido: this.userService.datosUser[0].apellido,
     modalidad: "",
     duracion: ""
   }
@@ -54,7 +50,15 @@ export class DiplomasPage implements OnInit {
         // Utilizar window.location.href para iniciar la descarga del archivo
         window.location.href = data.link.URL;
       } else {
-        console.error('Error al obtener el enlace del archivo desde el servidor.');
+        this.alert = await this.alertController.create({
+          header: 'Error!',
+          message: 'Problemas al descargar el diploma.',
+          buttons: ['OK']
+        });
+        this.alert.onDidDismiss().then(() => {
+          location.reload()
+        })
+        await this.alert.present()
       }
     }
   }
@@ -65,22 +69,41 @@ export class DiplomasPage implements OnInit {
   }
   public generar2 = 0;
   async generarDiplomado(data: any){
-    if(data.dat == 0){
-      this.fechas.inicio = this.convertir2(data.inicio)
-      this.fechas.fin = this.convertir3(data.fin)
-      this.datos.modalidad = data.modalidad
-      this.datos.duracion = data.duracion
-      data.dat = 1
-      data.link = await this.userService.GenerarDiplomadoPDF(this.datos, data.nomCapacitacion, this.fechas, data.diploma)
-    } else if (data.dat == 1){
-      data.dat = 0
-      if (data.link && data.link.URL) {
-        // Utilizar window.location.href para iniciar la descarga del archivo
-        window.location.href = data.link.URL;
-      } else {
-        console.error('Error al obtener el enlace del archivo desde el servidor.');
+    if(data.diploma == 'null' || data.diploma === null || data.diploma === undefined || data.diploma == ''){
+      this.alert = await this.alertController.create({
+        header: 'Aviso',
+        message: 'Aun no hay plantilla para generar este diploma, disculpe los inconvenientes',
+        buttons: ['OK']
+      });
+      await this.alert.present()
+    } else {
+      if(data.dat == 0){
+        this.fechas.inicio = this.convertir2(data.inicio)
+        this.fechas.fin = this.convertir3(data.fin)
+        this.datos.modalidad = data.modalidad
+        this.datos.duracion = data.duracion
+        data.dat = 1
+        data.link = await this.userService.GenerarDiplomadoPDF(this.datos, data.nomCapacitacion, this.fechas, data.diploma)
+      } else if (data.dat == 1){
+        data.dat = 0
+        if (data.link && data.link.URL) {
+          // Utilizar window.location.href para iniciar la descarga del archivo
+          window.location.href = data.link.URL;
+        } else {
+          this.alert = await this.alertController.create({
+            header: 'Error!',
+            message: 'Problemas al descargar el diploma.',
+            buttons: ['OK']
+          });
+          this.alert.onDidDismiss().then(() => {
+            location.reload()
+          })
+          await this.alert.present()
+          console.error('Error al obtener el enlace del archivo desde el servidor.');
+        }
       }
     }
+    
     //console.log(capacitacion + "/" + this.fechas.inicio + "-" +this.fechas.fin + "/" + diploma)
   }
 

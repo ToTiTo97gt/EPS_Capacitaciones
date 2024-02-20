@@ -41,16 +41,14 @@
       </div>
       <div id="col2">
         <ion-item>
-          <ion-label position="stacked">Contraseña</ion-label>
-          <ion-input class="pas" type="{{mostrar1 ? 'text' : 'password'}}" [(ngModel)]="nuevoUser.passwo"></ion-input>
+          <ion-input class="pas" label="Contraseña" label-placement="floating" type="{{mostrar1 ? 'text' : 'password'}}" [(ngModel)]="nuevoUser.passwo"></ion-input>
           <ion-button slot="end" fill="clear" (click)="togglePassVisibility()">
             <ion-icon [name]="mostrar1 ? 'eye-off' : 'eye'"></ion-icon>
           </ion-button>
         </ion-item>
         <br>
         <ion-item>
-          <ion-label position="stacked">Confirmar contraseña</ion-label>
-          <ion-input class="pas" type="{{mostrar1 ? 'text' : 'password'}}" [(ngModel)]="nuevoUser.confirmarPasswo"></ion-input>
+          <ion-input class="pas" label="Confirmar contraseña" label-placement="floating" type="{{mostrar1 ? 'text' : 'password'}}" [(ngModel)]="nuevoUser.confirmarPasswo"></ion-input>
           <ion-button slot="end" fill="clear" (click)="togglePassVisibility()">
             <ion-icon [name]="mostrar1 ? 'eye-off' : 'eye'"></ion-icon>
           </ion-button>
