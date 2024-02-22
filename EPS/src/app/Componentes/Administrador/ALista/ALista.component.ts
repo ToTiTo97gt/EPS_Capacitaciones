@@ -53,6 +53,7 @@ export class AListaComponent implements OnInit {
   async Registrar(nuevoUser: any){
     if(this.validarUser(nuevoUser)){
       let resp = await this.adminService.Registrar(nuevoUser)
+      
       if(resp != 'error'){
         this.alert = await this.alertController.create({
           header: 'Listo',

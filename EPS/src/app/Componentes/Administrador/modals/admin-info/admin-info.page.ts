@@ -62,10 +62,10 @@ export class AdminInfoPage implements OnInit {
 
   async AsignarPermiso(select: any){
     //hacer la funcion de asignar permisos
-    if(this.miSelect != null){
+    if(select !== undefined){
       let respuesta = await this.adminService.AsignarPermiso(this.idAdmin, select)
       try {
-        const resp = respuesta as {mensaje?: string}
+        const resp = respuesta as {mensaje?: string, error?: string}
         if(resp.mensaje !== undefined){
           const mensaje = resp.mensaje
           this.alert = await this.alertController.create({
@@ -106,15 +106,20 @@ export class AdminInfoPage implements OnInit {
       var respuesta
       if(estado == 1){
         respuesta = await this.adminService.BloquearAdmin(idAdmin, 0)
-      } else {
-        respuesta = await this.adminService.BloquearAdmin(idAdmin, 1)
-      }
-      const resp = respuesta as {mensaje?:string}
-      if(resp.mensaje !== undefined){
-        const mensaje = resp.mensaje
         this.alert = await this.alertController.create({
           header: 'Listo',
-          message: mensaje,
+          message: "Administrador bloqueado",
+          buttons: ['OK']
+        });
+        this.alert.onDidDismiss().then(() => {
+          location.reload()
+        })
+        await this.alert.present()
+      } else {
+        respuesta = await this.adminService.BloquearAdmin(idAdmin, 1)
+        this.alert = await this.alertController.create({
+          header: 'Listo',
+          message: "Administrador habilitado",
           buttons: ['OK']
         });
         this.alert.onDidDismiss().then(() => {

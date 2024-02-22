@@ -89,6 +89,8 @@ export class CapacitacionInfoPage implements OnInit {
     
   }
 
+  public fech: any
+  public hora: any
   async getAgenda(){
     this.agenda = await this.adminService.getAgenda(this.idCapacitacion)
     if(Array.isArray(this.agenda) && this.agenda.length > 0 && this.agenda.length == 1){
@@ -98,6 +100,8 @@ export class CapacitacionInfoPage implements OnInit {
       this.datosAgenda.hora = Elemento.hora
       this.datetime = new Date(this.datosAgenda.fecha)
       this.fechaYhora = `${this.datetime.toISOString().split('T')[0]}T${this.datosAgenda.hora}`
+      this.fech = this.datosAgenda.fecha
+      this.hora = this.datosAgenda.hora
     } else if (Array.isArray(this.agenda) && this.agenda.length > 1){
       for(var i = 0; i < this.agenda.length; i++) {
         var Elemento = this.agenda[i]

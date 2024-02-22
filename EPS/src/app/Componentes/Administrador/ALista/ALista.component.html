@@ -26,14 +26,23 @@
           <ion-col class="head">Nombre</ion-col>
           <ion-col class="head">Telefono</ion-col>
           <ion-col class="head">Correo</ion-col>
-          <ion-col class="head">Datos</ion-col>
+          <ion-col size="1" class="head">Estado</ion-col>
+          <ion-col size="1.2" class="head">Datos</ion-col>
         </ion-row>
         <div class="tab">
           <ion-row class="data-row" *ngFor="let item of datos">
             <ion-col>{{item.nombre + " " + item.apellido}}</ion-col>
             <ion-col>{{item.telefono}}</ion-col>
             <ion-col>{{item.email}}</ion-col>
-            <ion-col><ion-button (click)="MostrarDatos(item.idAdmin, item.nombre, item.apellido, item.estado)">Mostrar Informacion</ion-button></ion-col>
+            <ion-col size="1">
+              <div *ngIf="item.estado == 1">
+                <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+              </div>
+              <div *ngIf="item.estado != 1 || item.estado == 0">
+                <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"></line></svg>
+              </div>
+            </ion-col>
+            <ion-col size="1.2"><ion-button (click)="MostrarDatos(item.idAdmin, item.nombre, item.apellido, item.estado)"><svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16c0 1.1.9 2 2 2h12a2 2 0 0 0 2-2V8l-6-6z"/><path d="M14 3v5h5M16 13H8M16 17H8M10 9H8"/></svg></ion-button></ion-col>
           </ion-row>
         </div>
       </ion-grid>

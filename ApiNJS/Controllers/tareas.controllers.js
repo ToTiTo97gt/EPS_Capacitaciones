@@ -8,8 +8,10 @@ var CryptoJS = require("crypto-js")
 
 exports.RegistrarAdmin = async (req, res) => {
     try {
+        var estado = 1
         bd.query(`insert into administrador(nombre, apellido, email, passw, telefono, estado) 
-          values ('${req.body.nombre}', '${req.body.apellido}', '${req.body.email}', '${req.body.passw}', '${req.body.telefono}', 1)`,function(err, result){
+          values (?, ?, ?, ?, ?, ?)`,
+          [req.body.nombre, req.body.apellido, req.body.email, req.body.passw, req.body.telefono, estado],function(err, result){
             if(err) throw err
             let transporter = nodemailer.createTransport({
                 host: "smtp.gmail.com",
@@ -47,6 +49,8 @@ exports.RegistrarAdmin = async (req, res) => {
                       console.log('Email enviado')
                   }
               });
+
+            return res.send('Registro Exitoso')
         })
     } catch (error) {
         console.log('error al registrar al admin')
@@ -323,8 +327,11 @@ exports.AsignarPermiso = async (req, res) => {
                 if(err.code === 'ER_DUP_ENTRY'){
                     console.error('Error: Esta asignacion ya existe')
                     res.status(409).json({ error: 'Esta asignacion ya existe' });
+                } else if(err.code === 'ER_BAD_FIELD_ERROR') {
+                    console.error('Error: No se enviaron datos a registrar')
+                    res.status(410).json({ error: 'No se recivieron datos para registrar' });
                 } else {
-                    console.error('Error en la consulta:', error);
+                    console.error('Error en la consulta:', err);
                     res.status(500).json({ error: 'Error en la consulta' });
                 }
             } else {

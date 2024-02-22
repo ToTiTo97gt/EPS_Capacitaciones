@@ -27,6 +27,8 @@
     </div>
     <div id="Conf3">
       <div *ngIf="idCategoria == 1">
+        <h2> <label>Fecha: {{fech}} - Hora: {{hora}}</label></h2>
+        <br>
         <ion-datetime [min]="minDate" *ngIf="idCategoria == 1" (ionChange)="FechaYHoraAsignacion($event)" ></ion-datetime>
       </div>
       <div id="Diplo" *ngIf="idCategoria == 2">
