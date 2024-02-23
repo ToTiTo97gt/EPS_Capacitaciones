@@ -82,7 +82,7 @@ export class MenuComponent  implements OnInit {
       this.fileSelected = files[0];
       if (this.fileSelected) {
         this.capacitacion.poster = (this.fileSelected as File).name; // Obtener el nombre del archivo
-        alert(this.capacitacion.poster + " ***")
+        //alert(this.capacitacion.poster + " ***")
         this.imageUrl = window.URL.createObjectURL(this.fileSelected); // Crear la URL segura para mostrar la imagen
       } else {
         alert('Error al seleccionar el archivo');

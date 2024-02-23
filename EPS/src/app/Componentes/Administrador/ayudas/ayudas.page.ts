@@ -26,7 +26,7 @@ export class AyudasPage implements OnInit {
   }
 
   async cambiarEstado(idUsuario: any, asunto: any){
-    await this.adminService.EstadoSolicitud(idUsuario, asunto)
+    const res = await this.adminService.EstadoSolicitud(idUsuario, asunto)
     location.reload()
   }
 

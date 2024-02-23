@@ -11,7 +11,8 @@
   <div id="pantalla">
     <br>
     <div>
-      <h3>Carne: {{Usuario.carne}}</h3>
+      <div *ngIf="Usuario.carne != '' && Usuario.carne != null"> <h3>Carne: {{Usuario.carne}}</h3> </div>
+      <div *ngIf="Usuario.numcolegiado != '' && Usuario.numcolegiado != null"> <h3>No. Colegiado: {{Usuario.numcolegiado}}</h3> </div>
       <h3>CUI: {{Usuario.cui}}</h3>
       <h3>Correo: {{Usuario.correo}}</h3>
     </div>

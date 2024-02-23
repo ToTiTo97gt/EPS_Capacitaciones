@@ -120,9 +120,8 @@ export class UserInfoPage implements OnInit {
           const fontSize = 24;
           const longitudTexto = customFont.widthOfTextAtSize(nombre, fontSize);
           const PosX = (pageWidth - longitudTexto) / 2;
-          const color = rgb(0, 0, 1)
           
-          page.drawText(nombre, { font: customFont, x: (PosX + 5), y: 368, size: fontSize, color });
+          page.drawText(nombre, { font: customFont, x: (PosX + 5), y: 368, size: fontSize });
           
           const txt1 = "Por su participacion en la conferencia";
           const capaci = `"${capacitacion.nomCapacitacion}"`
@@ -140,19 +139,19 @@ export class UserInfoPage implements OnInit {
           page.drawText(txt1, {
               font: font2,
               x: ((pageWidth - l1) / 2),
-              y: 334, size: tam, color});
+              y: 334, size: tam});
           page.drawText(capaci, {
               font: font1,
               x: ((pageWidth - l2) / 2),
-              y: 308, size: tam, color});
+              y: 308, size: tam});
           page.drawText(txt2, {
               font: font2,
               x: ((pageWidth - l3) / 2),
-              y: 284, size: tam, color});
+              y: 284, size: tam});
           page.drawText(txt3, {
               font: font2,
               x: ((pageWidth - l4) / 2),
-              y: 258, size: tam, color});
+              y: 258, size: tam});
           // Guarda el documento
           const pdfBytes = await pdfDoc.save();
           const blob = new Blob([pdfBytes], { type: 'application/pdf' });
@@ -210,7 +209,7 @@ export class UserInfoPage implements OnInit {
   
           const capaci = `"${capacitacion.nomCapacitacion}"`
           const txt2 = `Realizado del ${this.convertir2(capacitacion.inicio)} al ${this.convertir3(capacitacion.fin)},`;
-          const txt3 = `con una duracion de ${duracion} horas`;
+          const txt3 = `con una duracion de ${duracion} horas ${modalidad}`;
           const txt4 = `Dado en la Ciudad de Guatemala en la fecha del ${this.convertir3(capacitacion.fin)}`
           
           const font2 = await pdfDoc.embedFont(StandardFonts.Helvetica)

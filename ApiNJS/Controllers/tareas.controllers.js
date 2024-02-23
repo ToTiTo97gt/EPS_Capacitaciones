@@ -909,7 +909,10 @@ exports.EstadoAyuda = async(req, res) => {
     try {
         var usuario = req.body.usuario
         var asunto = req.body.asunto
-        bd.query(`update ayuda set estado = 1 where idUsuario = ${usuario} and Asunto = '${asunto}'`)
+        bd.query(`update ayuda set estado = 1 where idUsuario = ${usuario} and Asunto = '${asunto}'`, function(err, result){
+            if(err) throw err
+            return res.send(result)
+        })
     } catch (error) {
         console.log("Error en la peticion EstadoAyuda ",error)
     }
@@ -1014,7 +1017,7 @@ exports.getUsuarios = async (req, res) => {
             if(req.body.datosExtra.presente != 2){
                 parametrosExtra += " and e.presente = " + req.body.datosExtra.presente
             }
-            console.log(parametrosExtra + " -*--*-*-*-*-*-")
+            //console.log(parametrosExtra + " -*--*-*-*-*-*-")
             bd.query(`select a.* from usuario a, tipousuario b, municipio c, departamento d
               where b.idTipo = a.idTipo and a.idmunicipio = c.idMunicipio and c.idDepartamento = d.idDepartamento${parametrosExtra}`, function(err, result){
                 if(err) throw err;
