@@ -56,12 +56,34 @@ export class CalendarioPage implements OnInit {
     return this.formatoFecha(objc,'dd/mm/yyyy') 
   }
 
-  fb(linkfb: any){
-    window.open(linkfb, '_system')
+  async fb(linkfb: any){
+    const urlRegex = /^(https?|ftp):\/\/[^\s/$.?#].[^\s]*$/;
+
+    if(linkfb && linkfb.trim() !== '' && urlRegex.test(linkfb)){
+      window.open(linkfb, '_system')
+    } else {
+      this.alert = await this.alertController.create({
+        header: 'Lo sentimos',
+        message: 'El link no existe o no ha sido cargado',
+        buttons: ['OK']
+      });
+      await this.alert.present()
+    }
   }
 
-  zoom(linkZoom: any){
-    window.open(linkZoom, '_system')
+  async zoom(linkZoom: any){
+    const urlRegex = /^(https?|ftp):\/\/[^\s/$.?#].[^\s]*$/;
+
+    if(linkZoom && linkZoom.trim() !== '' && urlRegex.test(linkZoom)){
+      window.open(linkZoom, '_system')
+    } else {
+      this.alert = await this.alertController.create({
+        header: 'Lo sentimos',
+        message: 'El link no existe o no ha sido cargado',
+        buttons: ['OK']
+      });
+      await this.alert.present()
+    }
   }
 
   formatoFecha(fecha: Date, formato: string) {
