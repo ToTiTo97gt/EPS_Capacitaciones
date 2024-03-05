@@ -10,7 +10,7 @@
     flex-wrap: wrap;
     overflow-y: hidden;
     justify-content: center;
-    background: rgb(34, 29, 69);
+    background: white;
   }
 
   .descripcion{
@@ -58,7 +58,7 @@
   
   #Conf3{
     margin-top: -5rem;
-    background: rgb(34, 29, 69);
+    background: white;
     width: 35rem;
     gap: 10px;
     display: flex;
@@ -73,7 +73,7 @@
   }
 
   #Diplo{
-    background-color: rgb(34, 29, 69);
+    background-color: white;
     width: 40rem;
     height: 26rem;
     gap: 10px;
@@ -84,7 +84,7 @@
   }
 
   .subDiplo{
-    background-color: rgb(34, 29, 69);
+    background-color: white;
     width: 11rem;
     height: 22rem;
     gap: 10px;
@@ -135,17 +135,17 @@
   }
 
   ion-toolbar{
-    --background: #ff0000;
-    color: white
+    --background: white;
+    color: rgb(34, 29, 69)
   }
 
   .Modif{
     width: 13rem;
-    --background: #ff0000;
+    --background: rgb(34, 29, 69);
   }
 
   ion-button{
-    --background: #ff0000;
+    --background: rgb(34, 29, 69);
   }
 
   ion-select{

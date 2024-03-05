@@ -61,6 +61,8 @@ app.post('/CSV', cors(), upload.single('file'), (req, res) => {
     }
   }
 
+  //console.log(jsonData)
+
   // Enviar respuesta al cliente
   res.send( jsonData );
   });

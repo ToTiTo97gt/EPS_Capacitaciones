@@ -5,13 +5,13 @@
 }
 
 ion-tab-button{
-    --background: #FF0000; /* Cambia el color de fondo del tab seleccionado a tu preferencia */
-    color: #fff;
+    --background: white; /* Cambia el color de fondo del tab seleccionado a tu preferencia */
+    color: #FF0000;
 }
 
 ion-tab-button::part(tab-selected){
-    --background: #221d45; /* Cambia el color de fondo del tab seleccionado a tu preferencia */
-    color: #ff0000;
+    --background: white; /* Cambia el color de fondo del tab seleccionado a tu preferencia */
+    color: #221d45;
 }
 
 ion-tab-button::part(tab) {

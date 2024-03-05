@@ -273,16 +273,16 @@ ion-content{
   }
 
   .GridHead{
-    --background: #FF0000;
-    border: solid 1px #fff;
+    --background: #FFf;
+    border: solid 1px #ff0000;
     color: red;
     text-align: center;
   }
   
   .head{
-    background-color: #FF0000;
-    border: solid 1px #fff;
-    color: #fff;
+    background-color: #FFf;
+    border: solid 1px #ff0000;
+    color: #ff0000;
     text-align: center;
   }
 
@@ -313,6 +313,6 @@ ion-content{
   }
 
 ion-toolbar{
-    color: #fff;
-    --background: #ff0000;
+    color: #ff0000;
+    --background: #fff;
 }

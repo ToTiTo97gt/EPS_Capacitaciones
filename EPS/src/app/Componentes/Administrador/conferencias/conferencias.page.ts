@@ -76,29 +76,66 @@ export class ConferenciasPage implements OnInit {
   }
 
   async SubirNotas(){
-    if(this.idCapacitacion === undefined){
-      this.alert = await this.alertController.create({
-        header: 'Aviso',
-        message: 'Seleccionar un Diplomado para cargar notas',
-        buttons: ['OK']
-      });
-      this.alert.onDidDismiss().then(() => {
-        location.reload()
-      })
-      await this.alert.present()
-    } else {
-      await this.adminService.MarcarAsistencias(this.idCapacitacion, this.data, 2)
-      this.alert = await this.alertController.create({
-        header: 'Listo',
-        message: 'Notas Cargadas',
-        buttons: ['OK']
-      });
-      this.alert.onDidDismiss().then(() => {
-        location.reload()
-      })
-      await this.alert.present()
+    let verif = true
+    for(let i = 0; i < this.data.length; i++){
+      if ('estado' in this.data[i]) {
+        // La propiedad 'estado' existe en esta entrada del arreglo
+        console.log('La propiedad estado existe en el índice', i);
+      } else {
+        verif = false
+        this.alert = await this.alertController.create({
+          header: 'Aviso',
+          message: 'Aegurese de asignar un estado a todos los elementos de la lista',
+          buttons: ['OK']
+        });
+        await this.alert.present()
+        break;
+      }
     }
-    //console.log(this.data)
+    if(verif == true){
+      if(this.idCapacitacion === undefined){
+        this.alert = await this.alertController.create({
+          header: 'Aviso',
+          message: 'Seleccionar un Diplomado para cargar notas',
+          buttons: ['OK']
+        });
+        this.alert.onDidDismiss().then(() => {
+          location.reload()
+        })
+        await this.alert.present()
+      } else {
+        //console.log(this.data)
+        const verif = true
+        for(let i = 0; i < this.data.length; i++){
+          console.log(this.data[i])
+          await this.adminService.MarcarAsistencias(this.idCapacitacion, this.data[i], 2)
+        }
+        this.alert = await this.alertController.create({
+          header: 'Listo',
+          message: 'Notas Cargadas',
+          buttons: ['OK']
+        });
+        this.alert.onDidDismiss().then(() => {
+          location.reload()
+        })
+        await this.alert.present()
+      }
+      //console.log(this.data)
+    }
+  }
+
+  todosAprobados(){
+    for(let i = 0; i < this.data.length; i++){
+      this.data[i].estado = 1
+      //console.log(this.data[i].Carne + " " + this.data[i].estado)
+    }
+  }
+
+  todosReprobados(){
+    for(let i = 0; i < this.data.length; i++){
+      this.data[i].estado = 0
+      //console.log(this.data[i].Carne + " " + this.data[i].estado)
+    }
   }
 
   nota: number = 0

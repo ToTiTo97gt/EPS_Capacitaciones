@@ -802,7 +802,7 @@ exports.getAgenda = async (req, res) => {
 exports.Asistencias = async (req, res) => {
     var idCapacitacion = req.body.idCapacitacion
     var tipo = req.body.tipo
-    console.log(idCapacitacion)
+    //console.log(idCapacitacion)
     try {
         if (tipo == 1){
             for(let data of req.body.datos){
@@ -822,39 +822,39 @@ exports.Asistencias = async (req, res) => {
             }
         } else if(tipo == 2) {
             var nota = 0
-            for(let data of req.body.datos){
-                bd.query(`update asistencia set presente = 1 where idUsuario = (select idUsuario from usuario where carne = '${data['Carne']}' and cui='${data['CUI']}' and correo='${data['Correo Electrónico']}') and inscrito = 1 and idCapacitacion = ${idCapacitacion}`, function(err, result){
-                    if(err){
-                        if(err.code === 'ER_BAD_FIELD_ERROR'){
-                            console.error('Columna no encontrada en la tabla.');
-                        } else {
-                            // Otro tipo de error, manejar según sea necesario
-                            console.error('Error en la consulta:', err);
-                        }
+            var data = req.body.datos
+            bd.query(`update asistencia set presente = 1 where idUsuario = (select idUsuario from usuario where carne = '${data['Carne']}' and cui='${data['CUI']}' and correo='${data['Correo Electrónico']}') and inscrito = 1 and idCapacitacion = ${idCapacitacion}`, function(err, result){
+                if(err){
+                    if(err.code === 'ER_BAD_FIELD_ERROR'){
+                        console.error('Columna no encontrada en la tabla.');
                     } else {
-                        bd.query(`Select a.idUsuario from usuario a, asistencia b where a.carne = '${data['Carne']}' and a.cui='${data['CUI']}' and a.correo='${data['Correo Electrónico']}' and a.idUsuario = b.idUsuario and b.inscrito = 1 and b.idCapacitacion = ${idCapacitacion};`, function(err, result){
-                            if(err){
-                                console.error('Error en la consulta ')
-                                return;
-                            }
-
-                            if(!result || result.length === 0 || !result[0].idUsuario){
-                                console.log('Usuario inexistente o no se inscribio')
-                            } else {
-                                if(data['nota'] === undefined){
-                                    nota = 0
-                                } else {
-                                    nota = data['nota']
-                                }
-                                const user = result[0].idUsuario;
-                                console.log('Nota Registrada')
-                                bd.query(`insert into nota (idUsuario, idCapacitacion, nota) values (${user}, ${idCapacitacion}, ${nota}) On duplicate key update nota = ${nota}`)
-                            }
-                        })
-                        //return res.send({message: 'Asistencia registrada con exito'})
+                        // Otro tipo de error, manejar según sea necesario
+                        console.error('Error en la consulta:', err);
                     }
-                })
-            }
+                } else {
+                    //console.log(data)
+                    bd.query(`Select a.idUsuario from usuario a, asistencia b where a.carne = '${data['Carne']}' and a.cui='${data['CUI']}' and a.correo='${data['Correo Electrónico']}' and a.idUsuario = b.idUsuario and b.inscrito = 1 and b.idCapacitacion = ${idCapacitacion};`, function(err, result){
+                        if(err){
+                            console.error('Error en la consulta ')
+                            return;
+                        }
+
+                        if(!result || result.length === 0 || !result[0].idUsuario){
+                            console.log('Usuario inexistente o no se inscribio')
+                        } else {
+                            if(data['nota'] === undefined){
+                                nota = 0
+                            } else {
+                                nota = data['nota']
+                            }
+                            const user = result[0].idUsuario;
+                            console.log('Nota Registrada')
+                            bd.query(`insert into nota (idUsuario, idCapacitacion, nota, estado) values (${user}, ${idCapacitacion}, ${nota}, ${data['estado']}) On duplicate key update nota = ${nota}, estado = ${data['estado']}`)
+                        }
+                    })
+                    //return res.send({message: 'Asistencia registrada con exito'})
+                }
+            })
         }
         
         return res.send({message: 'Asistencias Registradas'})
@@ -957,7 +957,7 @@ exports.getInscripciones = async (req, res) => {
     try {
         var idCapacitacion = req.body.idCapacitacion
         if(req.body.datosExtra === undefined){
-            bd.query(`select a.carne, a.cui, a.nombre, a.apellido, a.correo from usuario a, tipousuario b, municipio c, departamento d, asistencia e, capacitacion f
+            bd.query(`select a.carne, a.numcolegiado, a.nombre, a.apellido, a.correo from usuario a, tipousuario b, municipio c, departamento d, asistencia e, capacitacion f
               where f.idCapacitacion = ${idCapacitacion} and f.idCapacitacion = e.idCapacitacion and e.inscrito = 1 and e.idUsuario = a.idUsuario and b.idTipo = a.idTipo and a.idmunicipio = c.idMunicipio and c.idDepartamento = d.idDepartamento`, function(err, result){
                 if(err) throw err;
                 return res.send(result)

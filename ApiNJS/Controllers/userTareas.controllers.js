@@ -383,12 +383,12 @@ exports.Diplomados = async(req, res) => {
         return res.status(400).send('No se recivio dato de jornada')
     }
     try {
-        bd.query(`select a.idCapacitacion, a.nomCapacitacion, a.descripcion, Min(d.fecha) as inicio, Max(d.fecha) as fin, Min(e.nota) as nota, a.diploma, a.duracion, a.modalidad, 0 as dat, 'l' as link
+        bd.query(`select a.idCapacitacion, a.nomCapacitacion, a.descripcion, Min(d.fecha) as inicio, Max(d.fecha) as fin, e.estado, a.diploma, a.duracion, a.modalidad, 0 as dat, 'l' as link
           from capacitacion a
           join asistencia c on a.idCapacitacion = c.idCapacitacion
           join usuario b on b.idUsuario = c.idUsuario
           join agenda d on a.idCapacitacion = d.idCapacitacion
-          join nota e on a.idCapacitacion = e.idCapacitacion
+          join nota e on a.idCapacitacion = e.idCapacitacion and e.idUsuario = b.idUsuario
           join tipousuariodiploma g on g.idCapacitacion = a.idCapacitacion
           join tipousuario f on f.idTipo = g.idTipo
           join jornada h on h.idJornada = a.idJornada

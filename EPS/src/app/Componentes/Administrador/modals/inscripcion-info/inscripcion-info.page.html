@@ -33,13 +33,13 @@
   <div class="grid">
     <ion-grid>
       <ion-row class="GridHead">
-        <ion-col class="head"><h3>CUI</h3></ion-col>
+        <ion-col class="head"><h3>Colegiado</h3></ion-col>
         <ion-col class="head"><h3>Carne</h3></ion-col>
         <ion-col class="head"><h3>Nombre</h3></ion-col>
       </ion-row>
       <div class="tab">
         <ion-row *ngFor="let inscripcion of inscripciones">
-          <ion-col>{{inscripcion.cui}}</ion-col>
+          <ion-col>{{inscripcion.numcolegiado}}</ion-col>
           <ion-col>{{inscripcion.carne}}</ion-col>
           <ion-col>{{inscripcion.nombre}} {{inscripcion.apellido}}</ion-col>
         </ion-row>

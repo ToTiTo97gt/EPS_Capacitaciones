@@ -22,7 +22,7 @@
 }
 
 .header-row {
-    background-color: #ff0000;
+    background-color: gray;
     font-weight: bold;
 }
 
@@ -52,12 +52,12 @@
 }
 
 ion-content{
-    --background: #221d45;
+    --background: white;
 }
 
 ion-toolbar{
-    color: #fff;
-    --background: #ff0000;
+    color: #ff0000;
+    --background: #fff;
 }
 
 ion-select{
