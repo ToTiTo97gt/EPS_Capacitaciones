@@ -21,13 +21,24 @@
         </ion-toolbar>
       </ion-header>
       <div id="col1">
-        <ion-select aria-label="Fruit" [(ngModel)]="nuevoUser.idTipo" placeholder="Tipo de usuario">
-          <ion-select-option *ngFor="let usuario of usuarios" [value]="usuario.idTipo" >{{usuario.tipo}}</ion-select-option>
-        </ion-select>
+        <!-- <ion-select aria-label="Fruit" [(ngModel)]="nuevoUser.idTipo" placeholder="Tipo de usuario">
+          <ion-select-option *ngFor="let usuario of usuarios" [value]="usuario.idTipo" >
+            
+            <div *ngIf="usuario.idTipo != 6"> {{usuario.tipo}} </div>
+            <div *ngIf="usuario.idTipo == 6" class="Prof"> Profesional del derecho y ciencias afines </div>
+          </ion-select-option>
+        </ion-select> -->
+        <select class="prof" [(ngModel)]="nuevoUser.idTipo">
+          <option value="0" disabled select>Tipo de usuario</option>
+          <option *ngFor="let usuario of usuarios" [value]="usuario.idTipo">{{usuario.tipo}}</option>
+        </select>
+        <br>
         <div *ngIf="nuevoUser.idTipo == 4">
+          <br>
           <ion-input class="ion-text-center" [(ngModel)]="nuevoUser.carne" label="Carne" label-placement="floating" fill="outline" type="text"></ion-input>
         </div>
         <div *ngIf="nuevoUser.idTipo == 5">
+          <br>
           <ion-input class="ion-text-center" [(ngModel)]="nuevoUser.colegiado" label="No. Colegiado" label-placement="floating" fill="outline" type="text"></ion-input>
         </div>
         <br>
