@@ -8,8 +8,9 @@
     </div>
 
     <div class="filtro">
-        <ion-datetime [min]="2023" class="selectt" presentation="year" [preferWheel]="true" (ionChange)="dateChanged($event)"></ion-datetime>
-      
+        <select [(ngModel)]="anio" (change)="dateChanged()">
+          <option *ngFor="let year of years" [value]="year">{{ year }}</option>
+        </select>
         <ion-select class="jornada" aria-label="Fruit" placeholder="Jornadas" (ionChange)="jornadaChange($event)">
           <ion-select-option *ngFor="let jornada of jornadas" [value]="jornada.idJornada" >{{jornada.ciclo}}</ion-select-option>
         </ion-select>
@@ -83,7 +84,7 @@
       </ion-grid>
     </div>
     <div class="foot">
-    
+      <label class="usuarios">Administración 2021-2025 © Decano Henry Arriaga</label>
     </div>
   </div>
   

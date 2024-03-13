@@ -471,35 +471,79 @@ exports.GenerarPDF = async(req, res) => {
         
         page.drawText(nombre, { font: customFont, x: (PosX + 5), y: 368, size: fontSize, color });
         
-        const txt1 = "Por su participacion en la conferencia";
-        const capaci = `"${req.body.capacitacion}"`
-        const txt2 = `Con una duracion de ${duracion} horas ${modalidad}`;
+        const txt1 = "Por su participación en la conferencia";
+        let texto = req.body.capacitacion
+        let palabras = texto.split(" ")
+        let capaci, capaci2 = "", capaci3 = ""
+        if (palabras.length > 8){
+            let grupoPalabras = []
+            for (let i = 0; i < palabras.length; i +=8){
+                let grupo = palabras.slice(i, i + 8)
+                grupoPalabras.push(grupo)
+            }
+            capaci = `"${grupoPalabras[0].join(" ")}`
+            if(grupoPalabras[2] === undefined){
+                capaci2 = `${grupoPalabras[1].join(" ")}"`
+            } else {
+                capaci2 = `${grupoPalabras[1].join(" ")}`
+                capaci3 = `${grupoPalabras[2].join(" ")}"`
+            }
+        } else {
+            capaci = `"${req.body.capacitacion}"`
+        }
+        const txt2 = `Con una duración de ${duracion} horas ${modalidad}`;
         const txt3 = 'Dado en la Ciudad de Guatemala, '+req.body.fecha;
         
         const font2 = await pdfDoc.embedFont(StandardFonts.Helvetica)
         const font1 = await pdfDoc.embedFont(StandardFonts.TimesRomanBold)
         const tam = 18
-        const l1 = font2.widthOfTextAtSize(txt1, tam)
-        const l2 = font1.widthOfTextAtSize(capaci, tam)
-        const l3 = font2.widthOfTextAtSize(txt2, tam)
-        const l4 = font2.widthOfTextAtSize(txt3, tam)
         
+        const l1 = font2.widthOfTextAtSize(txt1, tam)
         page.drawText(txt1, {
             font: font2,
             x: ((pageWidth - l1) / 2),
-            y: 334, size: tam, color});
-        page.drawText(capaci, {
-            font: font1,
-            x: ((pageWidth - l2) / 2),
-            y: 308, size: tam, color});
-        page.drawText(txt2, {
-            font: font2,
-            x: ((pageWidth - l3) / 2),
-            y: 284, size: tam, color});
-        page.drawText(txt3, {
-            font: font2,
-            x: ((pageWidth - l4) / 2),
-            y: 258, size: tam, color});
+            y: 344, size: tam, color});
+        if(capaci2 == "" && capaci3 == ""){
+            const l2 = font1.widthOfTextAtSize(capaci, tam)
+            const l3 = font2.widthOfTextAtSize(txt2, tam)
+            const l4 = font2.widthOfTextAtSize(txt3, tam)
+            
+            page.drawText(capaci, {
+                font: font1,
+                x: ((pageWidth - l2) / 2),
+                y: 316, size: tam, color});
+            page.drawText(txt2, {
+                font: font2,
+                x: ((pageWidth - l3) / 2),
+                y: 284, size: tam, color});
+            page.drawText(txt3, {
+                font: font2,
+                x: ((pageWidth - l4) / 2),
+                y: 258, size: tam, color});
+        } else if(capaci2 != "" && capaci3 == ""){
+            const l2 = font1.widthOfTextAtSize(capaci, tam)
+            const l21 = font1.widthOfTextAtSize(capaci2, tam)
+            const l3 = font2.widthOfTextAtSize(txt2, tam)
+            const l4 = font2.widthOfTextAtSize(txt3, tam)
+            
+            page.drawText(capaci, {
+                font: font1,
+                x: ((pageWidth - l2) / 2),
+                y: 324, size: tam, color});
+            page.drawText(capaci2, {
+                font: font1,
+                x: ((pageWidth - l21) / 2),
+                y: 306, size: tam, color});
+            page.drawText(txt2, {
+                font: font2,
+                x: ((pageWidth - l3) / 2),
+                y: 284, size: tam, color});
+            page.drawText(txt3, {
+                font: font2,
+                x: ((pageWidth - l4) / 2),
+                y: 258, size: tam, color});
+        }
+
         // Guarda el documento
         const pdfBytes = await pdfDoc.save();
         const buffer = Buffer.from(pdfBytes)
@@ -569,35 +613,84 @@ exports.GenerarDiplomadoPDF = async(req, res) => {
         
         page.drawText(nombre, { font: customFont, x: (PosX-5), y: 570, size: fontSize});
 
-        const capaci = `"${req.body.capacitacion}"`
+        let texto = req.body.capacitacion
+        let palabras = texto.split(" ")
+        let capaci, capaci2 = "", capaci3 = ""
+        if (palabras.length > 6){
+            let grupoPalabras = []
+            for (let i = 0; i < palabras.length; i +=6){
+                let grupo = palabras.slice(i, i + 6)
+                grupoPalabras.push(grupo)
+            }
+            capaci = `"${grupoPalabras[0].join(" ")}`
+            if(grupoPalabras[2] === undefined){
+                capaci2 = `${grupoPalabras[1].join(" ")}"`
+            } else {
+                capaci2 = `${grupoPalabras[1].join(" ")}`
+                capaci3 = `${grupoPalabras[2].join(" ")}"`
+            }
+        } else {
+            capaci = `"${req.body.capacitacion}"`
+        }
         const txt2 = `Realizado del ${req.body.fechas. inicio} al ${req.body.fechas.fin},`;
-        const txt3 = `con una duracion de ${duracion} horas`;
+        const txt3 = `con una duración de ${duracion} horas`;
         const txt4 = `Dado en la Ciudad de Guatemala en la fecha del ${req.body.fechas.fin}`
         
         const font2 = await pdfDoc.embedFont(StandardFonts.Helvetica)
         const font1 = await pdfDoc.embedFont(StandardFonts.TimesRoman)
         const tam = 18, tam2 = 14, tam3 = 38
-        const l1 = font1.widthOfTextAtSize(capaci, tam3)
-        const l2 = font2.widthOfTextAtSize(txt2, tam2)
-        const l3 = font2.widthOfTextAtSize(txt3, tam2)
-        const l4 = font2.widthOfTextAtSize(txt4, tam2)
-        
-        page.drawText(capaci, {
-            font: font1,
-            x: ((pageWidth - l1) / 2),
-            y: 465, size: tam3});
-        page.drawText(txt2, {
-            font: font2,
-            x: ((pageWidth - l2) / 2),
-            y: 425, size: tam2});
-        page.drawText(txt3, {
-            font: font2,
-            x: ((pageWidth - l3) / 2),
-            y: 400, size: tam2});
-        page.drawText(txt4, {
-            font: font2,
-            x: ((pageWidth - l4) / 2),
-            y: 370, size: tam2});
+
+        if(capaci2 == "" && capaci3 == ""){
+            const l1 = font1.widthOfTextAtSize(capaci, tam3)
+            const l2 = font2.widthOfTextAtSize(txt2, tam2)
+            const l3 = font2.widthOfTextAtSize(txt3, tam2)
+            const l4 = font2.widthOfTextAtSize(txt4, tam2)
+            
+            page.drawText(capaci, {
+                font: font1,
+                x: ((pageWidth - l1) / 2),
+                y: 465, size: tam3});
+            page.drawText(txt2, {
+                font: font2,
+                x: ((pageWidth - l2) / 2),
+                y: 425, size: tam2});
+            page.drawText(txt3, {
+                font: font2,
+                x: ((pageWidth - l3) / 2),
+                y: 400, size: tam2});
+            page.drawText(txt4, {
+                font: font2,
+                x: ((pageWidth - l4) / 2),
+                y: 370, size: tam2});
+        } else if(capaci2 != "" && capaci3 == ""){
+            const l1 = font1.widthOfTextAtSize(capaci, tam3)
+            const l11 = font1.widthOfTextAtSize(capaci2, tam3)
+            const l2 = font2.widthOfTextAtSize(txt2, tam2)
+            const l3 = font2.widthOfTextAtSize(txt3, tam2)
+            const l4 = font2.widthOfTextAtSize(txt4, tam2)
+            
+            page.drawText(capaci, {
+                font: font1,
+                x: ((pageWidth - l1) / 2),
+                y: 470, size: tam3});
+            page.drawText(capaci2, {
+                font: font1,
+                x: ((pageWidth - l11) / 2),
+                y: 435, size: tam3});
+            page.drawText(txt2, {
+                font: font2,
+                x: ((pageWidth - l2) / 2),
+                y: 405, size: tam2});
+            page.drawText(txt3, {
+                font: font2,
+                x: ((pageWidth - l3) / 2),
+                y: 380, size: tam2});
+            page.drawText(txt4, {
+                font: font2,
+                x: ((pageWidth - l4) / 2),
+                y: 350, size: tam2});
+        }
+
         // Guarda el documento
         const pdfBytes = await pdfDoc.save();
         const buffer = Buffer.from(pdfBytes)

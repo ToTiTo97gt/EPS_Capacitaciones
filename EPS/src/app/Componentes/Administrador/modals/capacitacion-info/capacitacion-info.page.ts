@@ -291,6 +291,7 @@ export class CapacitacionInfoPage implements OnInit {
           }
         } else {
           alert(mensaje + " no hubo modificacion de agenda")
+          location.reload()
         }
       } else {
         console.log(respuesta2)

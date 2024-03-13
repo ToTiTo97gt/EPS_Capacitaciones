@@ -1,6 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { PDFDocument, rgb } from 'pdf-lib';
-import { Font } from '@pdf-lib/fontkit';
 import { AdminService } from '../../../Servicios/admin.servicio';
 import { UserService } from 'src/app/Servicios/user.servicio';
 import { AlertController } from '@ionic/angular';
@@ -14,10 +12,15 @@ import { HttpClient } from '@angular/common/http';
 })
 export class DiplomasPage implements OnInit {
 
-  constructor(private adminService:AdminService, private userService: UserService, private http: HttpClient, public alertController:AlertController) { }
+  years: number[] = []
+  constructor(private adminService:AdminService, private userService: UserService, private http: HttpClient, public alertController:AlertController) {
+    this.cargarAnios()
+  }
 
   ngOnInit() {
     //console.log(this.userService.datosUser)
+    const año = new Date().getFullYear()
+    this.anio = año.toString()
     this.datos.nombre = this.userService.datosUser[0].nombre
     this.datos.apellido = this.userService.datosUser[0].apellido
     var anioActual = new Date()
@@ -103,16 +106,12 @@ export class DiplomasPage implements OnInit {
         }
       }
     }
-    
-    //console.log(capacitacion + "/" + this.fechas.inicio + "-" +this.fechas.fin + "/" + diploma)
   }
 
   public anio = "";
   public jornadas: any
 
-  dateChanged(event: any){
-    const newDate = event.detail.value;
-    this.anio = newDate.split('-')[0]
+  dateChanged(){
     this.getPorAnio(this.anio)
   }
 
@@ -146,6 +145,14 @@ export class DiplomasPage implements OnInit {
   convertir2(fecha: string){
     var objc = new Date(fecha)
     return this.FechaSinAño(objc.getDate() + "/" + (objc.getMonth()+1)+"/"+objc.getFullYear())
+  }
+
+  cargarAnios() {
+    const currentYear = new Date().getFullYear();
+    this.years = [];
+    for (let i = currentYear; i >= 2023; i--) {
+      this.years.push(i);
+    }
   }
 
   FechaSinAño(fecha:string):string{

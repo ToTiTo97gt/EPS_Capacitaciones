@@ -85,3 +85,15 @@ ion-toolbar{
     --background: #221d45;
     color: white;
 }
+
+.foot{
+    gap: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    overflow-y: auto;
+    justify-content: center;
+  }
+  
+  .usuarios{
+    margin-top: 3rem;
+  }

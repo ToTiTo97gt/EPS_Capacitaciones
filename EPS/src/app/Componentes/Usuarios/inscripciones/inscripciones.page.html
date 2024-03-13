@@ -7,8 +7,8 @@
     <ng-container *ngFor="let conferencia of conferencias">
       <div class="card" *ngIf="conferencia.idCategoria == 1">
         <ion-header>
-          <ion-toolbar>
-            <ion-title>{{conferencia.nomCapacitacion}}</ion-title>
+          <ion-toolbar style="text-align: center;">
+            {{conferencia.nomCapacitacion}}
           </ion-toolbar>
         </ion-header>
         <div class="parte2">
@@ -25,10 +25,7 @@
           <ion-button (click)="zoom(conferencia.zoomLink)">
             ZOOM
           </ion-button>
-          <!-- 
-          <p style="font-size: 23px;">Presentador: {{conferencia.presentador}}</p>
-          <p style="font-size: 20px;">Fecha: {{convertir(conferencia.fecha)}}</p>
-          <p style="font-size: 17px;">Hora: {{conferencia.hora}}</p> -->
+          
         </div>
       </div>
       
@@ -40,8 +37,8 @@
     <ng-container *ngFor="let conferencia of conferencias">
       <div class="card" *ngIf="conferencia.idCategoria == 2">
         <ion-header>
-          <ion-toolbar>
-            <ion-title>{{conferencia.nomCapacitacion}}</ion-title>
+          <ion-toolbar style="text-align: center;">
+            {{conferencia.nomCapacitacion}}
           </ion-toolbar>
         </ion-header>
         <div class="parte2">
@@ -58,17 +55,14 @@
           <ion-button (click)="zoom(conferencia.zoomLink)">
             ZOOM
           </ion-button>
-          <!-- 
-          <p style="font-size: 23px;">Presentador: {{conferencia.presentador}}</p>
-          <p style="font-size: 20px;">Fecha: {{convertir(conferencia.fecha)}}</p>
-          <p style="font-size: 17px;">Hora: {{conferencia.hora}}</p> -->
+          
         </div>
       </div>
       
     </ng-container>
 
     <div class="foot">
-    
+      <label class="usuarios">Administración 2021-2025 © Decano Henry Arriaga</label>
     </div>
   </div>
 </ion-content>

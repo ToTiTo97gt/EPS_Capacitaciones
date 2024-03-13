@@ -65,7 +65,6 @@ export class ConferenciasPage implements OnInit {
       await this.alert.present()
     } else {
       await this.adminService.MarcarAsistencias(this.idCapacitacion, this.data, 1)
-      await this.adminService.MarcarAsistencias(this.idCapacitacion, this.data, 2)
       this.alert = await this.alertController.create({
         header: 'Listo',
         message: 'Asistencias Registradas',

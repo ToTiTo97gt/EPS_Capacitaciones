@@ -35,6 +35,8 @@ export class MenuComponent  implements OnInit {
   @ViewChild('fileInput1',{static:false}) fileInput1!: ElementRef;
   constructor(private sant: DomSanitizer, private adminService:AdminService, private UserService:UserService,
    private modalCtrl:ModalController, public alertController:AlertController) {
+    const año = new Date().getFullYear()
+    this.anio = año.toString()
     this.menu = "Jornadas"
     this.minDate = '2023-01-01T00:00:00Z'
   }
@@ -52,6 +54,16 @@ export class MenuComponent  implements OnInit {
 
     var anioActual = new Date()
     this.getPorAnio(anioActual.getFullYear())
+    this.cargarAnios()
+  }
+
+  years: number[] = []
+  cargarAnios() {
+    const currentYear = new Date().getFullYear();
+    this.years = [];
+    for (let i = currentYear; i >= 2023; i--) {
+      this.years.push(i);
+    }
   }
 
   FechaInicio(event: any){
@@ -369,7 +381,7 @@ export class MenuComponent  implements OnInit {
     return formato.replace(/dd|mm|yyyy/gi, (matched) => map[matched]);
   }
 
-  anio = ""
+  public anio: any
 
   async getPorAnio(anio: any){
     this.jornadas = await this.adminService.JornadasPorAnio(anio)
@@ -383,9 +395,7 @@ export class MenuComponent  implements OnInit {
     }
   }
 
-  dateChanged(event: any){
-    const newDate = event.detail.value;
-    this.anio = newDate.split('-')[0]
+  dateChanged(){
     this.getPorAnio(this.anio)
   }
 

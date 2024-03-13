@@ -9,7 +9,9 @@ import { ModalController } from '@ionic/angular';
   styleUrls: ['tab3.page.scss']
 })
 export class Tab3Page implements OnInit {
-  constructor(private adminService:AdminService,private modalCtrl:ModalController) {}
+  constructor(private adminService:AdminService,private modalCtrl:ModalController) {
+    this.cargarAnios()
+  }
 
   public anio: any
   public jornadas: any
@@ -19,8 +21,19 @@ export class Tab3Page implements OnInit {
   public tipo: any
 
   ngOnInit(): void {
+    const año = new Date().getFullYear()
+    this.anio = año.toString()
     var anioActual = new Date()
     this.getPorAnio(anioActual.getFullYear())
+  }
+
+  years: number[] = []
+  cargarAnios() {
+    const currentYear = new Date().getFullYear();
+    this.years = [];
+    for (let i = currentYear; i >= 2023; i--) {
+      this.years.push(i);
+    }
   }
 
   async getPorAnio(anio: any){
@@ -56,9 +69,7 @@ export class Tab3Page implements OnInit {
     await modal.present();
   }
 
-  dateChanged(event: any){
-    const newDate = event.detail.value;
-    this.anio = newDate.split('-')[0]
+  dateChanged(){
     this.getPorAnio(this.anio)
   }
 

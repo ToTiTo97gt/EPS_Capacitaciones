@@ -12,7 +12,7 @@
         <ion-select-option [value]="2" >Diplomados</ion-select-option>
       </ion-select>
 
-      <ion-select class="capacitacion" [(ngModel)]="idCapacitacion" placeholder="Capacitacion" (ionChange)="tipoChange($event)">
+      <ion-select class="capacitacion" [(ngModel)]="idCapacitacion" placeholder="Capacitación" (ionChange)="tipoChange($event)">
         <ion-select-option *ngFor="let capacitacion of capacitaciones" [value]="capacitacion.idCapacitacion">{{capacitacion.nomCapacitacion}}</ion-select-option>
       </ion-select>
       
@@ -55,6 +55,9 @@
     <div class="filtros2">
       <ion-button (click)="MarcarAsistencias()" *ngIf="categoria == 1"> Marcar asistencias </ion-button>
       <ion-button (click)="SubirNotas()" *ngIf="categoria == 2"> Subir Notas </ion-button>
+    </div>
+    <div class="foot">
+      <label>Administración 2021-2025 © Decano Henry Arriaga</label>
     </div>
   </div>
   

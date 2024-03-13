@@ -69,7 +69,7 @@ h1{
 
 .filtro{
     width: 30rem;
-    height: 10rem;
+    height: 3.5rem;
     gap: 10px;
     display: flex;
     flex-wrap: wrap;
@@ -112,4 +112,12 @@ ion-col {
     border: solid 1px #fff;
     color: #fff;
     text-align: center;
+}
+
+.foot{
+  gap: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  overflow-y: auto;
+  justify-content: center;
 }
