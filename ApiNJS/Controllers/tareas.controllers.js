@@ -806,7 +806,7 @@ exports.Asistencias = async (req, res) => {
     try {
         if (tipo == 1){
             for(let data of req.body.datos){
-                bd.query(`update asistencia set presente = 1 where idUsuario = (select idUsuario from usuario where carne = '${data['Carne']}' and cui='${data['CUI']}' and correo='${data['Correo Electrónico']}') and inscrito = 1 and idCapacitacion = ${idCapacitacion}`, function(err, result){
+                bd.query(`update asistencia set presente = 1 where idUsuario = (select idUsuario from usuario where carne = '${data['Carne'].trim()}' and cui='${data['CUI'].trim()}' and correo='${data['Correo Electrónico'].trim()}') and inscrito = 1 and idCapacitacion = ${idCapacitacion}`, function(err, result){
                     if(err){
                         if(err.code === 'ER_BAD_FIELD_ERROR'){
                             console.error('Columna no encontrada en la tabla.');
@@ -823,7 +823,7 @@ exports.Asistencias = async (req, res) => {
         } else if(tipo == 2) {
             var nota = 0
             var data = req.body.datos
-            bd.query(`update asistencia set presente = 1 where idUsuario = (select idUsuario from usuario where carne = '${data['Carne']}' and cui='${data['CUI']}' and correo='${data['Correo Electrónico']}') and inscrito = 1 and idCapacitacion = ${idCapacitacion}`, function(err, result){
+            bd.query(`update asistencia set presente = 1 where idUsuario = (select idUsuario from usuario where carne = '${data['Carne'].trim()}' and cui='${data['CUI'].trim()}' and correo='${data['Correo Electrónico'].trim()}') and inscrito = 1 and idCapacitacion = ${idCapacitacion}`, function(err, result){
                 if(err){
                     if(err.code === 'ER_BAD_FIELD_ERROR'){
                         console.error('Columna no encontrada en la tabla.');
@@ -833,7 +833,7 @@ exports.Asistencias = async (req, res) => {
                     }
                 } else {
                     //console.log(data)
-                    bd.query(`Select a.idUsuario from usuario a, asistencia b where a.carne = '${data['Carne']}' and a.cui='${data['CUI']}' and a.correo='${data['Correo Electrónico']}' and a.idUsuario = b.idUsuario and b.inscrito = 1 and b.idCapacitacion = ${idCapacitacion};`, function(err, result){
+                    bd.query(`Select a.idUsuario from usuario a, asistencia b where a.carne = '${data['Carne'].trim()}' and a.cui='${data['CUI'].trim()}' and a.correo='${data['Correo Electrónico'].trim()}' and a.idUsuario = b.idUsuario and b.inscrito = 1 and b.idCapacitacion = ${idCapacitacion};`, function(err, result){
                         if(err){
                             console.error('Error en la consulta ')
                             return;

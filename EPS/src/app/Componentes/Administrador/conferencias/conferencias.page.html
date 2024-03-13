@@ -1,8 +1,10 @@
 <ion-content [fullscreen]="true">
   <div class="pantalla">
     <div class="filtros">
-      <ion-datetime [min]="2023" class="filt" presentation="year" [preferWheel]="true" (ionChange)="dateChanged($event)"></ion-datetime>
-    
+      <select [(ngModel)]="anio" (change)="dateChanged()">
+        <option *ngFor="let year of years" [value]="year">{{ year }}</option>
+      </select>
+
       <ion-select class="jornada" placeholder="Jornadas" [(ngModel)]="jornada" (ionChange)="jornadaChange($event)">
         <ion-select-option *ngFor="let jornada of jornadas" [value]="jornada.idJornada" >{{jornada.ciclo}}</ion-select-option>
       </ion-select>

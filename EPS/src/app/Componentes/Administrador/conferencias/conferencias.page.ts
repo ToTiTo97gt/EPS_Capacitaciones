@@ -13,7 +13,9 @@ export class ConferenciasPage implements OnInit {
   @ViewChild('fileInput',{static:false}) fileInput!: ElementRef;  
   
   selectedFile:File | null = null;
-  constructor(private adminService:AdminService, public alertController:AlertController) { }
+  constructor(private adminService:AdminService, public alertController:AlertController) {
+    this.cargarAnios()
+  }
 
   public anio: any
   public jornadas: any
@@ -24,8 +26,19 @@ export class ConferenciasPage implements OnInit {
   public alert: any
 
   ngOnInit() {
+    const año = new Date().getFullYear()
+    this.anio = año.toString()
     var anioActual = new Date()
     this.getPorAnio(anioActual.getFullYear())
+  }
+
+  years: number[] = []
+  cargarAnios() {
+    const currentYear = new Date().getFullYear();
+    this.years = [];
+    for (let i = currentYear; i >= 2023; i--) {
+      this.years.push(i);
+    }
   }
 
   onFileChange(event: any): void {
@@ -158,9 +171,7 @@ export class ConferenciasPage implements OnInit {
     }
   }
 
-  dateChanged(event: any){
-    const newDate = event.detail.value;
-    this.anio = newDate.split('-')[0]
+  dateChanged(){
     this.getPorAnio(this.anio)
   }
 
