@@ -1,7 +1,7 @@
 <ion-content [fullscreen]="true">
   <div class="pantalla">
     <div class="filtros">
-      <select [(ngModel)]="anio" (change)="dateChanged()">
+      <select class="select" [(ngModel)]="anio" (change)="dateChanged()">
         <option *ngFor="let year of years" [value]="year">{{ year }}</option>
       </select>
 

@@ -34,9 +34,10 @@
         <ion-button (click)="fb(this.Diplomado.fbLink)">
           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="square" stroke-linejoin="bevel"> <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg>
         </ion-button>
-        <ion-button (click)="zoom(this.Diplomado.zoomLink)">
+        <ion-button *ngIf="tipo == 1 || tipo == 2 || tipo == 3" (click)="zoom(this.Diplomado.zoomLink)">
           ZOOM
         </ion-button>
+        
       </div>
       <div class="foot">
 
@@ -76,7 +77,7 @@
         <ion-button (click)="fb(this.Diplomado.fbLink)">
           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="square" stroke-linejoin="bevel"> <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg>
         </ion-button>
-        <ion-button (click)="zoom(this.Diplomado.zoomLink)">
+        <ion-button *ngIf="tipo == 1 || tipo == 2 || tipo == 3" (click)="zoom(this.Diplomado.zoomLink)">
           ZOOM
         </ion-button>
       </div>

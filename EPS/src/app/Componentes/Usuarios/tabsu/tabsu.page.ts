@@ -39,6 +39,7 @@ export class TabsuPage implements OnInit {
 
   async getDatosUser(){
     this.userService.datosUser = await this.userService.GetDatosUsuario(this.userService.idG)
+    this.userService.idTipo = this.userService.datosUser[0].idTipo
     this.nombre = this.userService.datosUser[0].nombre
     this.apellido = this.userService.datosUser[0].apellido
   }
